@@ -19,9 +19,6 @@ export const useClientesStore = defineStore('ClientesStore', {
 		doubleCount: (state) => state.count * 2,
 	},
 	actions: {
-		increment() {
-			this.count++;
-		},
 		toggleDelete() {
 			this.deletingCliente = !this.deletingCliente;
 			console.log(this.deletingCliente);
@@ -57,6 +54,13 @@ export const useClientesStore = defineStore('ClientesStore', {
 			);
 			console.log(this.currentcliente);
 		},
+		setCurrentClienteByCell(numero) {
+			this.currentcliente = this.clientDatabase.find(
+				(cliente) => cliente.numero == numero
+			);
+			console.log(this.currentcliente);
+		},
+
 		deletecliente(id) {
 			this.clientDatabase = this.clientDatabase.filter(
 				(cliente) => cliente.docId !== id
@@ -114,6 +118,25 @@ export const useProductsStore = defineStore('ProductosStore', {
 			this.productDatabase = this.productDatabase.filter(
 				(product) => product.idDoc != id
 			);
+		},
+	},
+});
+
+export const usePedidosStore = defineStore('PedidosStore', {
+	state: () => {
+		return {
+			pedidoFormOpen: null,
+		};
+	},
+	actions: {
+		buscarCliente() {
+			const clientes = useClientesStore();
+			this.clientesFiltrados = clientes.clientDatabase.filter(
+				(cliente) => cliente.numero == this.filtroCliente
+			);
+		},
+		tooglePedidoFormOpen() {
+			this.pedidoFormOpen = !this.pedidoFormOpen;
 		},
 	},
 });

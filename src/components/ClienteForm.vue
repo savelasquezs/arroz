@@ -189,7 +189,9 @@ export default {
 					(cliente) => cliente.docId == this.docId
 				);
 				this.clientDatabase[index] = { ...cambio, ...data };
+				useClientesStore().setCurrentCliente(this.docId);
 				this.toogleClienteForm();
+				useClientesStore().toggleEditCliente();
 			} catch (e) {
 				console.error('Error adding document: ', e);
 			}

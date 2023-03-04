@@ -1,9 +1,12 @@
 <template>
+	<Modal v-if="pedidoFormOpen"><PedidosForm /></Modal>
+	<Modal v-if="editClient"><ClienteForm /></Modal>
+
 	<div class="container clientesCont">
 		<h2>Tabla de Pedidos</h2>
 		<hr />
 		<div class="input-group mb-3 d-flex justify-content-end">
-			<button class="btn btn-success">
+			<button class="btn btn-success" @click="createPedido">
 				<span
 					><svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -22,8 +25,8 @@
 		<div class="input-group mb-5 h-5">
 			<input
 				type="text"
-				v-model="filtro"
-				@keyup="filtradosClientes"
+				v-model="filtroPedidos"
+				@keyup="filtradosPedidos"
 				class="form-control"
 				placeholder="  ...Buscar"
 			/>
@@ -44,11 +47,31 @@
 
 <script>
 import { useClientesStore } from '../store/main';
-import Navbar from '@/components/Navbar.vue';
+import ClienteForm from '@/components/ClienteForm.vue';
+import Modal from '@/components/Modal.vue';
+import PedidosForm from '@/components/PedidosForm.vue';
+import { mapState } from 'pinia';
+import { usePedidosStore } from '@/store/main';
 export default {
 	name: 'home',
+	data() {
+		return {
+			filtroPedidos: [],
+		};
+	},
+
 	components: {
-		Navbar,
+		Modal,
+		PedidosForm,
+		ClienteForm,
+	},
+	computed: {
+		...mapState(usePedidosStore, ['pedidoFormOpen']),
+	},
+	methods: {
+		createPedido() {
+			usePedidosStore().tooglePedidoFormOpen();
+		},
 	},
 };
 </script>

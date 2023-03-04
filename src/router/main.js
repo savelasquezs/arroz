@@ -7,7 +7,7 @@ const NODE_ENV = process.env.NODE_ENV;
 
 const routes = [
 	{
-		path: '/',
+		path: '/pedidos/todos',
 		name: 'Pedidos',
 		component: Pedidos,
 	},
