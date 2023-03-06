@@ -7,8 +7,8 @@
 			<div class="clientForm px-5">
 				<form @submit.prevent="submitCliente">
 					<div class="row">
-						<div class="mb-4 col">
-							<label for="numero" class="form-label">Numero de telefono</label>
+						<div class="mb-2 col">
+							<label for="numero" class="form-label">Telefono</label>
 							<input
 								required
 								type="number"
@@ -17,7 +17,7 @@
 								v-model="numero"
 							/>
 						</div>
-						<div class="mb-4 col">
+						<div class="mb-2 col">
 							<label for="nombre" class="form-label">Nombre</label>
 							<input
 								required
@@ -29,7 +29,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="mb-4">
+						<div class="mb-2">
 							<label for="direccion" class="form-label">Dirección</label>
 							<input
 								required
@@ -39,7 +39,7 @@
 								v-model="direccion"
 							/>
 						</div>
-						<div class="mb-4">
+						<div class="mb-2">
 							<label for="barrio" class="form-label">Barrio-Ciudad</label>
 							<input
 								required
@@ -54,7 +54,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="mb-4">
+					<div class="mb-2">
 						<label for="notasDireccion" class="form-label"
 							>Notas dirección</label
 						>
@@ -69,7 +69,7 @@
 							Piso, apt o cualquier punto de interes
 						</div>
 					</div>
-					<div class="mb-4">
+					<div class="mb-2">
 						<label for="notasPedidos" class="form-label">Notas Pedidos</label>
 						<input
 							type="text"
@@ -84,7 +84,7 @@
 							Notas importantes para su pedido
 						</div>
 					</div>
-					<div class="mb-4">
+					<div class="mb-2">
 						<label for="valor_domi" class="form-label">Valor del domi</label>
 						<input
 							required

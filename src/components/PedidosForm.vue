@@ -77,8 +77,7 @@
 								type="text"
 								class="form-control"
 								id="notasPedidos"
-								placeholder="cucharas, sin
- pimenton...."
+								placeholder="cucharas, sin pimenton...."
 								v-model="notasPedido"
 							/>
 						</div>
@@ -93,27 +92,136 @@
 							/>
 						</div>
 					</div>
-					<div class="button-container d-flex justify-content-around">
-						<button
-							type="button"
-							@click="cerrarPedido"
-							class="btn btn-lg btn-warning"
-						>
-							Salir</button
-						><button v-if="!editClient" type="submit" class="btn btn-success">
-							Guardar</button
-						><button v-else type="submit" class="btn btn-success">
-							Actualizar
-						</button>
+				</section>
+				<hr />
+				<section class="productos">
+					<div class="work-items">
+						<div class="d-flex justify-content-between">
+							<h4>Productos</h4>
+							<button
+								@click.prevent="addNewInvoiceItem"
+								class="addInvoiceItem btn btn-outline-success btn-sm"
+							>
+								<span
+									><svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="30"
+										height="30"
+										viewBox="0 0 24 24"
+									>
+										<path
+											fill="white"
+											d="M11 17h2v-4h4v-2h-4V7h-2v4H7v2h4v4Zm1 5q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
+										/></svg
+								></span>
+								Agregar
+							</button>
+						</div>
+						<hr />
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th class="col-sm-6">Producto</th>
+									<th class="col-sm-1">Cantidad</th>
+									<th class="col-sm-2">Precio</th>
+									<th>Subtotal</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr
+									v-for="(producto, indexProducto) in productosList"
+									:key="indexProducto"
+								>
+									<td>
+										<input
+											required
+											type="text"
+											class="form-control"
+											id="producto"
+											v-model="producto.nombre"
+											@keyup="
+												filtradosProductos(producto.nombre, indexProducto)
+											"
+										/>
+										<div ref="listaDesplegable" class="list-group lista">
+											<button
+												type="button"
+												class="list-group-item list-group-item-action"
+												v-for="(item, index) in filtradosProductosArray"
+												:key="index"
+												@click="
+													setProducto(
+														item.nombre,
+														item.valor,
+														producto.id,
+														indexProducto
+													)
+												"
+											>
+												{{ item.nombre }}
+											</button>
+										</div>
+									</td>
+									<td>
+										<input
+											type="text"
+											v-model="producto.cantidad"
+											class="form-control"
+										/>
+									</td>
+									<td>
+										<input
+											type="text"
+											v-model="producto.precio"
+											class="form-control"
+										/>
+									</td>
+									<td>
+										<input
+											type="text"
+											readonly
+											:value="
+												(producto.subtotal =
+													producto.cantidad * producto.precio)
+											"
+											class="form-control"
+										/>
+									</td>
+									<img
+										@click="deleteInvoiceProducto(producto.id)"
+										src="@/assets/icon-delete.svg"
+										alt=""
+									/>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</section>
+				<div class="button-container d-flex justify-content-around">
+					<button
+						type="button"
+						@click="cerrarPedido"
+						class="btn btn-lg btn-warning"
+					>
+						Salir</button
+					><button v-if="!editClient" type="submit" class="btn btn-success">
+						Guardar</button
+					><button v-else type="submit" class="btn btn-success">
+						Actualizar
+					</button>
+				</div>
 			</form>
 		</div>
 	</div>
 </template>
 <script>
-import { useClientesStore, usePedidosStore } from '@/store/main';
+import {
+	useClientesStore,
+	usePedidosStore,
+	useProductsStore,
+} from '@/store/main';
 import ClienteForm from '@/components/ClienteForm.vue';
+import { uid } from 'uid';
 
 import { mapState } from 'pinia';
 
@@ -134,6 +242,8 @@ export default {
 			numero: null,
 			filtroClientes: '',
 			filtradosClientesArray: [],
+			productosList: [],
+			filtradosProductosArray: [],
 		};
 	},
 	components: {
@@ -147,6 +257,7 @@ export default {
 			'currentcliente',
 		]),
 		...mapState(usePedidosStore, ['pedidoFormOpen']),
+		...mapState(useProductsStore, ['productDatabase']),
 		direccionCompleta() {
 			if (this.direccion) {
 				return `${this.direccion}, ${this.notasDir}, ${this.barrio} `;
@@ -159,6 +270,7 @@ export default {
 			this.searchingCliente = true;
 			if (this.filtroClientes == '') {
 				this.filtradosClientesArray = this.clientDatabase;
+				this.searchingCliente = false;
 				return;
 			} else {
 				this.filtradosClientesArray = this.clientDatabase.filter((cliente) =>
@@ -166,6 +278,43 @@ export default {
 				);
 				return;
 			}
+		},
+
+		filtradosProductos(filtro, indexList) {
+			this.searchingProduct = true;
+			this.$refs.listaDesplegable[indexList].classList.remove('d-none');
+			if (filtro == '') {
+				this.filtradosProductosArray = this.productDatabase;
+				return;
+			} else {
+				this.filtradosProductosArray = this.productDatabase.filter((producto) =>
+					producto.nombre.includes(filtro)
+				);
+				return;
+			}
+		},
+		addNewInvoiceItem() {
+			this.productosList.push({
+				nombre: '',
+				precio: 0,
+				cantidad: 1,
+				id: uid(),
+			});
+		},
+		setProducto(nombre, precio, idListItem, indexList) {
+			const indexProduct = this.productosList.findIndex(
+				(product) => product.id == idListItem
+			);
+			this.productosList[indexProduct].nombre = nombre;
+			this.productosList[indexProduct].precio = precio;
+			console.log(
+				this.$refs.listaDesplegable[indexList].classList.add('d-none')
+			);
+		},
+		deleteInvoiceProducto(id) {
+			this.productosList = this.productosList.filter(
+				(product) => product.id != id
+			);
 		},
 		resetcliente() {
 			this.clienteId = null;
@@ -219,10 +368,11 @@ export default {
 	},
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 .card {
 	overflow: scroll;
 	max-height: 90vh;
+	min-width: 800px;
 }
 
 .lista {
@@ -246,5 +396,12 @@ h4 {
 }
 hr {
 	margin: 0.5rem;
+}
+.productos img {
+	margin-top: 10px;
+	width: 30px;
+}
+.addInvoiceItem {
+	float: right;
 }
 </style>
