@@ -164,6 +164,7 @@ export default {
 				console.log('Document written with ID: ', docRef.id);
 				this.toogleClienteForm();
 				useClientesStore().addCliente({ ...data, docId: docRef.id });
+				useClientesStore().setCurrentCliente(docRef.id);
 			} catch (e) {
 				console.error('Error adding document: ', e);
 			}

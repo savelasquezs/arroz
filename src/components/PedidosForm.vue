@@ -10,24 +10,28 @@
 							v-show="clienteCompleto"
 							@click.prevent="editarCliente(currentcliente.docId)"
 						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="15"
-								height="15"
-								viewBox="0 0 24 24"
-							>
-								<path
-									fill="currentColor"
-									d="m19.3 8.925l-4.25-4.2l1.4-1.4q.575-.575 1.413-.575t1.412.575l1.4 1.4q.575.575.6 1.388t-.55 1.387L19.3 8.925ZM17.85 10.4L7.25 21H3v-4.25l10.6-10.6l4.25 4.25Z"
-								/>
-							</svg>
+							<Icon
+								icon="material-symbols:edit"
+								color="black"
+								width="24"
+								height="24"
+							/>
 						</button>
 					</div>
 					<hr />
 					<div class="row">
 						<div class="mb-2 col list-container">
-							<label for="numero" class="form-label">Telefono</label
-							><input
+							<label for="numero" class="form-label">Telefono</label>
+							<button
+								class="btn btn-sm btn-outline-success float-end"
+								v-if="filtradosClientesArray.length == 0"
+								@click.prevent="createCliente"
+							>
+								<Icon icon="mdi:create-new-folder" color="white" />
+								Crear Cliente
+							</button>
+
+							<input
 								required
 								type="number"
 								class="form-control"
@@ -102,18 +106,12 @@
 								@click.prevent="addNewInvoiceItem"
 								class="addInvoiceItem btn btn-outline-success btn-sm"
 							>
-								<span
-									><svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="30"
-										height="30"
-										viewBox="0 0 24 24"
-									>
-										<path
-											fill="white"
-											d="M11 17h2v-4h4v-2h-4V7h-2v4H7v2h4v4Zm1 5q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"
-										/></svg
-								></span>
+								<Icon
+									icon="material-symbols:add-circle-outline"
+									color="white"
+									width="30"
+									height="30"
+								/>
 								Agregar
 							</button>
 						</div>
@@ -221,6 +219,8 @@ import {
 	useProductsStore,
 } from '@/store/main';
 import ClienteForm from '@/components/ClienteForm.vue';
+import { Icon } from '@iconify/vue';
+
 import { uid } from 'uid';
 
 import { mapState } from 'pinia';
@@ -248,6 +248,7 @@ export default {
 	},
 	components: {
 		ClienteForm,
+		Icon,
 	},
 
 	computed: {
@@ -267,6 +268,7 @@ export default {
 	},
 	methods: {
 		filtradosClientes() {
+			console.log(this.filtradosClientesArray.length);
 			this.searchingCliente = true;
 			if (this.filtroClientes == '') {
 				this.filtradosClientesArray = this.clientDatabase;
@@ -355,6 +357,11 @@ export default {
 			useClientesStore().toggleEditCliente();
 			useClientesStore().toggleClientForm();
 			useClientesStore().setCurrentCliente(id);
+		},
+		createCliente() {
+			this.clienteCompleto = true;
+			useClientesStore().toggleClientForm();
+			this.clonarClienteASelf();
 		},
 	},
 	watch: {

@@ -19,6 +19,7 @@ export default {
 	transform: translate(-50%, -50%);
 	padding: 30px;
 	max-height: 90vh;
+	overflow: scroll;
 }
 .modal-overlay {
 	z-index: 100;
