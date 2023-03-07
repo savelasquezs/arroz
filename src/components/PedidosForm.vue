@@ -1,7 +1,7 @@
 <template>
 	<div class="card">
 		<div class="card-body">
-			<form>
+			<form @submit.prevent="submitEnviar">
 				<section class="cliente">
 					<div class="d-flex justify-content-between">
 						<h4>Cliente</h4>
@@ -21,10 +21,12 @@
 					<hr />
 					<div class="row">
 						<div class="mb-2 col list-container">
-							<label for="numero" class="form-label">Telefono</label>
+							<label for="numero" class="form-label">Cedula</label>
 							<button
 								class="btn btn-sm btn-outline-success float-end"
-								v-if="filtradosClientesArray.length == 0"
+								v-if="
+									filtradosClientesArray.length == 0 && filtroClientes !== ''
+								"
 								@click.prevent="createCliente"
 							>
 								<Icon icon="mdi:create-new-folder" color="white" />
@@ -35,10 +37,11 @@
 								required
 								type="number"
 								class="form-control"
-								id="numero"
+								id="cedula"
 								v-model="filtroClientes"
 								@keyup="filtradosClientes"
 							/>
+
 							<div class="list-group lista" v-if="searchingCliente">
 								<button
 									type="button"
@@ -47,9 +50,19 @@
 									:key="index"
 									@click="setcliente(cliente.docId)"
 								>
-									{{ cliente.numero }}
+									{{ cliente.cedula }}
 								</button>
 							</div>
+						</div>
+						<div class="mb-2 col" v-show="clienteCompleto">
+							<label for="numero" class="form-label">Telefono</label
+							><input
+								required
+								type="text"
+								class="form-control"
+								id="numero"
+								v-model="currentcliente.numero"
+							/>
 						</div>
 						<div class="mb-2 col" v-show="clienteCompleto">
 							<label for="nombre" class="form-label">Nombre</label
@@ -58,7 +71,7 @@
 								type="text"
 								class="form-control"
 								id="nombre"
-								v-model="nombre"
+								v-model="currentcliente.nombre"
 							/>
 						</div>
 					</div>
@@ -71,7 +84,7 @@
 									type="text"
 									class="form-control"
 									id="direccion"
-									v-model="direccionCompleta"
+									v-model="currentcliente.direccionCompleta"
 								/>
 							</div>
 						</div>
@@ -82,7 +95,7 @@
 								class="form-control"
 								id="notasPedidos"
 								placeholder="cucharas, sin pimenton...."
-								v-model="notasPedido"
+								v-model="currentcliente.notasPedido"
 							/>
 						</div>
 						<div class="mb-2">
@@ -92,7 +105,7 @@
 								type="number"
 								class="form-control"
 								id="valor_domi"
-								v-model="valorDomi"
+								v-model="currentcliente.valorDomi"
 							/>
 						</div>
 					</div>
@@ -219,6 +232,10 @@ import {
 	useProductsStore,
 } from '@/store/main';
 import ClienteForm from '@/components/ClienteForm.vue';
+import { db } from '../firebase/firebaseInit.js';
+
+import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
+
 import { Icon } from '@iconify/vue';
 
 import { uid } from 'uid';
@@ -232,14 +249,7 @@ export default {
 			clientesFiltrados: [],
 			clienteCompleto: null,
 			searchingCliente: null,
-			clienteId: null,
-			valorDomi: null,
-			notasPedido: null,
-			notasDir: null,
-			barrio: null,
-			direccion: null,
-			nombre: null,
-			numero: null,
+
 			filtroClientes: '',
 			filtradosClientesArray: [],
 			productosList: [],
@@ -265,6 +275,13 @@ export default {
 			}
 			return '';
 		},
+		total() {
+			let recuento = 0;
+			this.productosList.forEach((product) => {
+				recuento += product.subtotal;
+			});
+			return recuento;
+		},
 	},
 	methods: {
 		filtradosClientes() {
@@ -276,10 +293,57 @@ export default {
 				return;
 			} else {
 				this.filtradosClientesArray = this.clientDatabase.filter((cliente) =>
-					cliente.numero.toString().includes(this.filtroClientes)
+					cliente.cedula.toString().includes(this.filtroClientes)
 				);
 				return;
 			}
+		},
+
+		async guardarPedido() {
+			if (this.productosList.length == 0) {
+				alert('No puede guardar un pedido sin productos o productos vacios');
+				return;
+			}
+			const data = {
+				cliente: {
+					cedula: this.currentcliente.cedula,
+					valorDomi: this.currentcliente.valorDomi,
+					notasPedido: this.currentcliente.notasPedido,
+					direccion: this.currentcliente.direccionCompleta,
+					nombre: this.currentcliente.nombre,
+					numero: this.currentcliente.numero,
+				},
+				productos: this.productosList,
+				total: this.total,
+				enPreparacion: true,
+				enCamino: false,
+				enMesa: false,
+				entregado: false,
+				domiciliario: null,
+				fecha: new Date().toLocaleDateString('es', {
+					year: 'numeric',
+					month: 'short',
+					day: 'numeric',
+				}),
+				horaToma: new Date().toLocaleTimeString('es', {
+					timeZone: 'America/Bogota',
+					hour12: true,
+					hour: 'numeric',
+					minute: '2-digit',
+					second: '2-digit',
+				}),
+				horaPreparado: null,
+				horaDespachado: null,
+			};
+
+			const docRef = await addDoc(collection(db, 'pedidos'), data);
+			console.log(docRef.id);
+			usePedidosStore().addPedido({ ...data, docId: docRef.id });
+			this.cerrarPedido();
+		},
+
+		submitEnviar() {
+			this.guardarPedido();
 		},
 
 		filtradosProductos(filtro, indexList) {
@@ -332,27 +396,16 @@ export default {
 			this.clienteCompleto = !this.clienteCompleto;
 		},
 		setcliente(id) {
-			this.toggleClienteCompleto();
+			this.clienteCompleto = true;
 			this.searchingCliente = false;
 			useClientesStore().setCurrentCliente(id);
-			this.clonarClienteASelf();
+			this.filtroClientes = this.currentcliente.cedula;
 		},
 		cerrarPedido() {
 			usePedidosStore().tooglePedidoFormOpen();
 			this.resetcliente();
 		},
 
-		clonarClienteASelf() {
-			this.clienteId = this.currentcliente.docId;
-			this.numero = this.currentcliente.numero;
-			this.nombre = this.currentcliente.nombre;
-			this.direccion = this.currentcliente.direccion;
-			this.barrio = this.currentcliente.barrio;
-			this.notasDir = this.currentcliente.notasDir;
-			this.notasPedido = this.currentcliente.notasPedido;
-			this.valorDomi = this.currentcliente.valorDomi;
-			this.filtroClientes = this.currentcliente.numero;
-		},
 		editarCliente(id) {
 			useClientesStore().toggleEditCliente();
 			useClientesStore().toggleClientForm();
@@ -361,15 +414,11 @@ export default {
 		createCliente() {
 			this.clienteCompleto = true;
 			useClientesStore().toggleClientForm();
-			this.clonarClienteASelf();
 		},
 	},
 	watch: {
-		clientDatabase() {
-			this.clonarClienteASelf();
-		},
+		clientDatabase() {},
 		currentcliente() {
-			this.clonarClienteASelf();
 			console.log(this.valorDomi);
 		},
 	},

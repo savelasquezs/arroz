@@ -1,6 +1,15 @@
 <template>
 	<Modal v-if="pedidoFormOpen"><PedidosForm /></Modal>
-	<Modal v-if="editClient"><ClienteForm /></Modal>
+	<Modal v-if="detallePedidoAbierto">
+		<DetallePedido v-if="detallePedidoAbierto" :pedido="currentPedido" />
+	</Modal>
+	<Modal v-if="deletingPedido"
+		><Borrar
+			:itemId="currentPedido.docId"
+			collection="pedidos"
+			:itemName="currentPedido.cliente.nombre"
+			v-if="deletingPedido"
+	/></Modal>
 
 	<div class="container clientesCont">
 		<h2>Tabla de Pedidos</h2>
@@ -34,13 +43,87 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th>Identificador</th>
-					<th>Fecha</th>
 					<th>Cliente</th>
+					<th>Direccion</th>
 					<th>Valor</th>
 					<th>Estado</th>
+					<th>Fecha</th>
+					<th>Hora</th>
+					<th>Acciones</th>
 				</tr>
 			</thead>
+			<tbody>
+				<tr v-for="pedido in pedidosDatabase">
+					<td>{{ pedido.cliente.nombre }}</td>
+					<td>{{ pedido.cliente.direccion.split(',')[0] }}</td>
+					<td>{{ pedido.total }}</td>
+					<td align="center" @click="actualizarEstado(pedido.docId)">
+						<span v-if="pedido.enPreparacion"
+							><Icon
+								icon="mdi:pot-steam"
+								color="#7e0000"
+								width="20"
+								height="20"
+						/></span>
+						<span v-if="pedido.enCamino"
+							><Icon
+								icon="mdi:delivery-dining-electric"
+								color="green"
+								width="20"
+								height="20"
+						/></span>
+						<span v-if="pedido.enMesa"
+							><Icon
+								icon="material-symbols:table-restaurant"
+								color="orange"
+								width="20"
+								height="20"
+						/></span>
+
+						<span v-if="pedido.entregado">
+							<Icon icon="healthicons:happy" width="20" height="20" />
+							<Icon
+								icon="material-symbols:check"
+								color="green"
+								width="20"
+								height="20"
+							/>c
+						</span>
+					</td>
+					<td>{{ pedido.fecha }}</td>
+					<td>{{ pedido.horaToma }}</td>
+					<td>
+						<button
+							class="btn btn-sm btn-info"
+							@click="verDetalles(pedido.docId)"
+						>
+							<Icon
+								icon="mdi:eye-outline"
+								color="black"
+								width="20"
+								height="20"
+							/>
+						</button>
+						<button
+							class="btn btn-sm btn-warning"
+							@click="editarPedido(pedido.docId)"
+						>
+							<Icon
+								icon="material-symbols:edit"
+								color="black"
+								width="20"
+								height="20"
+							/>
+						</button>
+						<button
+							class="btn btn-sm btn-danger"
+							@click="borrarPedido(pedido.docId)"
+						>
+							<Icon icon="bi:trash-fill" color="black" width="20" height="20" />
+						</button>
+					</td>
+				</tr>
+			</tbody>
 		</table>
 	</div>
 </template>
@@ -48,10 +131,16 @@
 <script>
 import { useClientesStore } from '../store/main';
 import ClienteForm from '@/components/ClienteForm.vue';
+import DetallePedido from '@/components/DetallePedido.vue';
+
 import Modal from '@/components/Modal.vue';
 import PedidosForm from '@/components/PedidosForm.vue';
 import { mapState } from 'pinia';
 import { usePedidosStore } from '@/store/main';
+import { Icon } from '@iconify/vue';
+import Borrar from '@/components/Borrar.vue';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/firebase/firebaseInit.js';
 export default {
 	name: 'home',
 	data() {
@@ -64,14 +153,43 @@ export default {
 		Modal,
 		PedidosForm,
 		ClienteForm,
+		Icon,
+		Borrar,
+		DetallePedido,
 	},
 	computed: {
-		...mapState(usePedidosStore, ['pedidoFormOpen']),
+		...mapState(usePedidosStore, [
+			'pedidoFormOpen',
+			'pedidosDatabase',
+			'deletingPedido',
+			'currentPedido',
+			'detallePedidoAbierto',
+		]),
 	},
 	methods: {
 		createPedido() {
 			usePedidosStore().tooglePedidoFormOpen();
 		},
+		borrarPedido(id) {
+			usePedidosStore().setCurrentPedido(id);
+			usePedidosStore().toggleDelete();
+		},
+		verDetalles(id) {
+			console.log(id);
+			console.log(this.detallePedidoAbierto);
+			usePedidosStore().setCurrentPedido(id);
+			usePedidosStore().toggleDetallePedidoAbierto();
+		},
+		siguienteEstado(id) {
+			return usePedidosStore().siguienteEstado(id);
+		},
+		async actualizarEstado(id) {
+			const docRef = await doc(db, 'pedidos', id);
+			await updateDoc(docRef, this.siguienteEstado(id));
+		},
+	},
+	watch: {
+		pedidosDatabase() {},
 	},
 };
 </script>

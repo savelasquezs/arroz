@@ -18,6 +18,16 @@
 							/>
 						</div>
 						<div class="mb-2 col">
+							<label for="cedula" class="form-label">Cedula</label>
+							<input
+								required
+								type="number"
+								class="form-control"
+								id="cedula"
+								v-model="cedula"
+							/>
+						</div>
+						<div class="mb-2 col">
 							<label for="nombre" class="form-label">Nombre</label>
 							<input
 								required
@@ -134,6 +144,7 @@ export default {
 			notasPedido: null,
 			valorDomi: null,
 			createdDate: null,
+			cedula: null,
 		};
 	},
 	methods: {
@@ -147,6 +158,12 @@ export default {
 			}
 		},
 		async guardarCliente() {
+			if (
+				this.clientDatabase.some((cliente) => cliente.cedula == this.cedula)
+			) {
+				alert('Este numero de cedula ya está registrado');
+				return;
+			}
 			try {
 				const data = {
 					numero: this.numero,
@@ -157,6 +174,7 @@ export default {
 					notasPedido: this.notasPedido,
 					valorDomi: this.valorDomi,
 					createdDate: this.createdDate,
+					cedula: this.cedula,
 				};
 
 				const docRef = await addDoc(collection(db, 'clientes'), data);
@@ -222,6 +240,7 @@ export default {
 			this.notasDir = this.currentcliente.notasDir;
 			this.notasPedido = this.currentcliente.notasPedido;
 			this.valorDomi = this.currentcliente.valorDomi;
+			this.cedula = this.currentcliente.cedula;
 		}
 	},
 	computed: {

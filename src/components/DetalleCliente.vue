@@ -4,7 +4,8 @@
 			<div class="container d-flex justify-content-between">
 				<div class="left">
 					<h2 class="text-center">{{ cliente.nombre }}</h2>
-					<h4 class="text-center">{{ cliente.telefono }}</h4>
+					<h4 class="text-center">{{ cliente.cedula }}</h4>
+					<p class="text-center">{{ cliente.telefono }}</p>
 					<p class="text-center">{{ cliente.direccion }}</p>
 					<p class="text-center">{{ cliente.barrio }}</p>
 					<p class="text-center">{{ cliente.notasDir }}</p>

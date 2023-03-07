@@ -53,6 +53,9 @@ export const useClientesStore = defineStore('ClientesStore', {
 					const data = {
 						docId: doc.id,
 						...doc.data(),
+						direccionCompleta: `${doc.data().direccion}, ${
+							doc.data().notasDir
+						}, ${doc.data().barrio}`,
 					};
 					this.clientDatabase.push(data);
 				}
@@ -60,9 +63,9 @@ export const useClientesStore = defineStore('ClientesStore', {
 			this.invoicesLoaded = true;
 		},
 		setCurrentCliente(id) {
-			this.currentcliente = this.clientDatabase.find(
-				(cliente) => cliente.docId == id
-			);
+			this.currentcliente = {
+				...this.clientDatabase.find((cliente) => cliente.docId == id),
+			};
 			console.log(this.currentcliente);
 		},
 		setCurrentClienteByCell(numero) {
@@ -137,9 +140,66 @@ export const usePedidosStore = defineStore('PedidosStore', {
 	state: () => {
 		return {
 			pedidoFormOpen: null,
+			pedidosDatabase: [],
+			productLoaded: null,
+			deletingPedido: null,
+			currentPedido: null,
+			detallePedidoAbierto: null,
 		};
 	},
 	actions: {
+		toggleDetallePedidoAbierto() {
+			this.detallePedidoAbierto = !this.detallePedidoAbierto;
+		},
+
+		siguienteEstado(id) {
+			const pedido = this.pedidosDatabase.find((pedido) => pedido.docId == id);
+			if (pedido.enPreparacion) {
+				pedido.enPreparacion = false;
+				pedido.enMesa = true;
+				return {
+					enPreparacion: false,
+					enMesa: true,
+				};
+			} else if (pedido.enMesa) {
+				pedido.enMesa = false;
+				pedido.enCamino = true;
+				return {
+					enMesa: false,
+					enCamino: true,
+				};
+			} else if (pedido.enCamino) {
+				pedido.enCamino = false;
+				pedido.entregado = true;
+				return {
+					enCamino: false,
+					entregado: true,
+				};
+			} else if (pedido.entregado) {
+				pedido.entregado = false;
+				pedido.enPreparacion = true;
+				return {
+					entregado: false,
+					enPreparacion: true,
+				};
+			}
+		},
+		toggleDelete() {
+			this.deletingPedido = !this.deletingPedido;
+		},
+		setCurrentPedido(id) {
+			this.currentPedido = this.pedidosDatabase.find(
+				(pedido) => pedido.docId == id
+			);
+		},
+		addPedido(pedido) {
+			this.pedidosDatabase.push(pedido);
+		},
+		deletePedido(id) {
+			this.pedidosDatabase = this.pedidosDatabase.filter(
+				(pedido) => pedido.docId != id
+			);
+		},
 		buscarCliente() {
 			const clientes = useClientesStore();
 			this.clientesFiltrados = clientes.clientDatabase.filter(
@@ -148,6 +208,20 @@ export const usePedidosStore = defineStore('PedidosStore', {
 		},
 		tooglePedidoFormOpen() {
 			this.pedidoFormOpen = !this.pedidoFormOpen;
+		},
+		async getPedidos() {
+			const querySnapshot = await getDocs(collection(db, 'pedidos'));
+			querySnapshot.forEach((doc) => {
+				if (!this.pedidosDatabase.some((pedido) => pedido.docId == doc.id)) {
+					const data = {
+						docId: doc.id,
+						...doc.data(),
+					};
+					this.pedidosDatabase.push(data);
+				}
+			});
+
+			this.productLoaded = true;
 		},
 	},
 });

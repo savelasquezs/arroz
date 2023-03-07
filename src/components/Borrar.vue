@@ -3,6 +3,7 @@
 		<div class="card-body">
 			<h3 class="text-center">Seguro que quieres borrar:</h3>
 			<h2 class="text-center">
+				<span v-if="collection == 'pedidos'">El pedido de </span>
 				<strong>"{{ itemName }}"</strong>
 			</h2>
 			<h3 class="text-center">De el registro?</h3>
@@ -22,7 +23,11 @@
 </template>
 
 <script>
-import { useClientesStore, useProductsStore } from '@/store/main';
+import {
+	useClientesStore,
+	useProductsStore,
+	usePedidosStore,
+} from '@/store/main';
 import { mapState } from 'pinia';
 import { doc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/firebase/firebaseInit';
@@ -39,6 +44,9 @@ export default {
 					break;
 				case 'productos':
 					useProductsStore().toggleDeleteProduct();
+					break;
+				case 'pedidos':
+					usePedidosStore().toggleDelete();
 					break;
 
 				default:
@@ -61,6 +69,10 @@ export default {
 				case 'productos':
 					console.log(this.collection);
 					useProductsStore().deleteProduct(this.itemId);
+					break;
+				case 'pedidos':
+					console.log(this.collection);
+					usePedidosStore().deletePedido(this.itemId);
 					break;
 
 				default:

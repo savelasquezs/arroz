@@ -34,7 +34,7 @@
 			<input
 				type="text"
 				class="form-control"
-				placeholder="  ...Buscar por telefono"
+				placeholder="  ...Buscar por Cedula"
 				v-model="filtro"
 				@keyup="filtradosClientes"
 			/>
@@ -42,13 +42,13 @@
 		<table class="table table-hover">
 			<thead>
 				<tr>
+					<th>Cedula</th>
+
 					<th>Nombre</th>
 					<th>Telefono</th>
 					<th>Dirección</th>
 					<th>Valor Domi</th>
-					<th>Ver</th>
-					<th>Editar</th>
-					<th>Borrar</th>
+					<th>Acciones</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -58,6 +58,8 @@
 					:key="index"
 					@click.self="verDetalles(cliente.docId)"
 				>
+					<td>{{ cliente.cedula }}</td>
+
 					<td>{{ cliente.nombre }}</td>
 					<td>{{ cliente.numero }}</td>
 					<td>{{ cliente.direccion }}</td>
@@ -67,35 +69,29 @@
 							class="btn btn-sm btn-info"
 							@click="verDetalles(cliente.docId)"
 						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
+							<Icon
+								icon="mdi:eye-outline"
+								color="black"
 								width="20"
 								height="20"
-								viewBox="0 0 24 24"
-							>
-								<path
-									fill="currentColor"
-									d="M12 9a3 3 0 0 1 3 3a3 3 0 0 1-3 3a3 3 0 0 1-3-3a3 3 0 0 1 3-3m0-4.5c5 0 9.27 3.11 11 7.5c-1.73 4.39-6 7.5-11 7.5S2.73 16.39 1 12c1.73-4.39 6-7.5 11-7.5M3.18 12a9.821 9.821 0 0 0 17.64 0a9.821 9.821 0 0 0-17.64 0Z"
-								/>
-								Ver
-							</svg>
+							/>
 						</button>
-					</td>
-
-					<td>
 						<button
 							class="btn btn-sm btn-warning"
 							@click="editarCliente(cliente.docId)"
 						>
-							Editar
+							<Icon
+								icon="material-symbols:edit"
+								color="black"
+								width="20"
+								height="20"
+							/>
 						</button>
-					</td>
-					<td>
 						<button
 							class="btn btn-sm btn-danger"
 							@click="borrarCliente(cliente.docId)"
 						>
-							Borrar
+							<Icon icon="bi:trash-fill" color="black" width="20" height="20" />
 						</button>
 					</td>
 				</tr>
@@ -108,6 +104,7 @@
 import Borrar from '@/components/Borrar.vue';
 import Modal from '@/components/Modal.vue';
 import DetalleCliente from '@/components/DetalleCliente.vue';
+import { Icon } from '@iconify/vue';
 
 import { useClientesStore } from '../store/main';
 import Navbar from '@/components/Navbar.vue';
@@ -126,6 +123,7 @@ export default {
 		Borrar,
 		Modal,
 		DetalleCliente,
+		Icon,
 	},
 	methods: {
 		filtradosClientes() {
@@ -134,7 +132,7 @@ export default {
 				return;
 			} else {
 				this.filtrados = this.clientDatabase.filter((cliente) =>
-					cliente.numero.toString().includes(this.filtro)
+					cliente.cedula.toString().includes(this.filtro)
 				);
 				return;
 			}
@@ -195,10 +193,5 @@ hr {
 }
 tbody tr {
 	cursor: pointer;
-}
-
-.btn:hover {
-	box-shadow: 5px 5px 3px 0px rgba(0, 0, 0, 0.48);
-	transform: scale(1.05);
 }
 </style>

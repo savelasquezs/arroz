@@ -12,7 +12,11 @@ import ClienteForm from '@/components/ClienteForm.vue';
 
 import { mapState } from 'pinia';
 
-import { useClientesStore, useProductsStore } from '../src/store/main';
+import {
+	useClientesStore,
+	useProductsStore,
+	usePedidosStore,
+} from '../src/store/main';
 import Navbar from '@/components/Navbar.vue';
 import Modal from '@/components/Modal.vue';
 import Pedidos from '../src/views/Pedidos.vue';
@@ -37,6 +41,7 @@ export default {
 	created() {
 		useClientesStore().getInvoices();
 		useProductsStore().getProducts();
+		usePedidosStore().getPedidos();
 	},
 };
 </script>
@@ -48,6 +53,10 @@ export default {
 	grid-template-columns: 1fr 5fr;
 }
 
+.btn:hover {
+	box-shadow: 5px 5px 3px 0px rgba(0, 0, 0, 0.48);
+	transform: scale(1.05);
+}
 .navbar,
 .home {
 	display: inline-block;

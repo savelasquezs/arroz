@@ -28,6 +28,7 @@ export default {
 	right: 0;
 	bottom: 0;
 	top: 0;
+	height: 100vh;
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
