@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Clientes from '../views/Clientes.vue';
 import Pedidos from '../views/Pedidos.vue';
 import Productos from '../views/Productos.vue';
+import Home from '../views/Home.vue';
+
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -20,6 +22,11 @@ const routes = [
 		path: '/productos',
 		name: 'Productos',
 		component: Productos,
+	},
+	{
+		path: '/home',
+		name: 'Home',
+		component: Home,
 	},
 	// {
 	// 	path: '/pedidos/:pedidoId',
