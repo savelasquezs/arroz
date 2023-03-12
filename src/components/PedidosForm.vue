@@ -1,7 +1,14 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <form @submit.prevent="submitEnviar">
+      <form @submit.prevent="submitEnviar" class="">
+        <Icon
+          @click="cerrarPedido"
+          icon="material-symbols:close"
+          color="red"
+          width="30"
+          class="float-end close-form"
+        />
         <section class="cliente">
           <div class="d-flex justify-content-between">
             <h4>Cliente</h4>
@@ -40,6 +47,7 @@
                 id="cedula"
                 v-model="filtroClientes"
                 @keyup="filtradosClientes"
+                autocomplete="off"
               />
 
               <div class="list-group lista" v-if="searchingCliente">
@@ -149,6 +157,7 @@
                       type="text"
                       class="form-control"
                       id="producto"
+                      autocomplete="off"
                       v-model="producto.nombre"
                       @keyup="
                         filtradosProductos(producto.nombre, indexProducto)
@@ -231,6 +240,7 @@ import {
   usePedidosStore,
   useProductsStore,
 } from "@/store/main";
+import Swal from "sweetalert2";
 import ClienteForm from "@/components/ClienteForm.vue";
 import { db } from "../firebase/firebaseInit.js";
 
@@ -299,7 +309,35 @@ export default {
       }
     },
 
+    verificarPedido() {
+      if (
+        this.productosList.some(
+          (product) =>
+            !this.productDatabase.some((item) => item.nombre == product.nombre)
+        )
+      ) {
+        const nombreProducto = this.productosList.find(
+          (product) =>
+            !this.productDatabase.some((item) => item.nombre == product.nombre)
+        ).nombre;
+        const indexProducto = this.productosList.findIndex(
+          (product) =>
+            !this.productDatabase.some((item) => item.nombre == product.nombre)
+        );
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: ` El producto: ${nombreProducto} en la casilla numero ${
+            indexProducto + 1
+          } no existe en la base de datos`,
+        });
+        return true;
+      }
+    },
+
     async guardarPedido() {
+      if (this.verificarPedido()) return;
+
       if (this.productosList.length == 0) {
         alert("No puede guardar un pedido sin productos o productos vacios");
         return;
@@ -344,7 +382,7 @@ export default {
         return;
       } else {
         this.filtradosProductosArray = this.productDatabase.filter((producto) =>
-          producto.nombre.includes(filtro)
+          producto.nombre.toLowerCase().includes(filtro.toLowerCase())
         );
         return;
       }
@@ -449,5 +487,13 @@ hr {
 }
 .addInvoiceItem {
   float: right;
+}
+.close-form {
+  cursor: pointer;
+  &:hover {
+    transform: scale(1.1);
+    background: rgb(215, 212, 212);
+    border-radius: 50%;
+  }
 }
 </style>

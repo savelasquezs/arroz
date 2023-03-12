@@ -147,6 +147,7 @@ header {
   display: grid;
   width: 200px;
   height: 100vh;
+  // position: fixed;
   align-content: space-between;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
   .branding {

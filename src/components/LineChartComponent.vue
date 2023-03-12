@@ -33,10 +33,10 @@ export default {
 
   computed: {
     dates() {
-      return this.chartData.map((data) => data.label);
+      return this.chartData.map((data) => data.label).reverse();
     },
     totals() {
-      return this.chartData.map((data) => data.valor);
+      return this.chartData.map((data) => data.valor).reverse();
     },
     chartDataComputed() {
       const {

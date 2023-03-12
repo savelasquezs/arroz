@@ -1,7 +1,7 @@
 <template>
   <div class="contenedor">
-    <Navbar class="navbar" />
-    <div class="app-content flex flex-column"><router-view /></div>
+    <Navbar class="position-fixed" />
+    <div class="contenido"><router-view /></div>
   </div>
   <Modal v-if="clienteFormShowed">
     <ClienteForm v-if="clienteFormShowed" />
@@ -48,18 +48,17 @@ export default {
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
 
-.contenedor {
-  display: grid;
-  grid-template-columns: 1fr 5fr;
-}
+// .contenedor {
+//   display: grid;
+//   grid-template-columns: 1fr 5fr;
+// }
 
 .btn:hover {
   box-shadow: 5px 5px 3px 0px rgba(0, 0, 0, 0.48);
   transform: scale(1.05);
 }
-.navbar,
-.home {
-  display: inline-block;
+.contenido {
+  margin-left: 200px;
 }
 
 * {
@@ -75,12 +74,6 @@ export default {
 
   @media (min-width: 900px) {
     flex-direction: row !important;
-  }
-
-  .app-content {
-    padding: 0 20px;
-    flex: 1;
-    position: relative;
   }
 }
 
