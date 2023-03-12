@@ -2,32 +2,40 @@
   <div class="container">
     <h2 class="text-center mt-5">Dashboard</h2>
     <div class="row mt-5">
-      <div class="col">
-        <h4>Pedidos por dia</h4>
-        <line-chart-component
-          :chartData="arrPedidosXdia"
-          :options="chartOptions"
-          label="Pedidos por dia"
-          :chartColors="arrPedidosXdiaColors"
-        />
-      </div>
-      <div class="col">
-        <h4>Ventas por dia</h4>
-        <line-chart-component
-          :chartData="arrVentasDia"
-          :options="chartOptions"
-          label="Ventas diarias"
-          :chartColors="arrPedidosXdiaColors"
-        />
-      </div>
-      <div class="col">
-        <h4>Ventas por hora del dia</h4>
-        <line-chart-component
-          :chartData="arrPedidosPorHora"
-          :options="chartOptions"
-          label="Pedidos por hora"
-          :chartColors="arrPedidosXdiaColors"
-        />
+      <div class="col-lg-10 offset-1 mb-5">
+        <div class="card">
+          <div class="card-body">
+            <h4>Pedidos por dia</h4>
+            <line-chart-component
+              :chartData="arrPedidosXdia"
+              :options="chartOptions"
+              label="Pedidos por dia"
+              :chartColors="arrPedidosXdiaColors"
+            />
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h4>Ventas por dia</h4>
+            <line-chart-component
+              :chartData="arrVentasDia"
+              :options="chartOptions"
+              label="Ventas diarias"
+              :chartColors="arrPedidosXdiaColors"
+            />
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h4>Ventas por hora del dia</h4>
+            <line-chart-component
+              :chartData="arrPedidosPorHora"
+              :options="chartOptions"
+              label="Pedidos por hora"
+              :chartColors="arrPedidosXdiaColors"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>

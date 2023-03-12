@@ -123,6 +123,9 @@
           <div class="work-items">
             <div class="d-flex justify-content-between">
               <h4>Productos</h4>
+              <h6>
+                Total a pagar: <strong> ${{ total }}</strong>
+              </h6>
               <button
                 @click.prevent="addNewInvoiceItem"
                 class="addInvoiceItem btn btn-outline-success btn-sm"
@@ -136,6 +139,9 @@
                 Agregar
               </button>
             </div>
+            <p v-if="hacerDescuento" class="text-danger text-center">
+              Se está haciendo un descuento de {{ descuento }} %
+            </p>
             <hr />
             <table class="table table-hover">
               <thead>
@@ -264,6 +270,8 @@ export default {
       filtradosClientesArray: [],
       productosList: [],
       filtradosProductosArray: [],
+      descuento: 0,
+      hacerDescuento: false,
     };
   },
   components: {
@@ -290,6 +298,24 @@ export default {
       this.productosList.forEach((product) => {
         recuento += product.subtotal;
       });
+      if (
+        this.productosList.some(
+          (product) =>
+            product.cantidad >= 3 &&
+            product.nombre.toLowerCase().includes("super")
+        )
+      ) {
+        this.hacerDescuento = true;
+      } else {
+        this.hacerDescuento = false;
+      }
+
+      if (this.hacerDescuento) {
+        this.descuento = 10;
+        recuento =
+          recuento * (1 - this.descuento * 0.01) +
+          this.currentcliente.valorDomi;
+      } else recuento = recuento + this.currentcliente.valorDomi;
       return recuento;
     },
   },
@@ -411,14 +437,9 @@ export default {
       );
     },
     resetcliente() {
-      this.clienteId = null;
-      this.valorDomi = null;
-      this.notasPedido = null;
-      this.notasDir = null;
-      this.barrio = null;
-      this.direccion = null;
-      this.nombre = null;
-      this.numero = null;
+      this.descuento = 0;
+      this.hacerDescuento = false;
+      useClientesStore().resetCurrentClient();
     },
     toggleClienteCompleto() {
       this.clienteCompleto = !this.clienteCompleto;

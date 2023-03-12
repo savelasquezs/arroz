@@ -80,6 +80,19 @@ export const useClientesStore = defineStore('ClientesStore', {
 				(cliente) => cliente.docId !== id
 			);
 		},
+		resetCurrentClient(){
+			this.currentcliente={
+				docId: 'prueba',
+				numero: 'prueba',
+				nombre: 'prueba',
+				direccion: 'prueba',
+				barrio: 'prueba',
+				notasDir: 'prueba',
+				notasPedido: 'prueba',
+				valorDomi: 0,
+				numero: 0,
+			}
+		}
 	},
 	// other options...
 });
