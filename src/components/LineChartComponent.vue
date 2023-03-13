@@ -32,11 +32,24 @@ export default {
   components: { Line },
 
   computed: {
+    orderedData() {
+      return this.chartData.sort((a, b) => {
+        let fa = a.label.toLowerCase(),
+          fb = b.label.toLowerCase();
+        if (fa < fb) {
+          return -1;
+        }
+        if (fb < fa) {
+          return 1;
+        }
+        return 0;
+      });
+    },
     dates() {
-      return this.chartData.map((data) => data.label).reverse();
+      return this.orderedData.map((data) => data.label);
     },
     totals() {
-      return this.chartData.map((data) => data.valor).reverse();
+      return this.orderedData.map((data) => data.valor);
     },
     chartDataComputed() {
       const {

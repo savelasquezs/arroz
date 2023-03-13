@@ -66,7 +66,7 @@
 
 <script>
 import { mapState } from "pinia";
-import { useProductsStore } from "@/store/main";
+import { useProductsStore, useUtilsStore } from "@/store/main";
 import { db } from "../firebase/firebaseInit.js";
 import { doc, addDoc, updateDoc, collection } from "firebase/firestore";
 export default {
@@ -100,6 +100,7 @@ export default {
         console.log(`el producto fue guardado con el id : ${productRef.id}`);
         this.closeModal();
         useProductsStore().addProduct({ ...data, idDoc: productRef.id });
+        useUtilsStore().confirmAction("Producto Creado exitosamente");
       } catch (error) {
         console.log(error);
       }
@@ -112,10 +113,9 @@ export default {
           valor: this.valor,
           categoria: this.categoria,
         };
-        console.log(data);
-        console.log(this.idDoc);
+
         const docRef = await doc(db, "productos", this.idDoc);
-        console.log(docRef);
+
         const productRef = await updateDoc(docRef, data);
 
         this.closeModal();
@@ -126,6 +126,7 @@ export default {
           (product) => product.idDoc == this.idDoc
         );
         this.productDatabase[index] = { ...cambio, ...data };
+        useUtilsStore().confirmAction("Producto Actualizado exitosamente");
       } catch (error) {
         console.log(error);
       }

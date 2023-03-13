@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import { useClientesStore } from "@/store/main";
+import { useClientesStore, useUtilsStore } from "@/store/main";
 import { db } from "../firebase/firebaseInit.js";
 import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
 import { mapState } from "pinia";
@@ -183,6 +183,7 @@ export default {
         this.toogleClienteForm();
         useClientesStore().addCliente({ ...data, docId: docRef.id });
         useClientesStore().setCurrentCliente(docRef.id);
+        useUtilsStore().confirmAction("Cliente Guardado exitosamente");
       } catch (e) {
         console.error("Error adding document: ", e);
       }
@@ -211,6 +212,7 @@ export default {
         useClientesStore().setCurrentCliente(this.docId);
         this.toogleClienteForm();
         useClientesStore().toggleEditCliente();
+        useUtilsStore().confirmAction("Cliente Actualizado exitosamente");
       } catch (e) {
         console.error("Error adding document: ", e);
       }

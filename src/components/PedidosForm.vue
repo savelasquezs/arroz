@@ -230,7 +230,7 @@
             class="btn btn-lg btn-warning"
           >
             Salir</button
-          ><button v-if="!editClient" type="submit" class="btn btn-success">
+          ><button v-if="!editingPedido" type="submit" class="btn btn-success">
             Guardar</button
           ><button v-else type="submit" class="btn btn-success">
             Actualizar
@@ -245,6 +245,7 @@ import {
   useClientesStore,
   usePedidosStore,
   useProductsStore,
+  useUtilsStore,
 } from "@/store/main";
 import Swal from "sweetalert2";
 import ClienteForm from "@/components/ClienteForm.vue";
@@ -285,7 +286,12 @@ export default {
       "editClient",
       "currentcliente",
     ]),
-    ...mapState(usePedidosStore, ["pedidoFormOpen"]),
+    ...mapState(usePedidosStore, [
+      "pedidoFormOpen",
+      "pedidosDatabase",
+      "editingPedido",
+      "currentPedido",
+    ]),
     ...mapState(useProductsStore, ["productDatabase"]),
     direccionCompleta() {
       if (this.direccion) {
@@ -315,7 +321,10 @@ export default {
         recuento =
           recuento * (1 - this.descuento * 0.01) +
           this.currentcliente.valorDomi;
-      } else recuento = recuento + this.currentcliente.valorDomi;
+      } else {
+        recuento = recuento + this.currentcliente.valorDomi;
+        this.descuento = 0;
+      }
       return recuento;
     },
   },
@@ -388,15 +397,55 @@ export default {
         horaToma: new Date().getTime(),
         horaPreparado: null,
         horaDespachado: null,
+        descuento: this.descuento,
       };
 
       const docRef = await addDoc(collection(db, "pedidos"), data);
       console.log(docRef.id);
       usePedidosStore().addPedido({ ...data, docId: docRef.id });
       this.cerrarPedido();
+      useUtilsStore().confirmAction("Pedido Guardado Exitosamente");
+    },
+
+    async updatePedido() {
+      try {
+        const data = {
+          cliente: {
+            cedula: this.currentcliente.cedula,
+            valorDomi: this.currentcliente.valorDomi,
+            notasPedido: this.currentcliente.notasPedido,
+            direccion: this.currentcliente.direccionCompleta,
+            nombre: this.currentcliente.nombre,
+            numero: this.currentcliente.numero,
+          },
+          productos: this.productosList,
+          total: this.total,
+          descuento: this.descuento,
+        };
+
+        const docRef = await doc(db, "pedidos", this.currentPedido.docId);
+
+        const pedidoRef = await updateDoc(docRef, data);
+
+        this.cerrarPedido();
+        let cambio = this.pedidosDatabase.find(
+          (pedido) => pedido.docId == this.currentPedido.docId
+        );
+        let index = this.pedidosDatabase.findIndex(
+          (pedido) => pedido.docId == this.currentPedido.docId
+        );
+        this.pedidosDatabase[index] = { ...cambio, ...data };
+        useUtilsStore().confirmAction("Pedido Actualizado exitosamente");
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     submitEnviar() {
+      if (this.editingPedido) {
+        this.updatePedido();
+        return;
+      }
       this.guardarPedido();
     },
 
@@ -453,6 +502,9 @@ export default {
     cerrarPedido() {
       usePedidosStore().tooglePedidoFormOpen();
       this.resetcliente();
+      if (this.editingPedido) {
+        usePedidosStore().toggleEditPedido();
+      }
     },
 
     editarCliente(id) {
@@ -470,6 +522,25 @@ export default {
     currentcliente() {
       console.log(this.valorDomi);
     },
+  },
+  created() {
+    if (this.editingPedido) {
+      console.log(this.currentPedido);
+      this.productosList = this.currentPedido.productos;
+
+      const clienteId = this.clientDatabase.find(
+        (cliente) => cliente.cedula == this.currentPedido.cliente.cedula
+      );
+      if (clienteId) {
+        this.setcliente(clienteId.docId);
+      } else {
+        useUtilsStore().confirmAction(
+          "El cliente ha sido borrado, creelo nuevamente",
+          3000,
+          "error"
+        );
+      }
+    }
   },
 };
 </script>

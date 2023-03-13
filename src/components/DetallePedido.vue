@@ -21,8 +21,8 @@
           <hr />
           <hr />
           <h3 class="text-center">$ {{ pedido.total }}</h3>
-          <p>{{ pedido.fecha }}</p>
-          <p>{{ pedido.horaToma }}</p>
+          <p>{{ fechaLocal(pedido.horaToma) }}</p>
+          <p>{{ horaLocal(pedido.horaToma) }}</p>
           <p>
             Estado:
             <span class="mx-3" v-if="pedido.enPreparacion"
@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { usePedidosStore } from "@/store/main.js";
+import { usePedidosStore, useUtilsStore } from "@/store/main.js";
 import { Icon } from "@iconify/vue";
 
 export default {
@@ -89,6 +89,12 @@ export default {
   methods: {
     cerrarModal() {
       usePedidosStore().toggleDetallePedidoAbierto();
+    },
+    fechaLocal(fecha) {
+      return useUtilsStore().fechaLocal(fecha);
+    },
+    horaLocal(hora) {
+      return useUtilsStore().horaLocal(hora);
     },
   },
   components: {

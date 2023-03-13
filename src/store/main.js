@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 import { getDocs, collection } from 'firebase/firestore';
+import Swal from 'sweetalert2';
+import moment from 'moment';
 
 import { db } from '../firebase/firebaseInit';
 
@@ -80,8 +82,8 @@ export const useClientesStore = defineStore('ClientesStore', {
 				(cliente) => cliente.docId !== id
 			);
 		},
-		resetCurrentClient(){
-			this.currentcliente={
+		resetCurrentClient() {
+			this.currentcliente = {
 				docId: 'prueba',
 				numero: 'prueba',
 				nombre: 'prueba',
@@ -91,8 +93,8 @@ export const useClientesStore = defineStore('ClientesStore', {
 				notasPedido: 'prueba',
 				valorDomi: 0,
 				numero: 0,
-			}
-		}
+			};
+		},
 	},
 	// other options...
 });
@@ -158,11 +160,15 @@ export const usePedidosStore = defineStore('PedidosStore', {
 			deletingPedido: null,
 			currentPedido: null,
 			detallePedidoAbierto: null,
+			editingPedido: null,
 		};
 	},
 	actions: {
 		toggleDetallePedidoAbierto() {
 			this.detallePedidoAbierto = !this.detallePedidoAbierto;
+		},
+		toggleEditPedido() {
+			this.editingPedido = !this.editingPedido;
 		},
 
 		siguienteEstado(id) {
@@ -235,6 +241,29 @@ export const usePedidosStore = defineStore('PedidosStore', {
 			});
 
 			this.productLoaded = true;
+		},
+	},
+});
+
+export const useUtilsStore = defineStore('UtilsStore', {
+	state: () => {
+		return {};
+	},
+	actions: {
+		confirmAction(Mensaje, timer = 2000, icon = 'success') {
+			Swal.fire({
+				position: 'top-end',
+				icon,
+				title: Mensaje,
+				showConfirmButton: false,
+				timer,
+			});
+		},
+		fechaLocal(fecha) {
+			return moment(fecha).format('ll');
+		},
+		horaLocal(hora) {
+			return moment(hora).format('LT');
 		},
 	},
 });
