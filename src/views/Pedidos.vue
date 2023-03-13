@@ -132,12 +132,10 @@
 import { useClientesStore } from "../store/main";
 import ClienteForm from "@/components/ClienteForm.vue";
 import DetallePedido from "@/components/DetallePedido.vue";
-import moment from "moment";
-
 import Modal from "@/components/Modal.vue";
 import PedidosForm from "@/components/PedidosForm.vue";
 import { mapState } from "pinia";
-import { usePedidosStore } from "@/store/main";
+import { usePedidosStore, useUtilsStore } from "@/store/main";
 import { Icon } from "@iconify/vue";
 import Borrar from "@/components/Borrar.vue";
 import { doc, updateDoc } from "firebase/firestore";
@@ -168,18 +166,17 @@ export default {
     ]),
   },
   methods: {
-    fechaLocal(fecha) {
-      return moment(fecha).format("ll");
-    },
-    horaLocal(hora) {
-      return moment(hora).format("LT");
-    },
     createPedido() {
       usePedidosStore().tooglePedidoFormOpen();
     },
     borrarPedido(id) {
       usePedidosStore().setCurrentPedido(id);
       usePedidosStore().toggleDelete();
+    },
+    editarPedido(id) {
+      usePedidosStore().setCurrentPedido(id);
+      usePedidosStore().toggleEditPedido();
+      usePedidosStore().tooglePedidoFormOpen();
     },
     verDetalles(id) {
       console.log(id);
@@ -193,6 +190,12 @@ export default {
     async actualizarEstado(id) {
       const docRef = await doc(db, "pedidos", id);
       await updateDoc(docRef, this.siguienteEstado(id));
+    },
+    fechaLocal(fecha) {
+      return useUtilsStore().fechaLocal(fecha);
+    },
+    horaLocal(hora) {
+      return useUtilsStore().horaLocal(hora);
     },
   },
   watch: {
