@@ -15,6 +15,14 @@
     <h2>Tabla de Pedidos</h2>
     <hr />
     <div class="input-group mb-3 d-flex justify-content-end">
+      <button
+        class="btn btn-danger"
+        @click="borrarfiltros"
+        v-if="date || filtroPorNombre"
+      >
+        <Icon icon="game-icons:broom" color="white" width="30" height="30" />
+        Borrar filtros
+      </button>
       <button class="btn btn-success" @click="createPedido">
         <span
           ><svg
@@ -31,14 +39,35 @@
         Nuevo pedido
       </button>
     </div>
-    <div class="input-group mb-5 h-5">
-      <input
-        type="text"
-        v-model="filtroPedidos"
-        @keyup="filtradosPedidos"
-        class="form-control"
-        placeholder="  ...Buscar"
-      />
+    <div class="row">
+      <div class="mb-5 col">
+        <input
+          type="text"
+          v-model="filtroPorNombre"
+          @keyup="filtrar"
+          class="form-control"
+          placeholder="  ...Filtra por Nombre"
+        />
+      </div>
+      <div class="col">
+        <VueDatePicker
+          placeholder="Filtra por Fecha"
+          range
+          v-model="date"
+          close-on-scroll
+          auto-apply
+          :highlight-week-days="[3]"
+          hide-offset-dates
+          :year-range="[2023, 2100]"
+          :enable-time-picker="false"
+          format="dd/MM/yyyy"
+          locale="es"
+          :preset-ranges="presetDateRanges"
+          ><template #yearly="{ label, range, presetDateRange }">
+            <span @click="presetDateRange(range)">{{ label }}</span>
+          </template></VueDatePicker
+        >
+      </div>
     </div>
     <table class="table">
       <thead>
@@ -53,7 +82,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(pedido, index) in pedidosDatabase" :key="index">
+        <tr v-for="(pedido, index) in filtrados" :key="index">
           <td>{{ pedido.cliente.nombre }}</td>
           <td>{{ pedido.cliente.direccion.split(",")[0] }}</td>
           <td>{{ pedido.total }}</td>
@@ -129,6 +158,8 @@
 </template>
 
 <script>
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 import { useClientesStore } from "../store/main";
 import ClienteForm from "@/components/ClienteForm.vue";
 import DetallePedido from "@/components/DetallePedido.vue";
@@ -137,14 +168,47 @@ import PedidosForm from "@/components/PedidosForm.vue";
 import { mapState } from "pinia";
 import { usePedidosStore, useUtilsStore } from "@/store/main";
 import { Icon } from "@iconify/vue";
+import moment from "moment";
 import Borrar from "@/components/Borrar.vue";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/firebaseInit.js";
+
+import {
+  endOfMonth,
+  endOfYear,
+  startOfMonth,
+  startOfYear,
+  subMonths,
+} from "date-fns";
 export default {
   name: "home",
   data() {
     return {
-      filtroPedidos: [],
+      filtroPorNombre: "",
+      date: "",
+      presetDateRanges: [
+        { label: "Hoy", range: [new Date(), new Date()] },
+        {
+          label: "Ayer",
+          range: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+        },
+        {
+          label: "Este Mes",
+          range: [startOfMonth(new Date()), endOfMonth(new Date())],
+        },
+        {
+          label: "Mes Pasado",
+          range: [
+            startOfMonth(subMonths(new Date(), 1)),
+            endOfMonth(subMonths(new Date(), 1)),
+          ],
+        },
+        {
+          label: "Este Año",
+          range: [startOfYear(new Date()), endOfYear(new Date())],
+        },
+      ],
+      filtrados: [],
     };
   },
 
@@ -155,6 +219,7 @@ export default {
     Icon,
     Borrar,
     DetallePedido,
+    VueDatePicker,
   },
   computed: {
     ...mapState(usePedidosStore, [
@@ -166,8 +231,40 @@ export default {
     ]),
   },
   methods: {
+    borrarfiltros() {
+      this.date = "";
+      this.filtroPorNombre = "";
+    },
     createPedido() {
       usePedidosStore().tooglePedidoFormOpen();
+    },
+
+    filtrar() {
+      if (!this.date && this.filtroPorNombre == "") {
+        console.log("vacios");
+        console.log(this.pedidosDatabase);
+        this.filtrados = [...this.pedidosDatabase];
+        console.log(this.filtrados[0]);
+        return;
+      }
+      if (!this.date && this.filtroPorNombre !== "") {
+        this.filtrados = this.pedidosDatabase.filter((pedido) =>
+          pedido.cliente.nombre
+            .toLowerCase()
+            .includes(this.filtroPorNombre.toLocaleLowerCase())
+        );
+        return;
+      }
+
+      this.filtrados = this.pedidosDatabase.filter(
+        (pedido) =>
+          moment(pedido.horaToma).valueOf() >=
+            moment(this.date[0]).subtract(1, "days").valueOf() &&
+          moment(pedido.horaToma).valueOf() <= moment(this.date[1]).valueOf() &&
+          pedido.cliente.nombre
+            .toLowerCase()
+            .includes(this.filtroPorNombre.toLocaleLowerCase())
+      );
     },
     borrarPedido(id) {
       usePedidosStore().setCurrentPedido(id);
@@ -199,7 +296,15 @@ export default {
     },
   },
   watch: {
-    pedidosDatabase() {},
+    pedidosDatabase() {
+      this.filtrar();
+    },
+    date() {
+      this.filtrar();
+    },
+  },
+  created() {
+    this.filtrar();
   },
 };
 </script>
