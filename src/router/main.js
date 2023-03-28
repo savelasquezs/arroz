@@ -1,8 +1,4 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import Clientes from '../views/Clientes.vue';
-import Pedidos from '../views/Pedidos.vue';
-import Productos from '../views/Productos.vue';
-import Home from '../views/Home.vue';
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -10,22 +6,27 @@ const routes = [
 	{
 		path: '/pedidos/todos',
 		name: 'Pedidos',
-		component: Pedidos,
+		component: () => import('../views/Pedidos.vue'),
+	},
+	{
+		path: '/gastos',
+		name: 'Gastos',
+		component: () => import('../views/Gastos.vue'),
 	},
 	{
 		path: '/clientes',
 		name: 'Clientes',
-		component: Clientes,
+		component: () => import('../views/Clientes.vue'),
 	},
 	{
 		path: '/productos',
 		name: 'Productos',
-		component: Productos,
+		component: () => import('../views/Productos.vue'),
 	},
 	{
 		path: '/home',
 		name: 'Home',
-		component: Home,
+		component: () => import('../views/Home.vue'),
 	},
 	// {
 	// 	path: '/pedidos/:pedidoId',
