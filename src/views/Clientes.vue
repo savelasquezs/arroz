@@ -94,6 +94,7 @@ import { Icon } from "@iconify/vue";
 import { useClientesStore } from "../store/main";
 import Navbar from "@/components/Navbar.vue";
 import { mapState } from "pinia";
+import buttonAdd from "../components/buttonAdd.vue";
 export default {
   name: "home",
   data() {
@@ -109,6 +110,7 @@ export default {
     Modal,
     DetalleCliente,
     Icon,
+    buttonAdd,
   },
   methods: {
     filtradosClientes() {

@@ -12,6 +12,7 @@
         class="btn-close"
         data-bs-dismiss="offcanvas"
         aria-label="Close"
+        @click="borrarDatos"
       ></button>
     </div>
     <div class="offcanvas-body">
@@ -21,23 +22,22 @@
           class="form-control"
           id="floatingInput"
           placeholder="Nombre Gasto"
+          required
         />
         <label for="floatingInput">Nombre Gasto</label>
       </div>
-      <div class="form-floating">
-        <select
-          class="form-select"
-          id="floatingSelect"
-          aria-label="Floating label select example"
-        >
-          <option selected>Open this select menu</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
-        </select>
-        <label for="floatingSelect">categoria</label>
+      <div class="form-floating mb-3">
+        <input
+          type="number"
+          class="form-control"
+          id="valorGasto"
+          placeholder="Valor Gasto"
+          required
+        />
+        <label for="valorGasto">Valor Gasto</label>
       </div>
 
+      <autocomplete-drop-down :lista="lista" titulo="Categoria" />
       <div class="form-floating">
         <textarea
           class="form-control"
@@ -51,7 +51,17 @@
 </template>
 
 <script>
-export default {};
+import AutocompleteDropDown from "./AutocompleteDropDown.vue";
+export default {
+  data() {
+    return {
+      lista: ["algo", "luna", "carajo", "gata", "daños"],
+    };
+  },
+  components: {
+    AutocompleteDropDown,
+  },
+};
 </script>
 
 <style scoped>
