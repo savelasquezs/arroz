@@ -9,11 +9,11 @@
           :placeholder="titulo"
           v-model="filtro"
           required
+          ref="autocompleteInput"
           @focus="typing = true"
           @blur="validate"
         />
         <label for="floatingInput">{{ titulo }}</label>
-        <p class="text-danger">{{ error }}</p>
       </div>
 
       <ul class="list-group ullist" v-if="listaFiltrada && typing">
@@ -59,13 +59,9 @@ export default {
     },
     validate() {
       setTimeout(() => {
-        console.log(this.filtro);
         this.typing = false;
-        if (!this.lista.some((item) => item == this.filtro)) {
-          this.error = "El elemento no está en la lista";
-        } else {
-          this.error = "";
-        }
+        const elementoInLista = this.lista.some((item) => item == this.filtro);
+        this.$emit("catSeleccionada", this.filtro, elementoInLista);
       }, 200);
     },
   },
