@@ -23,9 +23,7 @@
       <template #tipos>
         <h1>tipos</h1>
       </template>
-      <template #categorias>
-        <h1>Categorias</h1>
-      </template>
+      <template #categorias><categorias /> </template>
     </tabs>
   </div>
 </template>
@@ -33,10 +31,12 @@
 <script>
 import { Icon } from "@iconify/vue";
 import GastoForm from "../components/gastoForm.vue";
-import buttonAdd from "../components/buttonAdd.vue";
 import Tabs from "../components/Tabs.vue";
+import Categorias from "../components/Categorias.vue";
+import buttonAdd from '../components/buttonAdd.vue';
 export default {
-  components: { Icon, GastoForm, buttonAdd, Tabs },
+  components: { Icon, GastoForm, Tabs, Categorias, buttonAdd },
+  methods: {},
 };
 </script>
 

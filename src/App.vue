@@ -17,6 +17,8 @@ import {
   useProductsStore,
   usePedidosStore,
 } from "../src/store/main";
+
+import { useCategorias } from "./store/gastos";
 import Navbar from "@/components/Navbar.vue";
 import Modal from "@/components/Modal.vue";
 import Pedidos from "../src/views/Pedidos.vue";
@@ -42,6 +44,7 @@ export default {
     useClientesStore().getInvoices();
     useProductsStore().getProducts();
     usePedidosStore().getPedidos();
+    useCategorias().getCategories();
   },
 };
 </script>

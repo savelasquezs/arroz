@@ -1,24 +1,26 @@
 <template>
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button
-        class="accordion-button"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#collapseOne"
-        aria-expanded="true"
-        aria-controls="collapseOne"
+  <div class="accordion mt-5" id="accordion-container">
+    <div class="accordion-item" v-for="(item, index) in list" :key="index">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          :data-bs-target="'#' + item.categorie + index"
+          aria-expanded="true"
+          :aria-controls="item.categorie + index"
+        >
+          {{ item.categorie }}
+        </button>
+      </h2>
+      <div
+        :id="item.categorie + index"
+        class="accordion-collapse collapse"
+        data-bs-parent="#accordion-container"
       >
-        {{ title }}
-      </button>
-    </h2>
-    <div
-      id="collapseOne"
-      class="accordion-collapse collapse show"
-      data-bs-parent="#accordionExample"
-    >
-      <div class="accordion-body">
-        <slot />
+        <div class="accordion-body">
+          {{ item.description }}
+        </div>
       </div>
     </div>
   </div>
@@ -26,7 +28,7 @@
 
 <script>
 export default {
-  props: { title: String },
+  props: { list: Array },
 };
 </script>
 
