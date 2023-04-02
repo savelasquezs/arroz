@@ -1,4 +1,11 @@
 <template>
+  <Modal v-if="deletingCat"
+    ><Borrar
+      :itemId="currentCat.docId"
+      collection="categories"
+      :itemName="currentCat.categorie"
+      v-if="deletingCat"
+  /></Modal>
   <div class="accordion mt-5" id="accordion-container">
     <div class="accordion-item" v-for="(item, index) in list" :key="index">
       <h2 class="accordion-header">
@@ -19,7 +26,18 @@
         data-bs-parent="#accordion-container"
       >
         <div class="accordion-body">
-          {{ item.description }}
+          <Icon
+            icon="ph:trash-fill"
+            color="red"
+            width="24"
+            height="24"
+            class="float-end"
+            role="button"
+            @click="deleteCat(item.docId)"
+          />
+          <h5>
+            {{ item.description }}
+          </h5>
         </div>
       </div>
     </div>
@@ -27,8 +45,30 @@
 </template>
 
 <script>
+import { Icon } from "@iconify/vue";
+import Modal from "./Modal.vue";
+import Borrar from "./Borrar.vue";
+import { mapState } from "pinia";
+import { useCategorias } from "../store/gastos";
 export default {
   props: { list: Array },
+  components: {
+    Modal,
+    Borrar,
+    Icon,
+  },
+  data() {
+    return {};
+  },
+  methods: {
+    deleteCat(id) {
+      useCategorias().setCurrent(id);
+      useCategorias().toogleDelete();
+    },
+  },
+  computed: {
+    ...mapState(useCategorias, ["deletingCat", "currentCat"]),
+  },
 };
 </script>
 

@@ -29,6 +29,7 @@ import {
   usePedidosStore,
   useUtilsStore,
 } from "@/store/main";
+import { useCategorias } from "../store/gastos";
 import Swal from "sweetalert2";
 
 import { mapState } from "pinia";
@@ -50,6 +51,9 @@ export default {
           break;
         case "pedidos":
           usePedidosStore().toggleDelete();
+          break;
+        case "categories":
+          useCategorias().toogleDelete();
           break;
 
         default:
@@ -76,6 +80,10 @@ export default {
         case "pedidos":
           console.log(this.collection);
           usePedidosStore().deletePedido(this.itemId);
+          break;
+        case "categories":
+          console.log(this.collection);
+          useCategorias().deleteCat(this.itemId);
           break;
 
         default:

@@ -7,6 +7,8 @@ export const useCategorias = defineStore('categorias', {
 	state: () => {
 		return {
 			allCategories: [],
+			deletingCat: null,
+			currentCat: null,
 		};
 	},
 	actions: {
@@ -22,8 +24,17 @@ export const useCategorias = defineStore('categorias', {
 				}
 			});
 		},
+		toogleDelete() {
+			this.deletingCat = !this.deletingCat;
+		},
+		setCurrent(id) {
+			this.currentCat = this.allCategories.find((cat) => cat.docId == id);
+		},
 		addCategoria(object) {
 			this.allCategories.push(object);
+		},
+		deleteCat(id) {
+			this.allCategories = this.allCategories.filter((cat) => cat.docId != id);
 		},
 	},
 });

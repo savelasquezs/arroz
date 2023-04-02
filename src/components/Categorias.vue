@@ -51,6 +51,7 @@ import Modal from "./Modal.vue";
 import { useCategorias, useUtilsGastos } from "../store/gastos";
 import Acordion from "./Acordion.vue";
 import { mapState } from "pinia";
+import { useUtilsStore } from "../store/main";
 
 export default {
   components: {
@@ -73,6 +74,14 @@ export default {
       this.modal = false;
     },
     async agregarCategoria() {
+      if (this.categorieToCreate == "" || this.descriptionCategorie == "") {
+        useUtilsStore().confirmAction(
+          "Los campos no pueden ir vacios",
+          2000,
+          "error"
+        );
+        return;
+      }
       const data = {
         categorie: this.categorieToCreate,
         description: this.descriptionCategorie,
