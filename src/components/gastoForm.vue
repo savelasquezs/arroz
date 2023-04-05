@@ -26,19 +26,10 @@
         />
         <label for="floatingInput">Nombre Gasto</label>
       </div>
-      <div class="form-floating mb-3">
-        <input
-          type="number"
-          class="form-control"
-          id="valorGasto"
-          placeholder="Valor Gasto"
-          required
-        />
-        <label for="valorGasto">Valor Gasto</label>
-      </div>
+
       <autocomplete-drop-down
         ref="autocomplete"
-        :lista="lista"
+        :lista="allCategories.map((cat) => cat.categorie)"
         titulo="Categoria"
         @catSeleccionada="setCategoria"
       />
@@ -74,10 +65,11 @@
 import Swal from "sweetalert2";
 import Acordion from "./Acordion.vue";
 import AutocompleteDropDown from "./AutocompleteDropDown.vue";
+import { mapState } from "pinia";
+import { useCategorias } from "../store/gastos";
 export default {
   data() {
     return {
-      lista: ["algo", "luna", "carajo", "gata", "daños"],
       categoria: "",
       categoriaNoValida: null,
       error: "",
@@ -145,6 +137,9 @@ export default {
       this.error = "";
       this.categoriaNoValida = false;
     },
+  },
+  computed: {
+    ...mapState(useCategorias, ["allCategories"]),
   },
 };
 </script>

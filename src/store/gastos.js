@@ -1,7 +1,13 @@
 import { db } from '../firebase/firebaseInit';
 import { defineStore } from 'pinia';
 import { useUtilsStore } from './main';
-import { getDocs, collection, addDoc } from 'firebase/firestore';
+import {
+	getDocs,
+	collection,
+	addDoc,
+	updateDoc,
+	doc,
+} from 'firebase/firestore';
 
 export const useCategorias = defineStore('categorias', {
 	state: () => {
@@ -9,9 +15,13 @@ export const useCategorias = defineStore('categorias', {
 			allCategories: [],
 			deletingCat: null,
 			currentCat: null,
+			editingCat: null,
 		};
 	},
 	actions: {
+		toggleEditingd() {
+			this.editingCat = !this.editingCat;
+		},
 		async getCategories() {
 			const querySnapshot = await getDocs(collection(db, 'categories'));
 			querySnapshot.forEach((doc) => {
@@ -57,6 +67,27 @@ export const useUtilsGastos = defineStore('utilsGastos', {
 					break;
 			}
 			useUtilsStore().confirmAction(`${mensaje}`);
+		},
+		async updateElement(data, tabla, id) {
+			const docRef = doc(db, tabla, id);
+			await updateDoc(docRef, data);
+			let index;
+			let cambio;
+			let mensaje;
+			switch (tabla) {
+				case 'categories':
+					index = useCategorias().allCategories.findIndex(
+						(cat) => cat.docId == id
+					);
+					cambio = useCategorias().allCategories.find((cat) => cat.docId == id);
+					useCategorias().allCategories[index] = { ...cambio, ...data };
+					mensaje = 'Categoria actualizada exitosamente';
+					break;
+
+				default:
+					break;
+			}
+			useUtilsStore().confirmAction(mensaje);
 		},
 	},
 });

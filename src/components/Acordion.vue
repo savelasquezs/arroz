@@ -35,6 +35,15 @@
             role="button"
             @click="deleteCat(item.docId)"
           />
+          <Icon
+            icon="material-symbols:edit"
+            color="orange"
+            width="24"
+            height="24"
+            role="button"
+            class="float-end mx-2"
+            @click="editCat(item.docId)"
+          />
           <h5>
             {{ item.description }}
           </h5>
@@ -64,6 +73,10 @@ export default {
     deleteCat(id) {
       useCategorias().setCurrent(id);
       useCategorias().toogleDelete();
+    },
+    editCat(id) {
+      useCategorias().setCurrent(id);
+      this.$emit("editando", id);
     },
   },
   computed: {

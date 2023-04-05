@@ -8,19 +8,19 @@
   <div class="card px-5 py-3">
     <tabs>
       <template #gastosDia>
-        <button-add
-          class="float-end mt-3"
-          mensaje="Nuevo Gasto de hoy"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasTop"
-          aria-controls="offcanvasTop"
-        />
         <h1>del</h1>
       </template>
       <template #todos>
         <h1>todos</h1>
       </template>
       <template #tipos>
+        <button-add
+          class="float-end mt-3"
+          mensaje="Crear nuevo tipo de gasto"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasTop"
+          aria-controls="offcanvasTop"
+        />
         <h1>tipos</h1>
       </template>
       <template #categorias><categorias /> </template>
@@ -33,7 +33,7 @@ import { Icon } from "@iconify/vue";
 import GastoForm from "../components/gastoForm.vue";
 import Tabs from "../components/Tabs.vue";
 import Categorias from "../components/Categorias.vue";
-import buttonAdd from '../components/buttonAdd.vue';
+import buttonAdd from "../components/buttonAdd.vue";
 export default {
   components: { Icon, GastoForm, Tabs, Categorias, buttonAdd },
   methods: {},

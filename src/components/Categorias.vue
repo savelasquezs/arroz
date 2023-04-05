@@ -4,7 +4,7 @@
     <button-add mensaje="Agregar categoria" @click="abrirModal" />
   </div>
 
-  <acordion :list="allCategories" />
+  <acordion :list="allCategories" @editando="abrirEditCat" />
 
   <modal v-if="modal">
     <div class="card px-5 py-5">
@@ -33,7 +33,18 @@
           </div>
         </div>
         <div class="d-flex justify-content-between mt-5">
-          <button class="btn btn-success" @click.prevent="agregarCategoria">
+          <button
+            class="btn btn-success"
+            @click.prevent="editarCat"
+            v-if="editingCat"
+          >
+            Actualizar
+          </button>
+          <button
+            class="btn btn-success"
+            v-else
+            @click.prevent="agregarCategoria"
+          >
             Agregar
           </button>
           <button class="btn btn-danger" @click.prevent="cerrarModal">
@@ -67,12 +78,33 @@ export default {
     };
   },
   methods: {
+    abrirEditCat() {
+      useCategorias().toggleEditingd();
+      this.abrirModal();
+    },
+    editarCat() {
+      const id = this.currentCat.docId;
+      const data = {
+        categorie: this.categorieToCreate,
+        description: this.descriptionCategorie,
+      };
+      useUtilsGastos().updateElement(data, "categories", id);
+      this.cerrarModal();
+    },
     abrirModal() {
       this.modal = true;
+      this.categorieToCreate = this.editingCat ? this.currentCat.categorie : "";
+      this.descriptionCategorie = this.editingCat
+        ? this.currentCat.description
+        : "";
     },
     cerrarModal() {
       this.modal = false;
+      if (this.editingCat) {
+        useCategorias().toggleEditingd();
+      }
     },
+
     async agregarCategoria() {
       if (this.categorieToCreate == "" || this.descriptionCategorie == "") {
         useUtilsStore().confirmAction(
@@ -91,7 +123,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(useCategorias, ["allCategories"]),
+    ...mapState(useCategorias, ["allCategories", "editingCat", "currentCat"]),
   },
   watch: {
     allCategories() {
