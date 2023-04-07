@@ -82,6 +82,7 @@ export default {
   computed: {
     ...mapState(useCategorias, ["deletingCat", "currentCat"]),
   },
+  emits: ["editando"],
 };
 </script>
 

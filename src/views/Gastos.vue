@@ -1,5 +1,4 @@
 <template>
-  <gasto-form />
   <div class="container gastosCont">
     <h2>Gastos</h2>
     <hr />
@@ -13,7 +12,9 @@
       <template #todos>
         <h1>todos</h1>
       </template>
+      <template #categorias><categorias /> </template>
       <template #tipos>
+        <gasto-form />
         <button-add
           class="float-end mt-3"
           mensaje="Crear nuevo tipo de gasto"
@@ -23,7 +24,6 @@
         />
         <h1>tipos</h1>
       </template>
-      <template #categorias><categorias /> </template>
     </tabs>
   </div>
 </template>

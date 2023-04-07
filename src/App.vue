@@ -6,6 +6,9 @@
   <Modal v-if="clienteFormShowed">
     <ClienteForm v-if="clienteFormShowed" />
   </Modal>
+  <Modal v-else-if="formOpenned">
+    <CatForm v-if="formOpenned" />
+  </Modal>
 </template>
 <script>
 import ClienteForm from "@/components/ClienteForm.vue";
@@ -22,6 +25,7 @@ import { useCategorias } from "./store/gastos";
 import Navbar from "@/components/Navbar.vue";
 import Modal from "@/components/Modal.vue";
 import Pedidos from "../src/views/Pedidos.vue";
+import CatForm from "./components/CatForm.vue";
 
 export default {
   components: {
@@ -29,10 +33,12 @@ export default {
     Pedidos,
     ClienteForm,
     Modal,
+    CatForm,
   },
 
   computed: {
     ...mapState(useClientesStore, ["clienteFormShowed"]),
+    ...mapState(useCategorias, ["formOpenned"]),
   },
 
   methods: {

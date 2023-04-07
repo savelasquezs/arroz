@@ -22,11 +22,25 @@
           class="form-control"
           id="floatingInput"
           placeholder="Nombre Gasto"
+          v-model="nombreGasto"
           required
         />
         <label for="floatingInput">Nombre Gasto</label>
       </div>
-
+      <div class="form-floating mb-3">
+        <select
+          class="form-select"
+          id="floatingSelect"
+          aria-label="Floating label select example"
+          v-model="medida"
+        >
+          <option value="Lb">Libra</option>
+          <option value="Kg">Kilo</option>
+          <option value="Pq">Paquete</option>
+          <option value="Un">Unidades</option>
+        </select>
+        <label for="floatingSelect">Unidad de Medida</label>
+      </div>
       <autocomplete-drop-down
         ref="autocomplete"
         :lista="allCategories.map((cat) => cat.categorie)"
@@ -38,7 +52,7 @@
       <button
         class="btn btn-outline-info mb-3"
         v-if="categoriaNoValida"
-        @click="confirmarAddCategoria(this.categoria)"
+        @click="addcat"
       >
         Agregar Categoria
       </button>
@@ -48,6 +62,7 @@
           class="form-control"
           placeholder="anotaciones"
           id="floatingTextarea"
+          v-model="anotaciones"
         ></textarea>
         <label for="floatingTextarea">Anotaciones</label>
       </div>
@@ -72,7 +87,10 @@ export default {
     return {
       categoria: "",
       categoriaNoValida: null,
+      medida: "",
       error: "",
+      anotaciones: "",
+      nombreGasto: "",
     };
   },
   components: {
@@ -91,51 +109,18 @@ export default {
         }
       }
     },
-    confirmarAddCategoria(categoria) {
-      const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-          confirmButton: "btn btn-success",
-          cancelButton: "btn btn-danger",
-        },
-        buttonsStyling: false,
-      });
-
-      swalWithBootstrapButtons
-        .fire({
-          title: `Seguro que quieres guardar "${categoria}" como una nueva categoria?`,
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonText: "Si, agregar!",
-          cancelButtonText: "No, cancelar!",
-          reverseButtons: true,
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            this.lista.push(categoria);
-            this.categoriaNoValida = false;
-            this.error = "";
-            swalWithBootstrapButtons.fire(
-              "Categoria Guardada!",
-              `${categoria} ha sido guardada como una nueva categoria`,
-              "success"
-            );
-          } else if (
-            /* Read more about handling dismissals below */
-            result.dismiss === Swal.DismissReason.cancel
-          ) {
-            swalWithBootstrapButtons.fire(
-              "Cancelado",
-              "Hemos cancelado le guardado de la categoria :)",
-              "error"
-            );
-          }
-        });
+    addcat() {
+      useCategorias().toggleForm();
     },
+
     borrarDatos() {
       this.$refs.autocomplete.filtro = "";
       this.categoria = "";
       this.error = "";
       this.categoriaNoValida = false;
+      this.medida = "";
+      this.nombreGasto = "";
+      this.anotaciones = "";
     },
   },
   computed: {

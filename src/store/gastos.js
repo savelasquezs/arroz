@@ -16,9 +16,13 @@ export const useCategorias = defineStore('categorias', {
 			deletingCat: null,
 			currentCat: null,
 			editingCat: null,
+			formOpenned: null,
 		};
 	},
 	actions: {
+		toggleForm() {
+			this.formOpenned = !this.formOpenned;
+		},
 		toggleEditingd() {
 			this.editingCat = !this.editingCat;
 		},
