@@ -23,6 +23,7 @@
           aria-controls="offcanvasTop"
         />
         <h1>tipos</h1>
+        <tipo-gasto />
       </template>
     </tabs>
   </div>
@@ -34,8 +35,9 @@ import GastoForm from "../components/gastoForm.vue";
 import Tabs from "../components/Tabs.vue";
 import Categorias from "../components/Categorias.vue";
 import buttonAdd from "../components/buttonAdd.vue";
+import TipoGasto from "../components/TipoGasto.vue";
 export default {
-  components: { Icon, GastoForm, Tabs, Categorias, buttonAdd },
+  components: { Icon, GastoForm, Tabs, Categorias, buttonAdd, TipoGasto },
   methods: {},
 };
 </script>

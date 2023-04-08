@@ -53,6 +53,54 @@ export const useCategorias = defineStore('categorias', {
 	},
 });
 
+export const useTipoGastos = defineStore('tipoGastos', {
+	state: () => {
+		return {
+			allTipoGastos: [],
+			deletingTipoGasto: null,
+			currentTipoGasto: null,
+			editingTipoGasto: null,
+			formOpenned: null,
+		};
+	},
+	actions: {
+		toggleEditing() {
+			this.editingTipoGasto = !this.editingTipoGasto;
+		},
+		toggleDeleting() {
+			this.deletingTipoGasto = !this.deletingTipoGasto;
+		},
+		toggleForm() {
+			this.formOpenned = !this.formOpenned;
+		},
+		setCurrent(id) {
+			this.currentTipoGasto = this.allTipoGastos.find(
+				(gasto) => gasto.docId == id
+			);
+		},
+		addTipoGasto(object) {
+			this.allTipoGastos.push(object);
+		},
+		deleteTipoGasto(id) {
+			this.allTipoGastos = this.allTipoGastos.filter(
+				(gasto) => gasto.docId != id
+			);
+		},
+		async getTipoGastos() {
+			const allTipo = await getDocs(collection(db, 'tipoGastos'));
+			allTipo.forEach((doc) => {
+				if (!this.allTipoGastos.some((gasto) => gasto.docId == doc.id)) {
+					const data = {
+						docId: doc.id,
+						...doc.data(),
+					};
+					this.allTipoGastos.push(data);
+				}
+			});
+		},
+	},
+});
+
 export const useUtilsGastos = defineStore('utilsGastos', {
 	state: () => {
 		return {};
@@ -65,7 +113,11 @@ export const useUtilsGastos = defineStore('utilsGastos', {
 			switch (tabla) {
 				case 'categories':
 					useCategorias().addCategoria({ ...data, docId: docRef.id });
-					mensaje = 'Categoria Guardad exitosamente';
+					mensaje = 'Categoria Guardado exitosamente';
+					break;
+				case 'tipoGastos':
+					useTipoGastos().addTipoGasto({ ...data, docId: docRef.id });
+					mensaje = 'Tipo de gasto guardado exitosamente';
 					break;
 				default:
 					break;

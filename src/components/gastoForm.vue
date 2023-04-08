@@ -13,6 +13,7 @@
         data-bs-dismiss="offcanvas"
         aria-label="Close"
         @click="borrarDatos"
+        ref="botonCerrar"
       ></button>
     </div>
     <div class="offcanvas-body position-relative">
@@ -69,6 +70,7 @@
 
       <button
         class="btn btn-success position-absolute bottom-0 mb-5 end-0 mx-3"
+        @click="guardarTipoGasto"
       >
         Guardar Gasto
       </button>
@@ -81,7 +83,8 @@ import Swal from "sweetalert2";
 import Acordion from "./Acordion.vue";
 import AutocompleteDropDown from "./AutocompleteDropDown.vue";
 import { mapState } from "pinia";
-import { useCategorias } from "../store/gastos";
+import { useCategorias, useUtilsGastos } from "../store/gastos";
+import { useUtilsStore } from "../store/main";
 export default {
   data() {
     return {
@@ -114,6 +117,7 @@ export default {
     },
 
     borrarDatos() {
+      console.log("borrado");
       this.$refs.autocomplete.filtro = "";
       this.categoria = "";
       this.error = "";
@@ -121,6 +125,26 @@ export default {
       this.medida = "";
       this.nombreGasto = "";
       this.anotaciones = "";
+    },
+    guardarTipoGasto() {
+      if (this.categoriaNoValida) return;
+      if (this.nombreGasto == "" || this.categoria == "" || this.medida == "") {
+        useUtilsStore().confirmAction(
+          "Los campos no pueden ir vacios",
+          2000,
+          "error"
+        );
+        return;
+      }
+      const data = {
+        categoria: this.categoria,
+        nombre: this.nombreGasto,
+        medida: this.medida,
+        anotaciones: this.anotaciones,
+      };
+
+      useUtilsGastos().saveElement(data, "tipoGastos");
+      this.$refs.botonCerrar.click();
     },
   },
   computed: {
