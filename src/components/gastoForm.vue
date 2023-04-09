@@ -1,4 +1,11 @@
 <template>
+  <Modal v-if="deletingTipoGasto"
+    ><Borrar
+      :itemId="currentTipoGasto.docId"
+      collection="tipoGastos"
+      :itemName="currentTipoGasto.nombre"
+      v-if="deletingTipoGasto"
+  /></Modal>
   <div
     class="offcanvas offcanvas-end"
     tabindex="-1"
@@ -71,6 +78,15 @@
       <button
         class="btn btn-success position-absolute bottom-0 mb-5 end-0 mx-3"
         @click="guardarTipoGasto"
+        v-if="editingTipoGasto"
+      >
+        Actualizar Registro
+      </button>
+
+      <button
+        v-else
+        class="btn btn-success position-absolute bottom-0 mb-5 end-0 mx-3"
+        @click="guardarTipoGasto"
       >
         Guardar Gasto
       </button>
@@ -83,8 +99,10 @@ import Swal from "sweetalert2";
 import Acordion from "./Acordion.vue";
 import AutocompleteDropDown from "./AutocompleteDropDown.vue";
 import { mapState } from "pinia";
-import { useCategorias, useUtilsGastos } from "../store/gastos";
+import { useCategorias, useTipoGastos, useUtilsGastos } from "../store/gastos";
 import { useUtilsStore } from "../store/main";
+import Modal from "./Modal.vue";
+import Borrar from "./Borrar.vue";
 export default {
   data() {
     return {
@@ -99,6 +117,8 @@ export default {
   components: {
     AutocompleteDropDown,
     Acordion,
+    Modal,
+    Borrar,
   },
   methods: {
     setCategoria(nombre, elementoInLista) {
@@ -117,14 +137,22 @@ export default {
     },
 
     borrarDatos() {
-      console.log("borrado");
       this.$refs.autocomplete.filtro = "";
-      this.categoria = "";
       this.error = "";
       this.categoriaNoValida = false;
       this.medida = "";
       this.nombreGasto = "";
       this.anotaciones = "";
+      this.categoria = "";
+      if (this.editingTipoGasto) {
+        useTipoGastos().toggleEditing();
+      }
+    },
+    setEditting() {
+      this.$refs.autocomplete.filtro = this.currentTipoGasto.categoria;
+      this.nombreGasto = this.currentTipoGasto.nombre;
+      this.medida = this.currentTipoGasto.medida;
+      this.anotaciones = this.currentTipoGasto.anotaciones;
     },
     guardarTipoGasto() {
       if (this.categoriaNoValida) return;
@@ -149,6 +177,11 @@ export default {
   },
   computed: {
     ...mapState(useCategorias, ["allCategories"]),
+    ...mapState(useTipoGastos, [
+      "editingTipoGasto",
+      "currentTipoGasto",
+      "deletingTipoGasto",
+    ]),
   },
 };
 </script>

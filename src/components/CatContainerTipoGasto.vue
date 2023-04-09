@@ -25,7 +25,10 @@
           <h6>{{ gasto.medida }}</h6>
         </div>
 
-        <button class="btn btn-sm btn-warning h-50 my-3">
+        <button
+          class="btn btn-sm btn-warning h-50 my-3"
+          @click="editItem(gasto.docId)"
+        >
           <Icon
             icon="material-symbols:edit"
             color="black"
@@ -33,7 +36,10 @@
             height="20"
           />
         </button>
-        <button class="btn btn-sm btn-danger h-50 my-3">
+        <button
+          class="btn btn-sm btn-danger h-50 my-3"
+          @click="deleteItem(gasto.docId)"
+        >
           <Icon icon="bi:trash-fill" color="black" width="20" height="20" />
         </button>
       </div>
@@ -43,9 +49,21 @@
 
 <script>
 import { Icon } from "@iconify/vue";
+import { useTipoGastos } from "../store/gastos";
 
 export default {
   props: ["gasto"],
+  methods: {
+    deleteItem(id) {
+      useTipoGastos().setCurrent(id);
+      useTipoGastos().toggleDeleting();
+    },
+    editItem(id) {
+      useTipoGastos().setCurrent(id);
+      useTipoGastos().toggleEditing();
+      this.$emit("editingPressed");
+    },
+  },
   components: {
     Icon,
   },

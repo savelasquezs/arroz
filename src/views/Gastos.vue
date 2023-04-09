@@ -14,15 +14,6 @@
       </template>
       <template #categorias><categorias /> </template>
       <template #tipos>
-        <gasto-form />
-        <button-add
-          class="float-end mt-3"
-          mensaje="Crear nuevo tipo de gasto"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasTop"
-          aria-controls="offcanvasTop"
-        />
-        <h1>tipos</h1>
         <tipo-gasto />
       </template>
     </tabs>
