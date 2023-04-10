@@ -1,5 +1,5 @@
 <template>
-  <gasto-form ref="formTipoGasto" />
+  <TipoGastoForm ref="formTipoGasto" />
   <button-add
     ref="addButton"
     class="float-end mt-3"
@@ -22,7 +22,7 @@
 import { mapState } from "pinia";
 import { useTipoGastos } from "../store/gastos";
 import CatContainerTipoGasto from "./CatContainerTipoGasto.vue";
-import GastoForm from "./gastoForm.vue";
+import TipoGastoForm from "./TipoGastoForm.vue";
 import ButtonAdd from "./buttonAdd.vue";
 export default {
   data() {
@@ -46,7 +46,7 @@ export default {
 
   components: {
     CatContainerTipoGasto,
-    GastoForm,
+    TipoGastoForm,
     ButtonAdd,
   },
 };

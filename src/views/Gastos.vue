@@ -22,13 +22,13 @@
 
 <script>
 import { Icon } from "@iconify/vue";
-import GastoForm from "../components/gastoForm.vue";
+import TipoGastoForm from "../components/TipoGastoForm.vue";
 import Tabs from "../components/Tabs.vue";
 import Categorias from "../components/Categorias.vue";
 import buttonAdd from "../components/buttonAdd.vue";
 import TipoGasto from "../components/TipoGasto.vue";
 export default {
-  components: { Icon, GastoForm, Tabs, Categorias, buttonAdd, TipoGasto },
+  components: { Icon, TipoGastoForm, Tabs, Categorias, buttonAdd, TipoGasto },
   methods: {},
 };
 </script>

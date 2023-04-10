@@ -139,6 +139,16 @@ export const useUtilsGastos = defineStore('utilsGastos', {
 					useCategorias().allCategories[index] = { ...cambio, ...data };
 					mensaje = 'Categoria actualizada exitosamente';
 					break;
+				case 'tipoGastos':
+					index = useTipoGastos().allTipoGastos.findIndex(
+						(gasto) => gasto.docId == id
+					);
+					cambio = useTipoGastos().allTipoGastos.find(
+						(gasto) => gasto.docId == id
+					);
+					useTipoGastos().allTipoGastos[index] = { ...cambio, ...data };
+					mensaje = 'Tipo de gasto actualizado exitosamente';
+					break;
 
 				default:
 					break;

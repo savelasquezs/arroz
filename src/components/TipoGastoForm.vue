@@ -13,7 +13,12 @@
     aria-labelledby="offcanvasTopLabel"
   >
     <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="offcanvasTopLabel">Nuevo Gasto</h5>
+      <h5 class="offcanvas-title px-5" v-if="editingTipoGasto">
+        Editar tipo de gasto
+      </h5>
+      <h5 class="offcanvas-title px-5" id="offcanvasTopLabel" v-else>
+        Nuevo Gasto
+      </h5>
       <button
         type="button"
         class="btn-close"
@@ -77,7 +82,7 @@
 
       <button
         class="btn btn-success position-absolute bottom-0 mb-5 end-0 mx-3"
-        @click="guardarTipoGasto"
+        @click="actualizarRegistro"
         v-if="editingTipoGasto"
       >
         Actualizar Registro
@@ -121,6 +126,26 @@ export default {
     Borrar,
   },
   methods: {
+    actualizarRegistro() {
+      if (this.categoriaNoValida) return;
+      if (this.nombreGasto == "" || this.categoria == "" || this.medida == "") {
+        useUtilsStore().confirmAction(
+          "Los campos no pueden ir vacios",
+          2000,
+          "error"
+        );
+        return;
+      }
+      const id = this.currentTipoGasto.docId;
+      const data = {
+        categoria: this.categoria,
+        nombre: this.nombreGasto,
+        medida: this.medida,
+        anotaciones: this.anotaciones,
+      };
+      useUtilsGastos().updateElement(data, "tipoGastos", id);
+      this.$refs.botonCerrar.click();
+    },
     setCategoria(nombre, elementoInLista) {
       if (nombre.length > 0) {
         this.categoriaNoValida = !elementoInLista;
@@ -150,6 +175,7 @@ export default {
     },
     setEditting() {
       this.$refs.autocomplete.filtro = this.currentTipoGasto.categoria;
+      this.categoria = this.currentTipoGasto.categoria;
       this.nombreGasto = this.currentTipoGasto.nombre;
       this.medida = this.currentTipoGasto.medida;
       this.anotaciones = this.currentTipoGasto.anotaciones;
