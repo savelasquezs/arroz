@@ -116,4 +116,7 @@ export default {
 
 
 <style scoped>
+.card {
+  z-index: 103;
+}
 </style>

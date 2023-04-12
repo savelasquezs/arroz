@@ -29,7 +29,7 @@ import {
   usePedidosStore,
   useUtilsStore,
 } from "@/store/main";
-import { useCategorias, useTipoGastos } from "../store/gastos";
+import { useCategorias, useGastosHoy, useTipoGastos } from "../store/gastos";
 import Swal from "sweetalert2";
 
 import { mapState } from "pinia";
@@ -57,6 +57,9 @@ export default {
           break;
         case "tipoGastos":
           useTipoGastos().toggleDeleting();
+          break;
+        case "Gastos":
+          useGastosHoy().toggleDeleting();
           break;
 
         default:
@@ -91,6 +94,10 @@ export default {
         case "tipoGastos":
           console.log(this.collection);
           useTipoGastos().deleteTipoGasto(this.itemId);
+          break;
+        case "Gastos":
+          console.log(this.collection);
+          useGastosHoy().deleteGasto(this.itemId);
           break;
 
         default:

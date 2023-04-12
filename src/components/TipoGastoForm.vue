@@ -212,4 +212,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.card {
+  z-index: 102;
+}
+</style>

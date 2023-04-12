@@ -3,12 +3,22 @@
     <form>
       <h3 class="text-center mb-3">Agregar Gasto</h3>
       <autocomplete-drop-down
-        ref="autocomplete"
+        ref="autocompletar"
         :lista="allTipoGastos.map((gasto) => gasto.nombre)"
         titulo="Gasto"
         @catSeleccionada="setGasto"
       />
       <p v-if="gastoNoValido" class="text-danger">Gasto no encontrado</p>
+      <button
+        class="btn btn-outline-info mb-3"
+        v-if="gastoNoValido"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasTop"
+        aria-controls="offcanvasTop"
+        @click.prevent="addTipoGasto"
+      >
+        Agregar Tipo de Gasto
+      </button>
       <div v-if="gasto">
         <div class="form-floating my-3">
           <input
@@ -59,7 +69,7 @@
       <div class="d-flex justify-content-between mt-5">
         <button
           class="btn btn-success"
-          @click.prevent="editarCat"
+          @click.prevent="actualizarGasto"
           v-if="editingGasto"
         >
           Actualizar
@@ -78,7 +88,7 @@
       <button
         class="btn btn-warning mt-3 w-100"
         v-if="!editingGasto"
-        @click.prevent="cerrarModal"
+        @click.prevent="guardarYContinuar"
       >
         Guardar y agregar otro
       </button>
@@ -106,6 +116,7 @@ export default {
   methods: {
     cerrarModal() {
       useGastosHoy().toggleForm();
+      if (this.editingGasto) useGastosHoy().toggleEditing();
     },
 
     setGasto(nombre, elementoInLista) {
@@ -114,7 +125,7 @@ export default {
         this.gasto = this.allTipoGastos.find((gasto) => gasto.nombre == nombre);
       }
     },
-    agregarGastoYSalir() {
+    async agregarGastoYSalir() {
       if (this.gastoNoValido) return;
       if (this.gasto == "" || this.cantidad == "" || this.valorTotal == "") {
         useUtilsStore().confirmAction(
@@ -136,13 +147,52 @@ export default {
       useUtilsGastos().saveElement(data, "Gastos");
       this.cerrarModal();
     },
+    async guardarYContinuar() {
+      await this.agregarGastoYSalir();
+      useGastosHoy().toggleForm();
+    },
+    addTipoGasto() {
+      useTipoGastos().toggleForm();
+    },
+    actualizarGasto() {
+      if (this.gastoNoValido) return;
+      if (this.gasto == "" || this.cantidad == "" || this.valorTotal == "") {
+        useUtilsStore().confirmAction(
+          "Los campos no pueden ir vacios",
+          2000,
+          "error"
+        );
+        return;
+      }
+      const data = {
+        gasto: this.gasto,
+        cantidad: this.cantidad,
+        valorTotal: this.valorTotal,
+        valorUnitario: this.valorUnitario,
+        origen: this.origen,
+        comentario: this.comentario,
+      };
+      useUtilsGastos().updateElement(data, "Gastos", this.currentGasto.docId);
+      this.cerrarModal();
+    },
   },
   computed: {
-    ...mapState(useGastosHoy, ["editingGasto"]),
+    ...mapState(useGastosHoy, ["editingGasto", "currentGasto"]),
     ...mapState(useTipoGastos, ["allTipoGastos"]),
     valorUnitario() {
       return this.valorTotal / this.cantidad;
     },
+  },
+
+  mounted() {
+    if (this.editingGasto) {
+      this.$refs.autocompletar.filtro = this.currentGasto.gasto.nombre;
+      this.gasto = this.currentGasto.gasto;
+      this.cantidad = this.currentGasto.cantidad;
+      this.valorTotal = this.currentGasto.valorTotal;
+      this.origen = this.currentGasto.origen;
+      this.comentario = this.currentGasto.comentario;
+    }
   },
 };
 </script>

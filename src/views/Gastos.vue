@@ -10,7 +10,7 @@
         <gastos-hoy />
       </template>
       <template #todos>
-        <h1>todos</h1>
+        <gastos-todos />
       </template>
       <template #categorias><categorias /> </template>
       <template #tipos>
@@ -28,6 +28,7 @@ import Categorias from "../components/Categorias.vue";
 import buttonAdd from "../components/buttonAdd.vue";
 import TipoGasto from "../components/TipoGasto.vue";
 import GastosHoy from "../components/GastosHoy.vue";
+import GastosTodos from "../components/GastosTodos.vue";
 export default {
   components: {
     Icon,
@@ -37,6 +38,7 @@ export default {
     buttonAdd,
     TipoGasto,
     GastosHoy,
+    GastosTodos,
   },
   methods: {},
 };
