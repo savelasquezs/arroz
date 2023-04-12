@@ -100,6 +100,49 @@ export const useTipoGastos = defineStore('tipoGastos', {
 		},
 	},
 });
+export const useGastosHoy = defineStore('gastosHoy', {
+	state: () => {
+		return {
+			allGastos: [],
+			deletingGasto: null,
+			currentGasto: null,
+			editingGasto: null,
+			formOpenned: null,
+		};
+	},
+	actions: {
+		toggleEditing() {
+			this.editingGasto = !this.editingGasto;
+		},
+		toggleDeleting() {
+			this.deletingGasto = !this.deletingGasto;
+		},
+		toggleForm() {
+			this.formOpenned = !this.formOpenned;
+		},
+		setCurrent(id) {
+			this.currentGasto = this.allGastos.find((gasto) => gasto.docId == id);
+		},
+		addGasto(object) {
+			this.allGastos.push(object);
+		},
+		deleteGasto(id) {
+			this.allGastos = this.allGastos.filter((gasto) => gasto.docId != id);
+		},
+		async getGastos() {
+			const all = await getDocs(collection(db, 'Gastos'));
+			all.forEach((doc) => {
+				if (!this.allGastos.some((gasto) => gasto.docId == doc.id)) {
+					const data = {
+						docId: doc.id,
+						...doc.data(),
+					};
+					this.allGastos.push(data);
+				}
+			});
+		},
+	},
+});
 
 export const useUtilsGastos = defineStore('utilsGastos', {
 	state: () => {
@@ -118,6 +161,10 @@ export const useUtilsGastos = defineStore('utilsGastos', {
 				case 'tipoGastos':
 					useTipoGastos().addTipoGasto({ ...data, docId: docRef.id });
 					mensaje = 'Tipo de gasto guardado exitosamente';
+					break;
+				case 'Gastos':
+					useGastosHoy().addGasto({ ...data, docId: docRef.id });
+					mensaje = 'Gasto guardado exitosamente';
 					break;
 				default:
 					break;
@@ -148,6 +195,14 @@ export const useUtilsGastos = defineStore('utilsGastos', {
 					);
 					useTipoGastos().allTipoGastos[index] = { ...cambio, ...data };
 					mensaje = 'Tipo de gasto actualizado exitosamente';
+					break;
+				case 'Gastos':
+					index = useGastosHoy().allGastos.findIndex(
+						(gasto) => gasto.docId == id
+					);
+					cambio = useGastosHoy().allGastos.find((gasto) => gasto.docId == id);
+					useGastosHoy().allGastos[index] = { ...cambio, ...data };
+					mensaje = 'Gasto actualizado exitosamente';
 					break;
 
 				default:

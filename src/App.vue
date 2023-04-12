@@ -21,7 +21,7 @@ import {
   usePedidosStore,
 } from "../src/store/main";
 
-import { useCategorias, useTipoGastos } from "./store/gastos";
+import { useCategorias, useGastosHoy, useTipoGastos } from "./store/gastos";
 import Navbar from "@/components/Navbar.vue";
 import Modal from "@/components/Modal.vue";
 import Pedidos from "../src/views/Pedidos.vue";
@@ -52,6 +52,7 @@ export default {
     usePedidosStore().getPedidos();
     useCategorias().getCategories();
     useTipoGastos().getTipoGastos();
+    useGastosHoy().getGastos();
   },
 };
 </script>

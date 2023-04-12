@@ -3,10 +3,10 @@
     <div class="d-flex justify-content-between">
       <div class="d-flex">
         <div
-          class="cat-container d-flex flex-column text-center shadow-sm p-1 my-1 mx-5 bg-body-tertiary rounded"
+          class="cat-container d-grid align-items-center justify-content-center text-center shadow-sm my-1 mx-5 bg-body-tertiary rounded"
         >
           <Icon
-            width="30"
+            width="14"
             class="mx-4"
             :icon="icono.icono"
             :color="icono.color"
@@ -15,7 +15,7 @@
           <p class="mb-0">{{ gasto.categoria }}</p>
         </div>
         <div>
-          <h4>{{ gasto.nombre }}</h4>
+          <h6>{{ gasto.nombre }}</h6>
           <p>{{ gasto.anotaciones }}</p>
         </div>
       </div>
@@ -122,4 +122,7 @@ export default {
 </script>
 
 <style scoped>
+p {
+  font-size: 12px;
+}
 </style>

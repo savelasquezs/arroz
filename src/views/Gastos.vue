@@ -7,7 +7,7 @@
   <div class="card px-5 py-3">
     <tabs>
       <template #gastosDia>
-        <h1>del</h1>
+        <gastos-hoy />
       </template>
       <template #todos>
         <h1>todos</h1>
@@ -27,8 +27,17 @@ import Tabs from "../components/Tabs.vue";
 import Categorias from "../components/Categorias.vue";
 import buttonAdd from "../components/buttonAdd.vue";
 import TipoGasto from "../components/TipoGasto.vue";
+import GastosHoy from "../components/GastosHoy.vue";
 export default {
-  components: { Icon, TipoGastoForm, Tabs, Categorias, buttonAdd, TipoGasto },
+  components: {
+    Icon,
+    TipoGastoForm,
+    Tabs,
+    Categorias,
+    buttonAdd,
+    TipoGasto,
+    GastosHoy,
+  },
   methods: {},
 };
 </script>

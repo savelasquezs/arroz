@@ -1,21 +1,25 @@
 <template>
   <TipoGastoForm ref="formTipoGasto" />
-  <button-add
-    ref="addButton"
-    class="float-end mt-3"
-    mensaje="Crear nuevo tipo de gasto"
-    data-bs-toggle="offcanvas"
-    data-bs-target="#offcanvasTop"
-    aria-controls="offcanvasTop"
-    @click="guardarOActualizar"
-  />
-  <h1>tipos</h1>
-  <cat-container-tipo-gasto
-    @editingPressed="toggleForm"
-    v-for="gasto in allTipoGastos"
-    :key="gasto.docId"
-    :gasto="gasto"
-  />
+  <div class="d-flex justify-content-between my-3">
+    <h3>Tipos de Gastos</h3>
+    <button-add
+      ref="addButton"
+      class="float-end mt-3"
+      mensaje="Crear nuevo tipo de gasto"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#offcanvasTop"
+      aria-controls="offcanvasTop"
+      @click="guardarOActualizar"
+    />
+  </div>
+  <div class="mt-5">
+    <cat-container-tipo-gasto
+      @editingPressed="toggleForm"
+      v-for="gasto in allTipoGastos"
+      :key="gasto.docId"
+      :gasto="gasto"
+    />
+  </div>
 </template>
 
 <script>
