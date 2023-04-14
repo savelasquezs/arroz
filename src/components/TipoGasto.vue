@@ -1,5 +1,4 @@
 <template>
-  <TipoGastoForm ref="formTipoGasto" />
   <div class="d-flex justify-content-between my-3">
     <h3>Tipos de Gastos</h3>
     <button-add
@@ -34,14 +33,14 @@ export default {
   },
   methods: {
     toggleForm() {
-      console.log(this.$refs.addButton.$refs.buttonPlus.click());
+      this.$refs.addButton.$refs.buttonPlus.click();
     },
     guardarOActualizar() {
       if (this.editingTipoGasto) {
-        this.$refs.formTipoGasto.setEditting();
+        this.$parent.$parent.$refs.formTipoGasto.setEditting();
         return;
       }
-      this.$refs.formTipoGasto.borrarDatos();
+      this.$parent.$parent.$refs.formTipoGasto.borrarDatos();
     },
   },
   computed: {

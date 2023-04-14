@@ -1,5 +1,4 @@
 <template>
-  <tipo-gasto-form ref="formTipoGasto" />
   <modal v-if="formOpenned || deletingGasto">
     <gasto-hoy-form v-if="formOpenned" />
     <borrar
@@ -78,7 +77,6 @@ import GastoHoyForm from "./GastoHoyForm.vue";
 import { useUtilsStore } from "../store/main";
 import { Icon } from "@iconify/vue";
 import Borrar from "./Borrar.vue";
-import TipoGastoForm from "./TipoGastoForm.vue";
 export default {
   data() {
     return {};
@@ -90,7 +88,6 @@ export default {
     GastoHoyForm,
     Icon,
     Borrar,
-    TipoGastoForm,
   },
   methods: {
     toggleModal() {

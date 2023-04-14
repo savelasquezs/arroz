@@ -1,4 +1,6 @@
 <template>
+  <tipo-gasto-form ref="formTipoGasto" />
+
   <div class="container gastosCont">
     <h2>Gastos</h2>
     <hr />
