@@ -3,10 +3,8 @@
     <Navbar class="position-fixed" />
     <div class="contenido"><router-view /></div>
   </div>
-  <Modal v-if="clienteFormShowed">
+  <Modal v-if="clienteFormShowed || formOpenned">
     <ClienteForm v-if="clienteFormShowed" />
-  </Modal>
-  <Modal v-else-if="formOpenned">
     <CatForm v-if="formOpenned" />
   </Modal>
 </template>
