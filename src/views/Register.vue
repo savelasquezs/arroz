@@ -19,8 +19,20 @@
             <div class="card2 card border-0 px-4 py-5">
               <div class="row px-3 mb-4">
                 <div class="line"></div>
-                <small class="or text-center">Inicio de Sesión</small>
+                <small class="or text-center">Registrate</small>
                 <div class="line"></div>
+              </div>
+              <div class="row px-3">
+                <label class="mb-1"
+                  ><h6 class="mb-0 text-sm">Nombre y Apellido</h6></label
+                >
+                <input
+                  class="mb-4"
+                  type="text"
+                  name="fullname"
+                  v-model="registerData.fullName"
+                  placeholder="Ingresa tu nombre y apellido"
+                />
               </div>
               <div class="row px-3">
                 <label class="mb-1"
@@ -30,20 +42,36 @@
                   class="mb-4"
                   type="text"
                   name="email"
+                  v-model="registerData.email"
                   placeholder="Ingresa un correo registrado"
                 />
               </div>
-              <div class="row px-3">
-                <label class="mb-1"
-                  ><h6 class="mb-0 text-sm">Contraseña</h6></label
-                >
-                <input
-                  type="contrasena"
-                  name="contrasena"
-                  placeholder="ingresa contrasena"
-                />
-              </div>
               <div class="row px-3 mb-4">
+                <div class="row px-3">
+                  <label class="mb-1"
+                    ><h6 class="mb-0 text-sm">Contraseña</h6></label
+                  >
+                  <input
+                    type="password"
+                    name="contrasena"
+                    v-model="registerData.password"
+                    placeholder="ingresa contrasena"
+                  />
+                </div>
+                <div class="row px-3">
+                  <label class="mb-1"
+                    ><h6 class="mb-0 text-sm">
+                      Ingresa de nuevo la Contraseña
+                    </h6></label
+                  >
+                  <input
+                    type="password"
+                    name="contrasena2"
+                    v-model="registerData.password2"
+                    placeholder="ingresa de nuevo tu contraseña"
+                  />
+                </div>
+
                 <a href="#" class="ml-auto mb-0 text-sm"
                   >Olvide la contraseña?</a
                 >
@@ -52,14 +80,15 @@
                 <button
                   type="submit"
                   class="btn btn-outline-success text-center"
+                  @click.prevent="register"
                 >
-                  Iniciar!!
+                  Registrate!!
                 </button>
               </div>
               <div class="row mb-4 px-3">
                 <small class="font-weight-bold"
-                  >No tienes cuenta aún?
-                  <a class="text-danger">Registrate</a></small
+                  >Ya estas registrado?
+                  <a class="text-danger">Inicia Sesión</a></small
                 >
               </div>
             </div>
@@ -78,9 +107,20 @@
 </template>
 
 <script>
-import { auth, db } from "../firebase/firebaseInit";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-export default {};
+import { useAuth } from "../store/auth";
+export default {
+  data() {
+    return {
+      registerData: {},
+    };
+  },
+  methods: {
+    register() {
+      useAuth().registerUser(this.registerData);
+    },
+  },
+  computed: {},
+};
 </script>
 
 <style scoped>
