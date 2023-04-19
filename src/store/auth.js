@@ -14,6 +14,7 @@ import {
 	updateDoc,
 	doc,
 } from 'firebase/firestore';
+import router from '../router/main';
 
 export const useAuth = defineStore('authArroz', {
 	state: () => {
@@ -22,6 +23,25 @@ export const useAuth = defineStore('authArroz', {
 		};
 	},
 	actions: {
+		fetchUser() {
+			auth.onAuthStateChanged(async (user) => {
+				if (user == null) {
+					this.clearUser();
+				} else {
+					user.getIdTokenResult().then((idTokenResult) => {
+						this.user.admin = idTokenResult.claims.admin;
+					});
+					this.setUser(user);
+					if (
+						router.isReady() &&
+						(router.currentRoute.value.path == '/login' ||
+							router.currentRoute.value.path == '/register')
+					) {
+						router.push('/');
+					}
+				}
+			});
+		},
 		setUser(user) {
 			localStorage.setItem('user', JSON.stringify(user));
 			this.user = JSON.parse(localStorage.getItem('user'));
