@@ -46,12 +46,18 @@
           <p>Contabilidad</p>
         </div>
       </div>
+      <div class="d-grid justify-content-center">
+        <h4 class="text-center">{{ logedUser }}</h4>
+        <button class="btn btn-outline-danger" @click="cerrarSesion">
+          Cerrar Sesión
+        </button>
+      </div>
     </div>
-    <div class="nav-footer"></div>
   </header>
 </template>
 
 <script>
+import { useAuth } from "../store/auth";
 import PedidoIcon from "./icons/pedidoIcon.vue";
 import clientesIcon from "./icons/clientesIcon.vue";
 import cajaIcon from "./icons/cajaIcon.vue";
@@ -59,6 +65,7 @@ import productosIcon from "./icons/productosIcon.vue";
 import gastosIcon from "./icons/gastosIcon.vue";
 import domiciliarioIcon from "./icons/domiciliarioIcon.vue";
 import ContabilidadIcon from "./icons/contabilidadIcon.vue";
+
 export default {
   name: "navbar",
   components: {
@@ -70,11 +77,27 @@ export default {
     domiciliarioIcon,
     ContabilidadIcon,
   },
+  methods: {
+    cerrarSesion() {
+      console.log("cerrar");
+      useAuth().logout();
+    },
+  },
+  computed: {
+    logedUser() {
+      if (localStorage.getItem("user")) {
+        return JSON.parse(localStorage.getItem("user")).displayName;
+      }
+    },
+    watch: {
+      logedUser() {
+        this.logedUser = JSON.parse(localStorage.getItem("user")).displayName;
+      },
+    },
+  },
 };
 </script>
 
-    ,
-    ContabilidadIcon
 <style scoped lang="scss">
 header {
   z-index: 99;

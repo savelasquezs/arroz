@@ -46,6 +46,9 @@ export const useAuth = defineStore('authArroz', {
 			localStorage.setItem('user', JSON.stringify(user));
 			this.user = JSON.parse(localStorage.getItem('user'));
 		},
+		showUser() {
+			console.log(localStorage.getItem('user'));
+		},
 		clearUser() {
 			localStorage.removeItem('user');
 			this.user = '';
@@ -97,23 +100,35 @@ export const useAuth = defineStore('authArroz', {
 		async login(datosUsuario) {
 			const { email, password } = datosUsuario;
 			try {
-				signInWithEmailAndPassword(auth, email, password);
+				await signInWithEmailAndPassword(auth, email, password);
+				this.setUser(auth.currentUser);
+				this.showUser();
 			} catch (error) {
+				console.log(error.code);
 				let mensaje = '';
 				switch (error.code) {
 					case 'auth/user-not-found':
-						(mensaje = 'No encontramos este usuario'), 'error';
+						mensaje = 'No encontramos este usuario';
 						break;
 					case 'auth/wrong-password':
-						(mensaje = 'La contraseña no coincide, intenta de nuevo'), 'error';
+						mensaje = 'La contraseña no coincide, intenta de nuevo';
+						break;
+					case 'auth/invalid-email':
+						mensaje = 'el correo ingresado no es valido';
 						break;
 					default:
-						(mensaje = `Algo salió mal ${error}`), 'error';
+						mensaje = `Algo salió mal ${error.code}`;
 						break;
 				}
 				useUtilsStore().confirmAction(mensaje, 2000, 'error');
 				return;
 			}
+		},
+
+		async logout() {
+			await auth.signOut();
+			this.clearUser();
+			router.push('/login');
 		},
 	},
 });

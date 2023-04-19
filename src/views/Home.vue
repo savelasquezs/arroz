@@ -3,6 +3,7 @@
     <h2 class="text-center mt-5">Dashboard</h2>
     <div class="row mt-5">
       <div class="col-lg-10 offset-1 mb-5">
+        <crear-admin class="pb-5" />
         <div class="card">
           <div class="card-body">
             <h4>Pedidos por dia</h4>
@@ -46,10 +47,12 @@ import LineChartComponent from "@/components/LineChartComponent.vue";
 import { mapState } from "pinia";
 import { usePedidosStore } from "@/store/main";
 import moment from "moment";
+import CrearAdmin from "../components/CrearAdmin.vue";
 
 export default {
   components: {
     LineChartComponent,
+    CrearAdmin,
   },
   data() {
     return {

@@ -31,6 +31,7 @@
                   type="text"
                   name="email"
                   placeholder="Ingresa un correo registrado"
+                  v-model="usuario.email"
                 />
               </div>
               <div class="row px-3">
@@ -41,6 +42,7 @@
                   type="contrasena"
                   name="contrasena"
                   placeholder="ingresa contrasena"
+                  v-model="usuario.password"
                 />
               </div>
               <div class="row px-3 mb-4">
@@ -52,6 +54,7 @@
                 <button
                   type="submit"
                   class="btn btn-outline-success text-center"
+                  @click="iniciarSesion"
                 >
                   Iniciar!!
                 </button>
@@ -80,7 +83,19 @@
 <script>
 import { auth, db } from "../firebase/firebaseInit";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-export default {};
+import { useAuth } from "../store/auth";
+export default {
+  data() {
+    return {
+      usuario: {},
+    };
+  },
+  methods: {
+    iniciarSesion() {
+      useAuth().login(this.usuario);
+    },
+  },
+};
 </script>
 
 <style scoped>
