@@ -1,7 +1,7 @@
 <template>
   <div class="contenedor">
-    <Navbar class="position-fixed" />
-    <div class="contenido"><router-view /></div>
+    <Navbar class="position-fixed" v-if="usuario" />
+    <div :class="usuario ? 'contenido' : ''"><router-view /></div>
   </div>
   <Modal v-if="clienteFormShowed || formOpenned">
     <ClienteForm v-if="clienteFormShowed" />
@@ -24,6 +24,8 @@ import Navbar from "@/components/Navbar.vue";
 import Modal from "@/components/Modal.vue";
 import Pedidos from "../src/views/Pedidos.vue";
 import CatForm from "./components/CatForm.vue";
+import { useAuth } from "./store/auth";
+import { auth } from "./firebase/firebaseInit";
 
 export default {
   components: {
@@ -37,6 +39,10 @@ export default {
   computed: {
     ...mapState(useClientesStore, ["clienteFormShowed"]),
     ...mapState(useCategorias, ["formOpenned"]),
+    usuario() {
+      useAuth().fetchUser();
+      return auth.currentUser;
+    },
   },
 
   methods: {

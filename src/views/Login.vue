@@ -92,6 +92,7 @@ export default {
   },
   methods: {
     iniciarSesion() {
+      
       useAuth().login(this.usuario);
     },
   },

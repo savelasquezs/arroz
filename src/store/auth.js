@@ -103,6 +103,10 @@ export const useAuth = defineStore('authArroz', {
 				await signInWithEmailAndPassword(auth, email, password);
 				this.setUser(auth.currentUser);
 				this.showUser();
+				await router.push('/pedidos/todos');
+				setTimeout(() => {
+					location.reload();
+				}, 100);
 			} catch (error) {
 				console.log(error.code);
 				let mensaje = '';
@@ -128,7 +132,8 @@ export const useAuth = defineStore('authArroz', {
 		async logout() {
 			await auth.signOut();
 			this.clearUser();
-			router.push('/login');
+			await router.push('/login');
+			location.reload();
 		},
 	},
 });

@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
+import { auth } from '../firebase/firebaseInit';
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -56,6 +57,29 @@ const routes = [
 const router = createRouter({
 	history: createWebHashHistory(import.meta.env.BASE_URL),
 	routes,
+});
+
+router.beforeEach((to, from, next) => {
+	if ((to.name == 'Register' || to.name == 'Login') && auth.currentUser) {
+		next('/pedidos/todos');
+		return;
+	}
+	if (
+		to.matched.some((record) => record.meta.requiresAuth) &&
+		!auth.currentUser
+	) {
+		console.log('requires auth');
+		if (from.path == '/' && localStorage.getItem('user')) {
+			next();
+		} else {
+			console.log(from);
+			console.log(localStorage.getItem('user'));
+			next('/login');
+		}
+		return;
+	} else {
+		next();
+	}
 });
 
 export default router;

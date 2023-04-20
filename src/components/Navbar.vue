@@ -46,7 +46,7 @@
           <p>Contabilidad</p>
         </div>
       </div>
-      <div class="d-grid justify-content-center">
+      <div class="d-grid justify-content-center" v-if="logedUser">
         <h4 class="text-center">{{ logedUser }}</h4>
         <button class="btn btn-outline-danger" @click="cerrarSesion">
           Cerrar Sesión
