@@ -7,8 +7,9 @@
       :itemName="currentProduct.nombre"
       v-if="borrarProducto"
   /></Modal>
+  <Navbar class="position-fixed" />
 
-  <div class="container clientesCont">
+  <div class="container clientesCont contenido">
     <h2>Tabla de Productos</h2>
     <hr />
     <div class="input-group mb-3 d-flex justify-content-end">
@@ -69,6 +70,7 @@ import Borrar from "@/components/Borrar.vue";
 import { useProductsStore } from "../store/main";
 import { mapState } from "pinia";
 import buttonAdd from "../components/buttonAdd.vue";
+import Navbar from "../components/Navbar.vue";
 
 export default {
   name: "home",
@@ -114,6 +116,7 @@ export default {
     ProductForm,
     Borrar,
     buttonAdd,
+    Navbar,
   },
   computed: {
     ...mapState(useProductsStore, [

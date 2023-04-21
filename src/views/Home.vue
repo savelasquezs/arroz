@@ -1,5 +1,7 @@
 <template>
-  <div class="container">
+  <Navbar class="position-fixed" />
+
+  <div class="container contenido">
     <h2 class="text-center mt-5">Dashboard</h2>
     <div class="row mt-5">
       <div class="col-lg-10 offset-1 mb-5">
@@ -48,11 +50,13 @@ import { mapState } from "pinia";
 import { usePedidosStore } from "@/store/main";
 import moment from "moment";
 import CrearAdmin from "../components/CrearAdmin.vue";
+import Navbar from "../components/Navbar.vue";
 
 export default {
   components: {
     LineChartComponent,
     CrearAdmin,
+    Navbar,
   },
   data() {
     return {

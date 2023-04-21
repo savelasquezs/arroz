@@ -1,4 +1,6 @@
 <template>
+  <Navbar class="position-fixed" />
+
   <Modal v-if="deletingCliente"
     ><Borrar
       :itemId="currentcliente.docId"
@@ -10,7 +12,7 @@
   <Modal v-if="detalleCliente">
     <DetalleCliente v-if="detalleCliente" :cliente="currentcliente" />
   </Modal>
-  <div class="container clientesCont">
+  <div class="container clientesCont contenido">
     <h2>Tabla de Clientes</h2>
     <hr />
     <div class="input-group mb-3 d-flex justify-content-end">

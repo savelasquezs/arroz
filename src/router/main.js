@@ -60,25 +60,23 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-	if ((to.name == 'Register' || to.name == 'Login') && auth.currentUser) {
-		next('/pedidos/todos');
-		return;
-	}
-	if (
-		to.matched.some((record) => record.meta.requiresAuth) &&
-		!auth.currentUser
-	) {
-		console.log('requires auth');
-		if (from.path == '/' && localStorage.getItem('user')) {
+	if (to.matched.some((ruta) => ruta.meta.requiresAuth)) {
+		const user = auth.currentUser;
+		if (user) {
 			next();
 		} else {
-			console.log(from);
-			console.log(localStorage.getItem('user'));
-			next('/login');
+			next({
+				name: 'Login',
+			});
 		}
-		return;
 	} else {
-		next();
+		if ((to.path == '/login' || to.path == '/register') && auth.currentUser) {
+			next({ name: 'Pedidos' });
+			console.log(to);
+		} else {
+			next();
+			console.log(to);
+		}
 	}
 });
 

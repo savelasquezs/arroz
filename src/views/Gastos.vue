@@ -1,24 +1,27 @@
 <template>
-  <tipo-gasto-form ref="formTipoGasto" />
+  <Navbar class="position-fixed" />
+  <div class="contenido">
+    <tipo-gasto-form ref="formTipoGasto" />
 
-  <div class="container gastosCont">
-    <h2>Gastos</h2>
-    <hr />
-    <div class="input-group mb-3 d-flex justify-content-end"></div>
-  </div>
-  <div class="card px-5 py-3">
-    <tabs>
-      <template #gastosDia>
-        <gastos-hoy />
-      </template>
-      <template #todos>
-        <gastos-todos />
-      </template>
-      <template #categorias><categorias /> </template>
-      <template #tipos>
-        <tipo-gasto />
-      </template>
-    </tabs>
+    <div class="container gastosCont">
+      <h2>Gastos</h2>
+      <hr />
+      <div class="input-group mb-3 d-flex justify-content-end"></div>
+    </div>
+    <div class="card px-5 py-3">
+      <tabs>
+        <template #gastosDia>
+          <gastos-hoy />
+        </template>
+        <template #todos>
+          <gastos-todos />
+        </template>
+        <template #categorias><categorias /> </template>
+        <template #tipos>
+          <tipo-gasto />
+        </template>
+      </tabs>
+    </div>
   </div>
 </template>
 

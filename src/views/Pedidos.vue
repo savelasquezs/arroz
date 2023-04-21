@@ -10,8 +10,9 @@
       :itemName="currentPedido.cliente.nombre"
       v-if="deletingPedido"
   /></Modal>
+  <Navbar class="position-fixed" />
 
-  <div class="container clientesCont">
+  <div class="container clientesCont contenido">
     <h2>Tabla de Pedidos</h2>
     <hr />
     <div class="input-group mb-3 d-flex justify-content-end">
@@ -141,7 +142,6 @@
       </tbody>
     </table>
   </div>
-  <h3>El more</h3>
 </template>
 
 <script>
@@ -160,7 +160,7 @@ import moment from "moment";
 import Borrar from "@/components/Borrar.vue";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/firebaseInit.js";
-
+import Navbar from "../components/Navbar.vue";
 import {
   endOfMonth,
   endOfYear,
@@ -209,6 +209,7 @@ export default {
     DetallePedido,
     VueDatePicker,
     ButtonAdd,
+    Navbar,
   },
   computed: {
     ...mapState(usePedidosStore, [

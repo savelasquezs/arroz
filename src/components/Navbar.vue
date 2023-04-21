@@ -65,8 +65,12 @@ import productosIcon from "./icons/productosIcon.vue";
 import gastosIcon from "./icons/gastosIcon.vue";
 import domiciliarioIcon from "./icons/domiciliarioIcon.vue";
 import ContabilidadIcon from "./icons/contabilidadIcon.vue";
+import { auth } from "../firebase/firebaseInit";
 
 export default {
+  data() {
+    return { logedUser: "" };
+  },
   name: "navbar",
   components: {
     PedidoIcon,
@@ -83,17 +87,8 @@ export default {
       useAuth().logout();
     },
   },
-  computed: {
-    logedUser() {
-      if (localStorage.getItem("user")) {
-        return JSON.parse(localStorage.getItem("user")).displayName;
-      }
-    },
-    watch: {
-      logedUser() {
-        this.logedUser = JSON.parse(localStorage.getItem("user")).displayName;
-      },
-    },
+  mounted() {
+    this.logedUser = auth.currentUser.displayName;
   },
 };
 </script>

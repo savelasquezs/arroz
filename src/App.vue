@@ -1,7 +1,6 @@
 <template>
   <div class="contenedor">
-    <Navbar class="position-fixed" v-if="usuario" />
-    <div :class="usuario ? 'contenido' : ''"><router-view /></div>
+    <router-view />
   </div>
   <Modal v-if="clienteFormShowed || formOpenned">
     <ClienteForm v-if="clienteFormShowed" />

@@ -100,13 +100,11 @@ export const useAuth = defineStore('authArroz', {
 		async login(datosUsuario) {
 			const { email, password } = datosUsuario;
 			try {
-				await signInWithEmailAndPassword(auth, email, password);
-				this.setUser(auth.currentUser);
-				this.showUser();
-				await router.push('/pedidos/todos');
-				setTimeout(() => {
-					location.reload();
-				}, 100);
+				signInWithEmailAndPassword(auth, email, password).then((user) => {
+					this.setUser(user);
+					this.showUser();
+					router.push('/pedidos/todos');
+				});
 			} catch (error) {
 				console.log(error.code);
 				let mensaje = '';
