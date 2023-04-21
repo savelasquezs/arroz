@@ -62,7 +62,9 @@
               <div class="row mb-4 px-3">
                 <small class="font-weight-bold"
                   >No tienes cuenta aún?
-                  <a class="text-danger">Registrate</a></small
+                  <a class="text-danger" @click="registerPage"
+                    >Registrate</a
+                  ></small
                 >
               </div>
             </div>
@@ -84,6 +86,7 @@
 import { auth, db } from "../firebase/firebaseInit";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useAuth } from "../store/auth";
+import router from "../router/main";
 export default {
   data() {
     return {
@@ -92,8 +95,10 @@ export default {
   },
   methods: {
     iniciarSesion() {
-      
       useAuth().login(this.usuario);
+    },
+    registerPage() {
+      router.push({ name: "Register" });
     },
   },
 };

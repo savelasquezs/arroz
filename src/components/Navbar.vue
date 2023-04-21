@@ -88,7 +88,13 @@ export default {
     },
   },
   mounted() {
-    this.logedUser = auth.currentUser.displayName;
+    const dName = JSON.parse(localStorage.getItem("user")).user.displayName;
+    const dNameArray = dName.split(" ");
+    const dNameUppercase = dNameArray.map(
+      (word) => word[0].toUpperCase() + word.substring(1)
+    );
+    const result = dNameUppercase.join(" ");
+    this.logedUser = result;
   },
 };
 </script>

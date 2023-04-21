@@ -34,6 +34,7 @@ import buttonAdd from "../components/buttonAdd.vue";
 import TipoGasto from "../components/TipoGasto.vue";
 import GastosHoy from "../components/GastosHoy.vue";
 import GastosTodos from "../components/GastosTodos.vue";
+import Navbar from "../components/Navbar.vue";
 export default {
   components: {
     Icon,
@@ -44,6 +45,7 @@ export default {
     TipoGasto,
     GastosHoy,
     GastosTodos,
+    Navbar,
   },
   methods: {},
 };

@@ -131,7 +131,6 @@ export const useAuth = defineStore('authArroz', {
 			await auth.signOut();
 			this.clearUser();
 			await router.push('/login');
-			location.reload();
 		},
 	},
 });

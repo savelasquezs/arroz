@@ -88,7 +88,9 @@
               <div class="row mb-4 px-3">
                 <small class="font-weight-bold"
                   >Ya estas registrado?
-                  <a class="text-danger">Inicia Sesión</a></small
+                  <a class="text-danger" @click="loginPage"
+                    >Inicia Sesión</a
+                  ></small
                 >
               </div>
             </div>
@@ -107,6 +109,7 @@
 </template>
 
 <script>
+import router from "../router/main";
 import { useAuth } from "../store/auth";
 export default {
   data() {
@@ -117,6 +120,9 @@ export default {
   methods: {
     register() {
       useAuth().registerUser(this.registerData);
+    },
+    loginPage() {
+      router.push({ name: "Login" });
     },
   },
   computed: {},

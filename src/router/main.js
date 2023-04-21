@@ -22,6 +22,7 @@ const routes = [
 		children: [
 			{
 				path: '/pedidos/todos',
+				alias: '/',
 				name: 'Pedidos',
 				component: () => import('../views/Pedidos.vue'),
 			},
@@ -62,9 +63,11 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
 	if (to.matched.some((ruta) => ruta.meta.requiresAuth)) {
 		const user = auth.currentUser;
-		if (user) {
+		const userlocal = localStorage.getItem('user');
+		if (user || userlocal) {
 			next();
 		} else {
+			console.log('no autenticado');
 			next({
 				name: 'Login',
 			});
