@@ -15,9 +15,15 @@ const routes = [
 		name: 'Register',
 	},
 	{
+		path: '/vistadomiciliarios',
+		component: () => import('../views/VIstaDomiciliarios.vue'),
+		name: 'VistaDomiciliarios',
+	},
+	{
 		path: '/admin',
 		meta: {
 			requiresAuth: true,
+			requiresAdmin: true,
 		},
 		children: [
 			{
@@ -63,9 +69,16 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
 	if (to.matched.some((ruta) => ruta.meta.requiresAuth)) {
 		const user = auth.currentUser;
-		const userlocal = localStorage.getItem('user');
+		const userlocal = JSON.parse(localStorage.getItem('user'));
+		const isAdmin = userlocal.isAdmin;
 		if (user || userlocal) {
-			next();
+			if (to.matched.some((ruta) => ruta.meta.requiresAdmin)) {
+				if (isAdmin) {
+					next();
+				} else {
+					next({ name: 'VistaDomiciliarios' });
+				}
+			}
 		} else {
 			console.log('no autenticado');
 			next({
