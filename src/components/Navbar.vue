@@ -88,7 +88,7 @@ export default {
     },
   },
   mounted() {
-    const dName = JSON.parse(localStorage.getItem("user")).user.displayName;
+    const dName = JSON.parse(localStorage.getItem("user")).displayName;
     const dNameArray = dName.split(" ");
     const dNameUppercase = dNameArray.map(
       (word) => word[0].toUpperCase() + word.substring(1)

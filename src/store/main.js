@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { getDocs, collection } from 'firebase/firestore';
+import { getDocs, collection, onSnapshot } from 'firebase/firestore';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 
@@ -48,22 +48,46 @@ export const useClientesStore = defineStore('ClientesStore', {
 		toggleDetalleCliente() {
 			this.detalleCliente = !this.detalleCliente;
 		},
-		async getInvoices() {
-			const querySnapshot = await getDocs(collection(db, 'clientes'));
-			querySnapshot.forEach((doc) => {
-				if (!this.clientDatabase.some((client) => client.docId == doc.id)) {
-					const data = {
-						docId: doc.id,
-						...doc.data(),
-						direccionCompleta: `${doc.data().direccion}, ${
-							doc.data().notasDir
-						}, ${doc.data().barrio}`,
-					};
-					this.clientDatabase.push(data);
-				}
+
+		listenChanges() {
+			onSnapshot(collection(db, 'clientes'), (snapshot) => {
+				snapshot.docChanges().forEach((change) => {
+					if (change.type == 'added') {
+						if (
+							!this.clientDatabase.some(
+								(client) => client.docId == change.doc.id
+							)
+						) {
+							const data = {
+								docId: change.doc.id,
+								...change.doc.data(),
+								direccionCompleta: `${change.doc.data().direccion}, ${
+									change.doc.data().notasDir
+								}, ${change.doc.data().barrio}`,
+							};
+							this.clientDatabase.push(data);
+						}
+					}
+				});
 			});
-			this.invoicesLoaded = true;
 		},
+
+		// async getInvoices() {
+		// 	const querySnapshot = await getDocs(collection(db, 'clientes'));
+		// 	querySnapshot.forEach((doc) => {
+		// 		if (!this.clientDatabase.some((client) => client.docId == doc.id)) {
+		// 			const data = {
+		// 				docId: doc.id,
+		// 				...doc.data(),
+		// 				direccionCompleta: `${doc.data().direccion}, ${
+		// 					doc.data().notasDir
+		// 				}, ${doc.data().barrio}`,
+		// 			};
+		// 			this.clientDatabase.push(data);
+		// 		}
+		// 	});
+		// 	this.invoicesLoaded = true;
+		// },
 		setCurrentCliente(id) {
 			this.currentcliente = {
 				...this.clientDatabase.find((cliente) => cliente.docId == id),

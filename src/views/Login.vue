@@ -32,6 +32,7 @@
                   name="email"
                   placeholder="Ingresa un correo registrado"
                   v-model="usuario.email"
+                  autocomplete="off"
                 />
               </div>
               <div class="row px-3">
@@ -39,10 +40,11 @@
                   ><h6 class="mb-0 text-sm">Contraseña</h6></label
                 >
                 <input
-                  type="contrasena"
+                  type="password"
                   name="contrasena"
                   placeholder="ingresa contrasena"
                   v-model="usuario.password"
+                  autocomplete="off"
                 />
               </div>
               <div class="row px-3 mb-4">

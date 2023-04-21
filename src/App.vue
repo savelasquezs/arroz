@@ -50,12 +50,12 @@ export default {
     },
   },
   created() {
-    useClientesStore().getInvoices();
     useProductsStore().getProducts();
     usePedidosStore().getPedidos();
     useCategorias().getCategories();
     useTipoGastos().getTipoGastos();
     useGastosHoy().getGastos();
+    useClientesStore().listenChanges();
   },
 };
 </script>

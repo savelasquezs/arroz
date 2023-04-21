@@ -32,6 +32,7 @@
                   name="fullname"
                   v-model="registerData.fullName"
                   placeholder="Ingresa tu nombre y apellido"
+                  autocomplete="off"
                 />
               </div>
               <div class="row px-3">
@@ -44,6 +45,7 @@
                   name="email"
                   v-model="registerData.email"
                   placeholder="Ingresa un correo registrado"
+                  autocomplete="off"
                 />
               </div>
               <div class="row px-3 mb-4">
@@ -56,6 +58,7 @@
                     name="contrasena"
                     v-model="registerData.password"
                     placeholder="ingresa contrasena"
+                    autocomplete="off"
                   />
                 </div>
                 <div class="row px-3">
@@ -67,6 +70,7 @@
                   <input
                     type="password"
                     name="contrasena2"
+                    autocomplete="off"
                     v-model="registerData.password2"
                     placeholder="ingresa de nuevo tu contraseña"
                   />
