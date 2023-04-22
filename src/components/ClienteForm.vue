@@ -200,15 +200,8 @@ export default {
           valorDomi: this.valorDomi,
         };
 
-        const docRef = await doc(db, "clientes", this.docId);
+        const docRef = doc(db, "clientes", this.docId);
         const document = await updateDoc(docRef, data);
-        let cambio = this.clientDatabase.find(
-          (cliente) => cliente.docId == this.docId
-        );
-        let index = this.clientDatabase.findIndex(
-          (cliente) => cliente.docId == this.docId
-        );
-        this.clientDatabase[index] = { ...cambio, ...data };
         useClientesStore().setCurrentCliente(this.docId);
         this.toogleClienteForm();
         useClientesStore().toggleEditCliente();

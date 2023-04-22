@@ -72,27 +72,18 @@ export const useClientesStore = defineStore('ClientesStore', {
 						this.clientDatabase = this.clientDatabase.filter(
 							(doc) => doc.docId !== change.doc.id
 						);
+					} else if (change.type == 'modified') {
+						let cambio = this.clientDatabase.find(
+							(cliente) => cliente.docId == change.doc.id
+						);
+						let index = this.clientDatabase.findIndex(
+							(cliente) => cliente.docId == change.doc.id
+						);
+						this.clientDatabase[index] = { ...cambio, ...change.doc.data() };
 					}
 				});
 			});
 		},
-
-		// async getInvoices() {
-		// 	const querySnapshot = await getDocs(collection(db, 'clientes'));
-		// 	querySnapshot.forEach((doc) => {
-		// 		if (!this.clientDatabase.some((client) => client.docId == doc.id)) {
-		// 			const data = {
-		// 				docId: doc.id,
-		// 				...doc.data(),
-		// 				direccionCompleta: `${doc.data().direccion}, ${
-		// 					doc.data().notasDir
-		// 				}, ${doc.data().barrio}`,
-		// 			};
-		// 			this.clientDatabase.push(data);
-		// 		}
-		// 	});
-		// 	this.invoicesLoaded = true;
-		// },
 		setCurrentCliente(id) {
 			this.currentcliente = {
 				...this.clientDatabase.find((cliente) => cliente.docId == id),
@@ -106,11 +97,6 @@ export const useClientesStore = defineStore('ClientesStore', {
 			console.log(this.currentcliente);
 		},
 
-		// deletecliente(id) {
-		// 	this.clientDatabase = this.clientDatabase.filter(
-		// 		(cliente) => cliente.docId !== id
-		// 	);
-		// },
 		resetCurrentClient() {
 			this.currentcliente = {
 				docId: 'prueba',
