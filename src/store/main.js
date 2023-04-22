@@ -52,6 +52,7 @@ export const useClientesStore = defineStore('ClientesStore', {
 		listenChanges() {
 			onSnapshot(collection(db, 'clientes'), (snapshot) => {
 				snapshot.docChanges().forEach((change) => {
+					console.log(change);
 					if (change.type == 'added') {
 						if (
 							!this.clientDatabase.some(
@@ -67,6 +68,10 @@ export const useClientesStore = defineStore('ClientesStore', {
 							};
 							this.clientDatabase.push(data);
 						}
+					} else if (change.type == 'removed') {
+						this.clientDatabase = this.clientDatabase.filter(
+							(doc) => doc.docId !== change.doc.id
+						);
 					}
 				});
 			});
@@ -101,11 +106,11 @@ export const useClientesStore = defineStore('ClientesStore', {
 			console.log(this.currentcliente);
 		},
 
-		deletecliente(id) {
-			this.clientDatabase = this.clientDatabase.filter(
-				(cliente) => cliente.docId !== id
-			);
-		},
+		// deletecliente(id) {
+		// 	this.clientDatabase = this.clientDatabase.filter(
+		// 		(cliente) => cliente.docId !== id
+		// 	);
+		// },
 		resetCurrentClient() {
 			this.currentcliente = {
 				docId: 'prueba',

@@ -77,7 +77,7 @@ export default {
       switch (this.collection) {
         case "clientes":
           console.log(this.collection);
-          useClientesStore().deletecliente(this.itemId);
+          // useClientesStore().deletecliente(this.itemId);
           break;
         case "productos":
           console.log(this.collection);
