@@ -52,7 +52,6 @@ export const useClientesStore = defineStore('ClientesStore', {
 		listenChanges() {
 			onSnapshot(collection(db, 'clientes'), (snapshot) => {
 				snapshot.docChanges().forEach((change) => {
-					console.log(change);
 					if (change.type == 'added') {
 						if (
 							!this.clientDatabase.some(
