@@ -215,6 +215,7 @@ export const usePedidosStore = defineStore('PedidosStore', {
 				return {
 					enPreparacion: false,
 					enMesa: true,
+					horaMesa: new Date().getTime(),
 				};
 			} else if (pedido.enMesa) {
 				pedido.enMesa = false;
@@ -222,6 +223,7 @@ export const usePedidosStore = defineStore('PedidosStore', {
 				return {
 					enMesa: false,
 					enCamino: true,
+					horaCamino: new Date().getTime(),
 				};
 			} else if (pedido.enCamino) {
 				pedido.enCamino = false;
@@ -229,6 +231,7 @@ export const usePedidosStore = defineStore('PedidosStore', {
 				return {
 					enCamino: false,
 					entregado: true,
+					horaEntregado: new Date().getTime(),
 				};
 			} else if (pedido.entregado) {
 				pedido.entregado = false;

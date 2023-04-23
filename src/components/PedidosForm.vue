@@ -395,8 +395,9 @@ export default {
         domiciliario: null,
         fecha: new Date(),
         horaToma: new Date().getTime(),
-        horaPreparado: null,
-        horaDespachado: null,
+        horaMesa: null,
+        horaCamino: null,
+        horaEntregado: null,
         descuento: this.descuento,
       };
 

@@ -12,7 +12,11 @@
     </div>
   </div>
   <div class="pedidos container">
-    <square-colored v-for="(pedido, index) in porEntregar" :key="index" />
+    <square-colored
+      v-for="(pedido, index) in porEntregar"
+      :key="index"
+      :pedido="pedido"
+    />
   </div>
 </template>
 
