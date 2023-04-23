@@ -10,14 +10,19 @@
       </button>
     </div>
   </div>
+  <div class="pedidos container">
+    <square-colored v-for="(pedido, index) in porEntregar" :key="index" />
+  </div>
 </template>
 
 <script>
 import { mapState } from "pinia";
 import { useAuth } from "../store/auth";
 import { usePedidosStore } from "../store/main";
+import SquareColored from "../components/domiciliarios/SquareColored.vue";
 
 export default {
+  components: { SquareColored },
   methods: {
     cerrarSesion() {
       useAuth().logout();
@@ -33,6 +38,20 @@ export default {
         : "";
     },
     ...mapState(usePedidosStore, ["pedidosDatabase"]),
+    porEntregar() {
+      const filtrados = this.filtrar();
+      return filtrados;
+    },
+  },
+  methods: {
+    filtrar() {
+      return this.pedidosDatabase.filter((pedido) => pedido.enMesa);
+    },
+  },
+  watch: {
+    pedidosDatabase() {
+      this.filtrar();
+    },
   },
 };
 </script>
