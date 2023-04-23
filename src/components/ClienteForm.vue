@@ -167,7 +167,7 @@ export default {
       try {
         const data = {
           numero: this.numero,
-          nombre: this.nombre,
+          nombre: useUtilsStore().capitalize(this.nombre),
           direccion: this.direccion,
           barrio: this.barrio,
           notasDir: this.notasDir,

@@ -66,6 +66,7 @@ import gastosIcon from "./icons/gastosIcon.vue";
 import domiciliarioIcon from "./icons/domiciliarioIcon.vue";
 import ContabilidadIcon from "./icons/contabilidadIcon.vue";
 import { auth } from "../firebase/firebaseInit";
+import { useUtilsStore } from "../store/main";
 
 export default {
   data() {
@@ -89,11 +90,8 @@ export default {
   },
   mounted() {
     const dName = JSON.parse(localStorage.getItem("user")).displayName;
-    const dNameArray = dName.split(" ");
-    const dNameUppercase = dNameArray.map(
-      (word) => word[0].toUpperCase() + word.substring(1)
-    );
-    const result = dNameUppercase.join(" ");
+
+    const result = useUtilsStore().capitalize(dName);
     this.logedUser = result;
   },
 };

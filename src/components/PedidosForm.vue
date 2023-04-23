@@ -402,7 +402,7 @@ export default {
 
       const docRef = await addDoc(collection(db, "pedidos"), data);
       console.log(docRef.id);
-      usePedidosStore().addPedido({ ...data, docId: docRef.id });
+      // usePedidosStore().addPedido({ ...data, docId: docRef.id });
       this.cerrarPedido();
       useUtilsStore().confirmAction("Pedido Guardado Exitosamente");
     },

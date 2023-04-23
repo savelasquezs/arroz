@@ -1,5 +1,11 @@
 import { defineStore } from 'pinia';
-import { getDocs, collection, onSnapshot } from 'firebase/firestore';
+import {
+	getDocs,
+	collection,
+	onSnapshot,
+	query,
+	orderBy,
+} from 'firebase/firestore';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 
@@ -50,7 +56,8 @@ export const useClientesStore = defineStore('ClientesStore', {
 		},
 
 		listenChanges() {
-			onSnapshot(collection(db, 'clientes'), (snapshot) => {
+			const q = query(collection(db, 'clientes'), orderBy('nombre'));
+			onSnapshot(q, (snapshot) => {
 				snapshot.docChanges().forEach((change) => {
 					if (change.type == 'added') {
 						if (
@@ -139,7 +146,8 @@ export const useProductsStore = defineStore('ProductosStore', {
 		},
 
 		listenChanges() {
-			onSnapshot(collection(db, 'productos'), (snapshot) => {
+			const q = query(collection(db, 'productos'), orderBy('nombre'));
+			onSnapshot(q, (snapshot) => {
 				snapshot.docChanges().forEach((change) => {
 					if (change.type == 'added') {
 						if (
@@ -239,14 +247,7 @@ export const usePedidosStore = defineStore('PedidosStore', {
 				(pedido) => pedido.docId == id
 			);
 		},
-		// addPedido(pedido) {
-		// 	this.pedidosDatabase.push(pedido);
-		// },
-		// deletePedido(id) {
-		// 	this.pedidosDatabase = this.pedidosDatabase.filter(
-		// 		(pedido) => pedido.docId != id
-		// 	);
-		// },
+
 		buscarCliente() {
 			const clientes = useClientesStore();
 			this.clientesFiltrados = clientes.clientDatabase.filter(
@@ -258,7 +259,8 @@ export const usePedidosStore = defineStore('PedidosStore', {
 		},
 
 		listenChanges() {
-			onSnapshot(collection(db, 'pedidos'), (snapshot) => {
+			const q = query(collection(db, 'pedidos'), orderBy('horaToma', 'desc'));
+			onSnapshot(q, (snapshot) => {
 				snapshot.docChanges().forEach((change) => {
 					if (change.type == 'added') {
 						if (
@@ -270,7 +272,7 @@ export const usePedidosStore = defineStore('PedidosStore', {
 								docId: change.doc.id,
 								...change.doc.data(),
 							};
-							this.pedidosDatabase.push(data);
+							this.pedidosDatabase.unshift(data);
 						}
 					} else if (change.type == 'modified') {
 						let cambio = this.pedidosDatabase.find(
@@ -279,9 +281,7 @@ export const usePedidosStore = defineStore('PedidosStore', {
 						let index = this.pedidosDatabase.findIndex(
 							(pedido) => pedido.docId == change.doc.id
 						);
-						console.log(this.pedidosDatabase[index]);
 						this.pedidosDatabase[index] = { ...cambio, ...change.doc.data() };
-						console.log(this.pedidosDatabase[index]);
 					} else if (change.type == 'removed') {
 						this.pedidosDatabase = this.pedidosDatabase.filter(
 							(pedido) => pedido.docId != change.doc.id
@@ -290,20 +290,6 @@ export const usePedidosStore = defineStore('PedidosStore', {
 				});
 			});
 		},
-		// async getPedidos() {
-		// 	const querySnapshot = await getDocs(collection(db, 'pedidos'));
-		// 	querySnapshot.forEach((doc) => {
-		// 		if (!this.pedidosDatabase.some((pedido) => pedido.docId == doc.id)) {
-		// 			const data = {
-		// 				docId: doc.id,
-		// 				...doc.data(),
-		// 			};
-		// 			this.pedidosDatabase.push(data);
-		// 		}
-		// 	});
-
-		// 	this.productLoaded = true;
-		// },
 	},
 });
 
@@ -326,6 +312,14 @@ export const useUtilsStore = defineStore('UtilsStore', {
 		},
 		horaLocal(hora) {
 			return moment(hora).format('LT');
+		},
+		capitalize(words) {
+			const wordsArray = words.split(' ');
+			const wordsUppercase = wordsArray.map(
+				(word) => word[0].toUpperCase() + word.substring(1)
+			);
+			const result = wordsUppercase.join(' ');
+			return result;
 		},
 	},
 });
