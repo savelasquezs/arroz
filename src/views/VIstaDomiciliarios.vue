@@ -8,6 +8,7 @@
       <button @click="cerrarSesion" class="btn btn-outline-danger">
         Cerrar Sesion
       </button>
+      <button @click="cerrar">cerrar</button>
     </div>
   </div>
   <div class="pedidos container">
@@ -22,12 +23,16 @@ import { usePedidosStore } from "../store/main";
 import SquareColored from "../components/domiciliarios/SquareColored.vue";
 
 export default {
-  components: { SquareColored },
   methods: {
     cerrarSesion() {
+      console.log("Diablos señorita");
       useAuth().logout();
     },
+    filtrar() {
+      return this.pedidosDatabase.filter((pedido) => pedido.enMesa);
+    },
   },
+  components: { SquareColored },
   computed: {
     usuario() {
       return localStorage.getItem("user")
@@ -43,11 +48,7 @@ export default {
       return filtrados;
     },
   },
-  methods: {
-    filtrar() {
-      return this.pedidosDatabase.filter((pedido) => pedido.enMesa);
-    },
-  },
+
   watch: {
     pedidosDatabase() {
       this.filtrar();
