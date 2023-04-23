@@ -155,15 +155,15 @@ export const useUtilsGastos = defineStore('utilsGastos', {
 			let mensaje = '';
 			switch (tabla) {
 				case 'categories':
-					useCategorias().addCategoria({ ...data, docId: docRef.id });
+					// useCategorias().addCategoria({ ...data, docId: docRef.id });
 					mensaje = 'Categoria Guardado exitosamente';
 					break;
 				case 'tipoGastos':
-					useTipoGastos().addTipoGasto({ ...data, docId: docRef.id });
+					// useTipoGastos().addTipoGasto({ ...data, docId: docRef.id });
 					mensaje = 'Tipo de gasto guardado exitosamente';
 					break;
 				case 'Gastos':
-					useGastosHoy().addGasto({ ...data, docId: docRef.id });
+					// useGastosHoy().addGasto({ ...data, docId: docRef.id });
 					mensaje = 'Gasto guardado exitosamente';
 					break;
 				default:

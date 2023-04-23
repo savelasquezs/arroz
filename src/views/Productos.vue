@@ -2,7 +2,7 @@
   <Modal v-if="modalProducto"><ProductForm v-if="modalProducto" /></Modal>
   <Modal v-if="borrarProducto"
     ><Borrar
-      :itemId="currentProduct.idDoc"
+      :itemId="currentProduct.docId"
       collection="productos"
       :itemName="currentProduct.nombre"
       v-if="borrarProducto"
@@ -44,7 +44,7 @@
           <td>
             <button
               class="btn btn-sm btn-warning"
-              @click="editarProduct(product.idDoc)"
+              @click="editarProduct(product.docId)"
             >
               Editar
             </button>
@@ -52,7 +52,7 @@
           <td>
             <button
               class="btn btn-sm btn-danger"
-              @click="borrarProduct(product.idDoc)"
+              @click="borrarProduct(product.docId)"
             >
               Borrar
             </button>
@@ -107,8 +107,8 @@ export default {
       console.log(this.editProduct);
     },
     borrarProduct(id) {
-      useProductsStore().toggleDeleteProduct();
       useProductsStore().setCurrentProduct(id);
+      useProductsStore().toggleDeleteProduct();
     },
   },
   components: {

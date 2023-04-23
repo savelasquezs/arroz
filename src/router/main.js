@@ -70,7 +70,7 @@ router.beforeEach((to, from, next) => {
 	if (to.matched.some((ruta) => ruta.meta.requiresAuth)) {
 		const user = auth.currentUser;
 		const userlocal = JSON.parse(localStorage.getItem('user'));
-		const isAdmin = userlocal.isAdmin;
+		const isAdmin = localStorage.getItem('user') ? userlocal.isAdmin : '';
 		if (user || userlocal) {
 			if (to.matched.some((ruta) => ruta.meta.requiresAdmin)) {
 				if (isAdmin) {

@@ -428,13 +428,7 @@ export default {
         const pedidoRef = await updateDoc(docRef, data);
 
         this.cerrarPedido();
-        let cambio = this.pedidosDatabase.find(
-          (pedido) => pedido.docId == this.currentPedido.docId
-        );
-        let index = this.pedidosDatabase.findIndex(
-          (pedido) => pedido.docId == this.currentPedido.docId
-        );
-        this.pedidosDatabase[index] = { ...cambio, ...data };
+
         useUtilsStore().confirmAction("Pedido Actualizado exitosamente");
       } catch (error) {
         console.log(error);

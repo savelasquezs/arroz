@@ -173,6 +173,7 @@ export default {
   data() {
     return {
       filtroPorNombre: "",
+      filtrados: [],
       date: "",
       presetDateRanges: [
         { label: "Hoy", range: [new Date(), new Date()] },
@@ -196,7 +197,6 @@ export default {
           range: [startOfYear(new Date()), endOfYear(new Date())],
         },
       ],
-      filtrados: [],
     };
   },
 
@@ -231,10 +231,7 @@ export default {
 
     filtrar() {
       if (!this.date && this.filtroPorNombre == "") {
-        console.log("vacios");
-        console.log(this.pedidosDatabase);
-        this.filtrados = [...this.pedidosDatabase];
-        console.log(this.filtrados[0]);
+        this.filtrados = this.pedidosDatabase;
         return;
       }
       if (!this.date && this.filtroPorNombre !== "") {

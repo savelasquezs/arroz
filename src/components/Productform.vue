@@ -99,7 +99,7 @@ export default {
         const productRef = await addDoc(collection(db, "productos"), data);
         console.log(`el producto fue guardado con el id : ${productRef.id}`);
         this.closeModal();
-        useProductsStore().addProduct({ ...data, idDoc: productRef.id });
+        // useProductsStore().addProduct({ ...data, idDoc: productRef.id });
         useUtilsStore().confirmAction("Producto Creado exitosamente");
       } catch (error) {
         console.log(error);
@@ -114,18 +114,12 @@ export default {
           categoria: this.categoria,
         };
 
-        const docRef = await doc(db, "productos", this.idDoc);
+        const docRef = doc(db, "productos", this.currentProduct.docId);
 
         const productRef = await updateDoc(docRef, data);
 
         this.closeModal();
-        let cambio = this.productDatabase.find(
-          (product) => product.idDoc == this.idDoc
-        );
-        let index = this.productDatabase.findIndex(
-          (product) => product.idDoc == this.idDoc
-        );
-        this.productDatabase[index] = { ...cambio, ...data };
+
         useUtilsStore().confirmAction("Producto Actualizado exitosamente");
       } catch (error) {
         console.log(error);

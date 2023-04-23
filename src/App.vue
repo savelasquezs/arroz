@@ -50,8 +50,8 @@ export default {
     },
   },
   created() {
-    useProductsStore().getProducts();
-    usePedidosStore().getPedidos();
+    useProductsStore().listenChanges();
+    usePedidosStore().listenChanges();
     useCategorias().getCategories();
     useTipoGastos().getTipoGastos();
     useGastosHoy().getGastos();

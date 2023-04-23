@@ -81,11 +81,11 @@ export default {
           break;
         case "productos":
           console.log(this.collection);
-          useProductsStore().deleteProduct(this.itemId);
+          // useProductsStore().deleteProduct(this.itemId);
           break;
         case "pedidos":
           console.log(this.collection);
-          usePedidosStore().deletePedido(this.itemId);
+          // usePedidosStore().deletePedido(this.itemId);
           break;
         case "categories":
           console.log(this.collection);

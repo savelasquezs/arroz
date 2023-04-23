@@ -137,30 +137,44 @@ export const useProductsStore = defineStore('ProductosStore', {
 		toggleDeleteProduct() {
 			this.borrarProducto = !this.borrarProducto;
 		},
-		async getProducts() {
-			const querySnapshot = await getDocs(collection(db, 'productos'));
-			querySnapshot.forEach((doc) => {
-				if (!this.productDatabase.some((product) => product.docId == doc.id)) {
-					const data = {
-						idDoc: doc.id,
-						...doc.data(),
-					};
-					this.productDatabase.push(data);
-				}
-			});
 
-			this.productLoaded = true;
+		listenChanges() {
+			onSnapshot(collection(db, 'productos'), (snapshot) => {
+				snapshot.docChanges().forEach((change) => {
+					if (change.type == 'added') {
+						if (
+							!this.productDatabase.some(
+								(product) => product.docId == change.doc.id
+							)
+						) {
+							const data = {
+								docId: change.doc.id,
+								...change.doc.data(),
+							};
+							this.productDatabase.push(data);
+						}
+					} else if (change.type == 'modified') {
+						let cambio = this.productDatabase.find(
+							(product) => product.docId == change.doc.id
+						);
+						let index = this.productDatabase.findIndex(
+							(product) => product.docId == change.doc.id
+						);
+						this.productDatabase[index] = { ...cambio, ...change.doc.data() };
+					} else if (change.type == 'removed') {
+						this.productDatabase = this.productDatabase.filter(
+							(product) => product.docId != change.doc.id
+						);
+					}
+				});
+			});
 		},
+
 		setCurrentProduct(id) {
 			this.currentProduct = this.productDatabase.find(
-				(product) => product.idDoc == id
+				(product) => product.docId == id
 			);
 			console.log(this.currentProduct);
-		},
-		deleteProduct(id) {
-			this.productDatabase = this.productDatabase.filter(
-				(product) => product.idDoc != id
-			);
 		},
 	},
 });
@@ -225,14 +239,14 @@ export const usePedidosStore = defineStore('PedidosStore', {
 				(pedido) => pedido.docId == id
 			);
 		},
-		addPedido(pedido) {
-			this.pedidosDatabase.push(pedido);
-		},
-		deletePedido(id) {
-			this.pedidosDatabase = this.pedidosDatabase.filter(
-				(pedido) => pedido.docId != id
-			);
-		},
+		// addPedido(pedido) {
+		// 	this.pedidosDatabase.push(pedido);
+		// },
+		// deletePedido(id) {
+		// 	this.pedidosDatabase = this.pedidosDatabase.filter(
+		// 		(pedido) => pedido.docId != id
+		// 	);
+		// },
 		buscarCliente() {
 			const clientes = useClientesStore();
 			this.clientesFiltrados = clientes.clientDatabase.filter(
@@ -242,20 +256,54 @@ export const usePedidosStore = defineStore('PedidosStore', {
 		tooglePedidoFormOpen() {
 			this.pedidoFormOpen = !this.pedidoFormOpen;
 		},
-		async getPedidos() {
-			const querySnapshot = await getDocs(collection(db, 'pedidos'));
-			querySnapshot.forEach((doc) => {
-				if (!this.pedidosDatabase.some((pedido) => pedido.docId == doc.id)) {
-					const data = {
-						docId: doc.id,
-						...doc.data(),
-					};
-					this.pedidosDatabase.push(data);
-				}
-			});
 
-			this.productLoaded = true;
+		listenChanges() {
+			onSnapshot(collection(db, 'pedidos'), (snapshot) => {
+				snapshot.docChanges().forEach((change) => {
+					if (change.type == 'added') {
+						if (
+							!this.pedidosDatabase.some(
+								(pedido) => pedido.docId == change.doc.id
+							)
+						) {
+							const data = {
+								docId: change.doc.id,
+								...change.doc.data(),
+							};
+							this.pedidosDatabase.push(data);
+						}
+					} else if (change.type == 'modified') {
+						let cambio = this.pedidosDatabase.find(
+							(pedido) => pedido.docId == change.doc.id
+						);
+						let index = this.pedidosDatabase.findIndex(
+							(pedido) => pedido.docId == change.doc.id
+						);
+						console.log(this.pedidosDatabase[index]);
+						this.pedidosDatabase[index] = { ...cambio, ...change.doc.data() };
+						console.log(this.pedidosDatabase[index]);
+					} else if (change.type == 'removed') {
+						this.pedidosDatabase = this.pedidosDatabase.filter(
+							(pedido) => pedido.docId != change.doc.id
+						);
+					}
+				});
+			});
 		},
+		// async getPedidos() {
+		// 	const querySnapshot = await getDocs(collection(db, 'pedidos'));
+		// 	querySnapshot.forEach((doc) => {
+		// 		if (!this.pedidosDatabase.some((pedido) => pedido.docId == doc.id)) {
+		// 			const data = {
+		// 				docId: doc.id,
+		// 				...doc.data(),
+		// 			};
+		// 			this.pedidosDatabase.push(data);
+		// 		}
+		// 	});
+
+		// 	this.productLoaded = true;
+		// },
 	},
 });
 
