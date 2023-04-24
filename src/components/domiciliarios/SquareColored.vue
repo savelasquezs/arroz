@@ -1,9 +1,8 @@
 <template>
-  <div class="pedido_container" ref="cuadro">
+  <div class="pedido_container" :class="colorClass">
     <div class="container">
       <h5>{{ pedido.cliente.nombre }}</h5>
       <p>{{ pedido.cliente.direccion }}</p>
-      <p>{{ counter }}</p>
       <p>{{ pedido.horaMesa }}</p>
     </div>
   </div>
@@ -11,34 +10,49 @@
 
 <script>
 export default {
+  props: {
+    pedido: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
-      counter: 0,
+      elapsedTime: 0,
     };
   },
-  props: ["pedido"],
-  created() {
-    setInterval(() => {
-      this.counter += 1;
+  computed: {
+    colorClass() {
+      if (this.elapsedTime < 10) {
+        return "yellow";
+      } else if (this.elapsedTime < 20) {
+        return "yellowDark";
+      } else if (this.elapsedTime < 30) {
+        return "orange";
+      } else if (this.elapsedTime < 40) {
+        return "orangeDark";
+      } else if (this.elapsedTime < 50) {
+        return "fucsia";
+      } else {
+        return "red";
+      }
+    },
+    orderMesaTime() {
+      return this.pedido.horaMesa;
+    },
+  },
+  mounted() {
+    this.timer = setInterval(() => {
+      // Update the elapsedTime data property
+      const now = new Date();
+      this.elapsedTime = Math.floor((now - this.orderMesaTime) / 1000);
     }, 1000);
   },
-
-  watch: {
-    counter() {
-      const background =
-        this.counter < 10
-          ? "#c0eda6"
-          : this.counter >= 10 && this.counter < 20
-          ? "#fff7bc"
-          : this.counter >= 20
-          ? "#ff0075"
-          : "#fff";
-      this.$refs.cuadro.style = `background:${background}`;
-    },
+  beforeUnmount() {
+    clearInterval(this.timer);
   },
 };
 </script>
-
 <style scoped>
 .pedido_container {
   height: 200px;
@@ -49,21 +63,23 @@ export default {
 
   animation-name: bg;
 }
-@keyframes bg {
-  0% {
-    background: #c0eda6;
-  }
-  25% {
-    background: #fff7bc;
-  }
-  50% {
-    background: #ff8080;
-  }
-  75% {
-    background: #fd5d5d;
-  }
-  100% {
-    background: #ff0075;
-  }
+
+.yellow {
+  background: #c0eda6;
+}
+.yellowDark {
+  background: #fff7bc;
+}
+.orange {
+  background: #ff8080;
+}
+.orangeDark {
+  background: #fd5d5d;
+}
+.fucsia {
+  background: #ff0075;
+}
+.red {
+  background: red;
 }
 </style>

@@ -11,7 +11,7 @@
       <button @click="cerrar">cerrar</button>
     </div>
   </div>
-  <div class="pedidos container">
+  <div class="pedidos container d-grid grid">
     <square-colored
       v-for="(pedido, index) in porEntregar"
       :key="index"
@@ -62,4 +62,9 @@ export default {
 </script>
 
 <style scoped>
+.pedidos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 50px;
+}
 </style>
