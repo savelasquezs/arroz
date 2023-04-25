@@ -49,7 +49,7 @@
 
 <script>
 import { Icon } from "@iconify/vue";
-import { useTipoGastos } from "../store/gastos";
+import { useTipoGastos } from "../../store/gastos";
 
 export default {
   props: ["gasto"],

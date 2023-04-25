@@ -127,7 +127,7 @@
 
 <script>
 import { useClientesStore, useUtilsStore } from "@/store/main";
-import { db } from "../firebase/firebaseInit.js";
+import { db } from "../../firebase/firebaseInit.js";
 import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
 import { mapState } from "pinia";
 export default {

@@ -29,7 +29,7 @@ import {
   usePedidosStore,
   useUtilsStore,
 } from "@/store/main";
-import { useCategorias, useGastosHoy, useTipoGastos } from "../store/gastos";
+import { useCategorias, useGastosHoy, useTipoGastos } from "../../store/gastos";
 import Swal from "sweetalert2";
 
 import { mapState } from "pinia";

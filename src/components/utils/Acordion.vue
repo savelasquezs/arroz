@@ -58,7 +58,7 @@ import { Icon } from "@iconify/vue";
 import Modal from "./Modal.vue";
 import Borrar from "./Borrar.vue";
 import { mapState } from "pinia";
-import { useCategorias } from "../store/gastos";
+import { useCategorias } from "../../store/gastos";
 export default {
   props: { list: Array },
   components: {

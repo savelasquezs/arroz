@@ -27,13 +27,13 @@
 
 <script>
 import { Icon } from "@iconify/vue";
-import TipoGastoForm from "../components/TipoGastoForm.vue";
-import Tabs from "../components/Tabs.vue";
-import Categorias from "../components/Categorias.vue";
-import buttonAdd from "../components/buttonAdd.vue";
-import TipoGasto from "../components/TipoGasto.vue";
-import GastosHoy from "../components/GastosHoy.vue";
-import GastosTodos from "../components/GastosTodos.vue";
+import TipoGastoForm from "../components/gastos/TipoGastoForm.vue";
+import Tabs from "../components/utils/Tabs.vue";
+import Categorias from "../components/gastos/Categorias.vue";
+import buttonAdd from "../components/utils/buttonAdd.vue";
+import TipoGasto from "../components/gastos/TipoGasto.vue";
+import GastosHoy from "../components/gastos/GastosHoy.vue";
+import GastosTodos from "../components/gastos/GastosTodos.vue";
 import Navbar from "../components/Navbar.vue";
 export default {
   components: {

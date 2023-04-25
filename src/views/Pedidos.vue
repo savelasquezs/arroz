@@ -145,22 +145,23 @@
 </template>
 
 <script>
-import ButtonAdd from "../components/buttonAdd.vue";
+import ButtonAdd from "../components/utils/buttonAdd.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { useClientesStore } from "../store/main";
-import ClienteForm from "@/components/ClienteForm.vue";
-import DetallePedido from "@/components/DetallePedido.vue";
-import Modal from "@/components/Modal.vue";
-import PedidosForm from "@/components/PedidosForm.vue";
+import DetallePedido from "@/components/pedido/DetallePedido.vue";
+import Modal from "@/components/utils/Modal.vue";
+import PedidosForm from "@/components/pedido/PedidosForm.vue";
 import { mapState } from "pinia";
 import { usePedidosStore, useUtilsStore } from "@/store/main";
 import { Icon } from "@iconify/vue";
 import moment from "moment";
-import Borrar from "@/components/Borrar.vue";
+import Borrar from "@/components/utils/Borrar.vue";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase/firebaseInit.js";
 import Navbar from "../components/Navbar.vue";
+import ClienteForm from "../components/clientes/ClienteForm.vue";
+
 import {
   endOfMonth,
   endOfYear,

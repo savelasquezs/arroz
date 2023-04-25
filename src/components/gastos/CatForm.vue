@@ -48,10 +48,10 @@
 </template>
 
 <script>
-import { useCategorias, useUtilsGastos } from "../store/gastos";
-import Acordion from "./Acordion.vue";
+import { useCategorias, useUtilsGastos } from "../../store/gastos";
+import Acordion from "../utils/Acordion.vue";
 import { mapState } from "pinia";
-import { useUtilsStore } from "../store/main";
+import { useUtilsStore } from "../../store/main";
 
 export default {
   components: {

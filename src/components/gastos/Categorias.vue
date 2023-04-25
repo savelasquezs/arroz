@@ -13,9 +13,9 @@
 
 <script>
 import { mapState } from "pinia";
-import { useCategorias } from "../store/gastos";
-import Acordion from "./Acordion.vue";
-import buttonAdd from "./buttonAdd.vue";
+import { useCategorias } from "../../store/gastos";
+import buttonAdd from "../utils/buttonAdd.vue";
+import Acordion from "../utils/Acordion.vue";
 
 export default {
   components: {

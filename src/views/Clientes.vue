@@ -88,15 +88,15 @@
 </template>
 
 <script>
-import Borrar from "@/components/Borrar.vue";
-import Modal from "@/components/Modal.vue";
-import DetalleCliente from "@/components/DetalleCliente.vue";
+import Borrar from "@/components/utils/Borrar.vue";
+import Modal from "@/components/utils/Modal.vue";
+import DetalleCliente from "@/components/clientes/DetalleCliente.vue";
 import { Icon } from "@iconify/vue";
 
 import { useClientesStore } from "../store/main";
 import Navbar from "@/components/Navbar.vue";
 import { mapState } from "pinia";
-import buttonAdd from "../components/buttonAdd.vue";
+import buttonAdd from "../components/utils/buttonAdd.vue";
 export default {
   name: "home",
   data() {

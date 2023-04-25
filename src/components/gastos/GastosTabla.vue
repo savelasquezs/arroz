@@ -69,14 +69,14 @@
 <script>
 import moment from "moment";
 moment.locale("es");
-import buttonAdd from "./buttonAdd.vue";
+import buttonAdd from "../utils/buttonAdd.vue";
 import { mapState } from "pinia";
-import { useGastosHoy } from "../store/gastos";
-import Modal from "./Modal.vue";
+import { useGastosHoy } from "../../store/gastos";
+import Modal from "../utils/Modal.vue";
 import GastoHoyForm from "./GastoHoyForm.vue";
-import { useUtilsStore } from "../store/main";
+import { useUtilsStore } from "../../store/main";
 import { Icon } from "@iconify/vue";
-import Borrar from "./Borrar.vue";
+import Borrar from "../utils/Borrar.vue";
 export default {
   data() {
     return {};

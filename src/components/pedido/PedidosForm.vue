@@ -248,8 +248,7 @@ import {
   useUtilsStore,
 } from "@/store/main";
 import Swal from "sweetalert2";
-import ClienteForm from "@/components/ClienteForm.vue";
-import { db } from "../firebase/firebaseInit.js";
+import { db } from "../../firebase/firebaseInit.js";
 
 import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
 
@@ -258,6 +257,7 @@ import { Icon } from "@iconify/vue";
 import { uid } from "uid";
 
 import { mapState } from "pinia";
+import ClienteForm from "../clientes/ClienteForm.vue";
 
 export default {
   name: "pedidoForm",

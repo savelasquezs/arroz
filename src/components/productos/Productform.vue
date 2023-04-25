@@ -67,7 +67,7 @@
 <script>
 import { mapState } from "pinia";
 import { useProductsStore, useUtilsStore } from "@/store/main";
-import { db } from "../firebase/firebaseInit.js";
+import { db } from "../../firebase/firebaseInit.js";
 import { doc, addDoc, updateDoc, collection } from "firebase/firestore";
 export default {
   components: {},

@@ -5,7 +5,7 @@
 <script>
 import { mapState } from "pinia";
 import GastosTabla from "./GastosTabla.vue";
-import { useGastosHoy } from "../store/gastos";
+import { useGastosHoy } from "../../store/gastos";
 import moment from "moment";
 
 export default {

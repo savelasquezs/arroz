@@ -64,12 +64,12 @@
 </template>
 
 <script>
-import Modal from "@/components/Modal.vue";
-import ProductForm from "@/components/Productform.vue";
-import Borrar from "@/components/Borrar.vue";
+import Modal from "@/components/utils/Modal.vue";
+import ProductForm from "@/components/productos/Productform.vue";
+import Borrar from "@/components/utils/Borrar.vue";
 import { useProductsStore } from "../store/main";
 import { mapState } from "pinia";
-import buttonAdd from "../components/buttonAdd.vue";
+import buttonAdd from "../components/utils/buttonAdd.vue";
 import Navbar from "../components/Navbar.vue";
 
 export default {

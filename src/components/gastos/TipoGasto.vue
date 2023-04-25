@@ -23,10 +23,10 @@
 
 <script>
 import { mapState } from "pinia";
-import { useTipoGastos } from "../store/gastos";
+import { useTipoGastos } from "../../store/gastos";
 import CatContainerTipoGasto from "./CatContainerTipoGasto.vue";
 import TipoGastoForm from "./TipoGastoForm.vue";
-import ButtonAdd from "./buttonAdd.vue";
+import ButtonAdd from "../utils/buttonAdd.vue";
 export default {
   data() {
     return {};

@@ -24,7 +24,7 @@
 
 <script>
 import { httpsCallable } from "firebase/functions";
-import { functions } from "../firebase/firebaseInit";
+import { functions } from "../../firebase/firebaseInit";
 export default {
   data() {
     return {

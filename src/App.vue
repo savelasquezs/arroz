@@ -8,23 +8,20 @@
   </Modal>
 </template>
 <script>
-import ClienteForm from "@/components/ClienteForm.vue";
-
 import { mapState } from "pinia";
-
 import {
   useClientesStore,
   useProductsStore,
   usePedidosStore,
 } from "../src/store/main";
-
 import { useCategorias, useGastosHoy, useTipoGastos } from "./store/gastos";
-import Navbar from "@/components/Navbar.vue";
-import Modal from "@/components/Modal.vue";
-import Pedidos from "../src/views/Pedidos.vue";
-import CatForm from "./components/CatForm.vue";
 import { useAuth } from "./store/auth";
 import { auth } from "./firebase/firebaseInit";
+import Navbar from "./components/Navbar.vue";
+import Modal from "./components/utils/Modal.vue";
+import Pedidos from "./views/Pedidos.vue";
+import CatForm from "./components/gastos/CatForm.vue";
+import ClienteForm from "./components/clientes/ClienteForm.vue";
 
 export default {
   components: {

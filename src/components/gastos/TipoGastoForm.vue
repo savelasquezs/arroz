@@ -101,13 +101,13 @@
 
 <script>
 import Swal from "sweetalert2";
-import Acordion from "./Acordion.vue";
-import AutocompleteDropDown from "./AutocompleteDropDown.vue";
+import Acordion from "../utils/Acordion.vue";
+import AutocompleteDropDown from "../utils/AutocompleteDropDown.vue";
 import { mapState } from "pinia";
-import { useCategorias, useTipoGastos, useUtilsGastos } from "../store/gastos";
-import { useUtilsStore } from "../store/main";
-import Modal from "./Modal.vue";
-import Borrar from "./Borrar.vue";
+import { useCategorias, useTipoGastos, useUtilsGastos } from "../../store/gastos";
+import { useUtilsStore } from "../../store/main";
+import Modal from "../utils/Modal.vue";
+import Borrar from "../utils/Borrar.vue";
 export default {
   data() {
     return {
