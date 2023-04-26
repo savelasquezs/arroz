@@ -1,9 +1,24 @@
 <template>
-  <div class="pedido_container" :class="colorClass">
-    <div class="container">
-      <h5>{{ pedido.cliente.nombre }}</h5>
-      <p>{{ pedido.cliente.direccion }}</p>
-      <p>{{ pedido.horaMesa }}</p>
+  <div class="pedido" v-for="(order, index) in porEntregar" :key="index">
+    <div
+      class="pedido_container"
+      :class="[colorClass(order), { selected: order.selected }]"
+    >
+      <label :for="'order-' + order.docId">
+        <input
+          type="checkbox"
+          :id="'order-' + order.docId"
+          :value="order"
+          v-model="selectedOrders"
+          @change="highlight(order)"
+        />
+        <div class="container">
+          <h5>{{ order.cliente.nombre }}</h5>
+          <p>{{ order.cliente.direccion }}</p>
+          <p>{{ order.horaMesa }}</p>
+          <p>Elapsed time: {{ elapsedTime(order) }}</p>
+        </div>
+      </label>
     </div>
   </div>
 </template>
@@ -11,41 +26,51 @@
 <script>
 export default {
   props: {
-    pedido: {
-      type: Object,
+    porEntregar: {
+      type: Array,
       required: true,
     },
   },
-  data() {
-    return {
-      elapsedTime: 0,
-    };
-  },
-  computed: {
-    colorClass() {
-      if (this.elapsedTime < 10) {
+  methods: {
+    elapsedTime(order) {
+      const now = new Date();
+      const elapsedTimeInSeconds = Math.floor(
+        (now - new Date(order.horaMesa)) / 1000
+      );
+      return elapsedTimeInSeconds;
+    },
+    highlight(order) {
+      order.selected = !order.selected;
+      console.log(order);
+    },
+    colorClass(order) {
+      const elapsedTime = this.elapsedTime(order);
+      if (elapsedTime < 10) {
         return "yellow";
-      } else if (this.elapsedTime < 20) {
+      } else if (elapsedTime < 20) {
         return "yellowDark";
-      } else if (this.elapsedTime < 30) {
+      } else if (elapsedTime < 30) {
         return "orange";
-      } else if (this.elapsedTime < 40) {
+      } else if (elapsedTime < 40) {
         return "orangeDark";
-      } else if (this.elapsedTime < 50) {
+      } else if (elapsedTime < 50) {
         return "fucsia";
       } else {
         return "red";
       }
     },
-    orderMesaTime() {
-      return this.pedido.horaMesa;
-    },
+  },
+
+  data() {
+    return {
+      selectedOrders: [],
+    };
   },
   mounted() {
     this.timer = setInterval(() => {
-      // Update the elapsedTime data property
-      const now = new Date();
-      this.elapsedTime = Math.floor((now - this.orderMesaTime) / 1000);
+      this.porEntregar.forEach((order) => {
+        order.elapsedTime = this.elapsedTime(order);
+      });
     }, 1000);
   },
   beforeUnmount() {
@@ -53,7 +78,12 @@ export default {
   },
 };
 </script>
+
 <style scoped>
+.selected {
+  box-shadow: -1px 1px 8px 10px rgba(170, 184, 230, 1) !important;
+  }
+
 .pedido_container {
   height: 200px;
   width: 200px;
@@ -81,5 +111,8 @@ export default {
 }
 .red {
   background: red;
+}
+input[type="checkbox"] {
+  display: none;
 }
 </style>

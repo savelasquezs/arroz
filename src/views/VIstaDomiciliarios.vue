@@ -12,11 +12,7 @@
     </div>
   </div>
   <div class="pedidos container d-grid grid">
-    <square-colored
-      v-for="(pedido, index) in porEntregar"
-      :key="index"
-      :pedido="pedido"
-    />
+    <square-colored :porEntregar="porEntregar" />
   </div>
 </template>
 
@@ -27,10 +23,18 @@ import { usePedidosStore } from "../store/main";
 import SquareColored from "../components/domiciliarios/SquareColored.vue";
 
 export default {
+  data() {
+    return {
+      selectedOrders: [],
+    };
+  },
   methods: {
     cerrarSesion() {
       console.log("Diablos señorita");
       useAuth().logout();
+    },
+    printSelected() {
+      console.log(this.selectedOrders);
     },
     filtrar() {
       return this.pedidosDatabase.filter((pedido) => pedido.enMesa);
