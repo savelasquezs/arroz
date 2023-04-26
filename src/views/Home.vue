@@ -45,12 +45,12 @@
 </template>
 
 <script >
-import LineChartComponent from "@/components/LineChartComponent.vue";
 import { mapState } from "pinia";
 import { usePedidosStore } from "@/store/main";
 import moment from "moment";
 import CrearAdmin from "../components/utils/CrearAdmin.vue";
 import Navbar from "../components/Navbar.vue";
+import LineChartComponent from "../components/utils/LineChartComponent.vue";
 
 export default {
   components: {
