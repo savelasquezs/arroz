@@ -21,8 +21,24 @@
           <hr />
           <hr />
           <h3 class="text-center">$ {{ pedido.total }}</h3>
+          <h5>Descuento: {{ pedido.descuento }}</h5>
           <p>{{ fechaLocal(pedido.horaToma) }}</p>
-          <p>{{ horaLocal(pedido.horaToma) }}</p>
+          <p><strong>Hora toma:</strong> {{ horaLocal(pedido.horaToma) }}</p>
+          <p>
+            <strong>Hora preparado:</strong>
+            {{ pedido.horaMesa ? horaLocal(pedido.horaMesa) : "Aún no" }}
+          </p>
+          <p>
+            <strong>Hora despachado:</strong>
+            {{ pedido.horaMesa ? horaLocal(pedido.horaCamino) : "Aún no" }}
+          </p>
+          <p>
+            <strong>Domiciliario: </strong> {{ pedido.domiciliario?.nombre }}
+          </p>
+          <p>
+            <strong>Hora entregado:</strong>
+            {{ pedido.horaMesa ? horaLocal(pedido.horaEntregado) : "Aún no" }}
+          </p>
           <p>
             Estado:
             <span class="mx-3" v-if="pedido.enPreparacion"

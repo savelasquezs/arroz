@@ -28,7 +28,9 @@
               :id="'order-' + order.docId"
               :value="order"
               v-model="selectedOrders"
+              :ref="order.docId"
               @change="highlight(order)"
+              checked="false"
             />
             <div class="container">
               <h5>{{ order.cliente.nombre }}</h5>
@@ -66,9 +68,31 @@ export default {
   },
   methods: {
     async asignarPedidos(domiciliario) {
+      const orderToAdicionar = [];
+      this.selectedOrders = this.selectedOrders.map((order) => {
+        return {
+          docId: order.docId,
+          valorDomi: order.cliente.valorDomi,
+          cliente: order.cliente.nombre,
+          direccion: order.cliente.direccion,
+          fecha: order.fecha,
+          horaCamino: order.horaCamino,
+          horaMesa: order.horaMesa,
+          total: order.total,
+        };
+      });
+      this.selectedOrders.forEach((order) => {
+        if (
+          !domiciliario.pedidosEntregados.some(
+            (pedido) => pedido.docId == order.docId
+          )
+        ) {
+          orderToAdicionar.push(order);
+        }
+      });
       const domiciliosLlevados = [
         ...domiciliario.pedidosEntregados,
-        ...this.selectedOrders,
+        ...orderToAdicionar,
       ];
       const data = {
         pedidosEntregados: domiciliosLlevados,
@@ -85,6 +109,7 @@ export default {
       this.selectedOrders.forEach((order) => {
         usePedidosStore().actualizarEstado(order.docId, domiCorto);
       });
+      this.selectedOrders = [];
       this.$refs.asignacion.cerrarModal();
     },
     authDomiciliario() {
@@ -99,7 +124,11 @@ export default {
       return elapsedTimeInSeconds;
     },
     highlight(order) {
-      order.selected = !order.selected;
+      if (this.$refs[order.docId][0].checked) {
+        order.selected = true;
+      } else {
+        order.selected = false;
+      }
     },
     colorClass(order) {
       const elapsedTime = this.elapsedTime(order);
