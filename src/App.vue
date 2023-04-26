@@ -15,6 +15,7 @@ import {
   usePedidosStore,
 } from "../src/store/main";
 import { useCategorias, useGastosHoy, useTipoGastos } from "./store/gastos";
+import { useDomiciliarios } from "./store/domiciliario";
 import { useAuth } from "./store/auth";
 import { auth } from "./firebase/firebaseInit";
 import Navbar from "./components/Navbar.vue";
@@ -53,6 +54,7 @@ export default {
     useTipoGastos().getTipoGastos();
     useGastosHoy().getGastos();
     useClientesStore().listenChanges();
+    useDomiciliarios().listenChanges();
   },
 };
 </script>

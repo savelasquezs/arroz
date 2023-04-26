@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia';
 import {
-	getDocs,
 	collection,
 	onSnapshot,
 	query,
 	orderBy,
+	doc,
+	updateDoc,
 } from 'firebase/firestore';
 import Swal from 'sweetalert2';
 import moment from 'moment';
@@ -207,7 +208,7 @@ export const usePedidosStore = defineStore('PedidosStore', {
 			this.editingPedido = !this.editingPedido;
 		},
 
-		siguienteEstado(id) {
+		siguienteEstado(id, domiciliario = null) {
 			const pedido = this.pedidosDatabase.find((pedido) => pedido.docId == id);
 			if (pedido.enPreparacion) {
 				pedido.enPreparacion = false;
@@ -224,6 +225,7 @@ export const usePedidosStore = defineStore('PedidosStore', {
 					enMesa: false,
 					enCamino: true,
 					horaCamino: new Date().getTime(),
+					domiciliario: domiciliario,
 				};
 			} else if (pedido.enCamino) {
 				pedido.enCamino = false;
@@ -242,6 +244,12 @@ export const usePedidosStore = defineStore('PedidosStore', {
 				};
 			}
 		},
+
+		async actualizarEstado(id, domiciliario = null) {
+			const docRef = doc(db, 'pedidos', id);
+			await updateDoc(docRef, this.siguienteEstado(id, domiciliario));
+		},
+
 		toggleDelete() {
 			this.deletingPedido = !this.deletingPedido;
 		},

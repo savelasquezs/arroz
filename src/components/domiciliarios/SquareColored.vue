@@ -1,30 +1,63 @@
 <template>
-  <div class="pedido" v-for="(order, index) in porEntregar" :key="index">
+  <modal v-if="registerFormOpened || loginFormOpened">
+    <register-form-domiciliarios
+      ref="asignacion"
+      v-if="loginFormOpened"
+      @domiAuthenticado="asignarPedidos"
+    />
+    <register-form-domiciliarios v-if="registerFormOpened" :registro="true" />
+  </modal>
+  <div class="container mt-5">
     <div
-      class="pedido_container"
-      :class="[colorClass(order), { selected: order.selected }]"
+      class="input-group mb-3 d-flex justify-content-end"
+      v-if="selectedOrders.length > 0"
     >
-      <label :for="'order-' + order.docId">
-        <input
-          type="checkbox"
-          :id="'order-' + order.docId"
-          :value="order"
-          v-model="selectedOrders"
-          @change="highlight(order)"
-        />
-        <div class="container">
-          <h5>{{ order.cliente.nombre }}</h5>
-          <p>{{ order.cliente.direccion }}</p>
-          <p>{{ order.horaMesa }}</p>
-          <p>Elapsed time: {{ elapsedTime(order) }}</p>
+      <button class="btn btn-outline-success btn-lg" @click="authDomiciliario">
+        llevar
+      </button>
+    </div>
+    <div class="pedidos">
+      <div v-for="(order, index) in porEntregar" :key="index">
+        <div
+          class="pedido_container"
+          :class="[colorClass(order), { selected: order.selected }]"
+        >
+          <label :for="'order-' + order.docId">
+            <input
+              type="checkbox"
+              :id="'order-' + order.docId"
+              :value="order"
+              v-model="selectedOrders"
+              @change="highlight(order)"
+            />
+            <div class="container">
+              <h5>{{ order.cliente.nombre }}</h5>
+              <p>{{ order.cliente.direccion }}</p>
+              <p>{{ order.horaMesa }}</p>
+              <p>Elapsed time: {{ elapsedTime(order) }}</p>
+            </div>
+          </label>
         </div>
-      </label>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "pinia";
+import { useDomiciliarios } from "../../store/domiciliario";
+import buttonAdd from "../utils/buttonAdd.vue";
+import Modal from "../utils/Modal.vue";
+import RegisterFormDomiciliarios from "./registerFormDomiciliarios.vue";
+import { useUtilsGastos } from "../../store/gastos";
+import { usePedidosStore } from "../../store/main";
 export default {
+  data() {
+    return {
+      selectedOrders: [],
+    };
+  },
+  components: { buttonAdd, Modal, RegisterFormDomiciliarios },
   props: {
     porEntregar: {
       type: Array,
@@ -32,6 +65,32 @@ export default {
     },
   },
   methods: {
+    async asignarPedidos(domiciliario) {
+      const domiciliosLlevados = [
+        ...domiciliario.pedidosEntregados,
+        ...this.selectedOrders,
+      ];
+      const data = {
+        pedidosEntregados: domiciliosLlevados,
+      };
+      await useUtilsGastos().updateElement(
+        data,
+        "domiciliarios",
+        domiciliario.docId
+      );
+      const domiCorto = {
+        nombre: domiciliario.nombreDomiciliario,
+        docId: domiciliario.docId,
+      };
+      this.selectedOrders.forEach((order) => {
+        usePedidosStore().actualizarEstado(order.docId, domiCorto);
+      });
+      this.$refs.asignacion.cerrarModal();
+    },
+    authDomiciliario() {
+      this.modal = true;
+      useDomiciliarios().toggleloginFormOpened();
+    },
     elapsedTime(order) {
       const now = new Date();
       const elapsedTimeInSeconds = Math.floor(
@@ -41,7 +100,6 @@ export default {
     },
     highlight(order) {
       order.selected = !order.selected;
-      console.log(order);
     },
     colorClass(order) {
       const elapsedTime = this.elapsedTime(order);
@@ -61,11 +119,6 @@ export default {
     },
   },
 
-  data() {
-    return {
-      selectedOrders: [],
-    };
-  },
   mounted() {
     this.timer = setInterval(() => {
       this.porEntregar.forEach((order) => {
@@ -76,13 +129,27 @@ export default {
   beforeUnmount() {
     clearInterval(this.timer);
   },
+  computed: {
+    ...mapState(useDomiciliarios, [
+      "registerFormOpened",
+      "loginFormOpened",
+      "allDomiciliarios",
+    ]),
+  },
 };
 </script>
 
 <style scoped>
+.pedidos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 50px;
+  justify-content: center;
+  justify-items: center;
+}
 .selected {
   box-shadow: -1px 1px 8px 10px rgba(170, 184, 230, 1) !important;
-  }
+}
 
 .pedido_container {
   height: 200px;

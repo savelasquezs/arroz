@@ -8,12 +8,10 @@
       <button @click="cerrarSesion" class="btn btn-outline-danger">
         Cerrar Sesion
       </button>
-      <button @click="cerrar">cerrar</button>
     </div>
   </div>
-  <div class="pedidos container d-grid grid">
-    <square-colored :porEntregar="porEntregar" />
-  </div>
+
+  <square-colored :porEntregar="porEntregar" />
 </template>
 
 <script>
@@ -21,11 +19,15 @@ import { mapState } from "pinia";
 import { useAuth } from "../store/auth";
 import { usePedidosStore } from "../store/main";
 import SquareColored from "../components/domiciliarios/SquareColored.vue";
+import Modal from "../components/utils/Modal.vue";
+import RegisterFormDomiciliarios from "../components/domiciliarios/registerFormDomiciliarios.vue";
 
 export default {
   data() {
     return {
       selectedOrders: [],
+      modal: null,
+ 
     };
   },
   methods: {
@@ -40,7 +42,7 @@ export default {
       return this.pedidosDatabase.filter((pedido) => pedido.enMesa);
     },
   },
-  components: { SquareColored },
+  components: { SquareColored, Modal, RegisterFormDomiciliarios },
   computed: {
     usuario() {
       return localStorage.getItem("user")
@@ -66,9 +68,4 @@ export default {
 </script>
 
 <style scoped>
-.pedidos {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-gap: 50px;
-}
 </style>

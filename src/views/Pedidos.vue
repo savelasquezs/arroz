@@ -63,6 +63,7 @@
           <th>Direccion</th>
           <th>Valor</th>
           <th>Estado</th>
+          <th>Domiciliario</th>
           <th>Fecha</th>
           <th>Hora</th>
           <th>Acciones</th>
@@ -106,6 +107,7 @@
               />c
             </span>
           </td>
+          <td>{{ pedido.domiciliario?.nombre }}</td>
           <td>{{ fechaLocal(pedido.horaToma) }}</td>
           <td>{{ horaLocal(pedido.horaToma) }}</td>
           <td>
@@ -269,12 +271,9 @@ export default {
       usePedidosStore().setCurrentPedido(id);
       usePedidosStore().toggleDetallePedidoAbierto();
     },
-    siguienteEstado(id) {
-      return usePedidosStore().siguienteEstado(id);
-    },
+
     async actualizarEstado(id) {
-      const docRef = await doc(db, "pedidos", id);
-      await updateDoc(docRef, this.siguienteEstado(id));
+      usePedidosStore().actualizarEstado(id);
     },
     fechaLocal(fecha) {
       return useUtilsStore().fechaLocal(fecha);
