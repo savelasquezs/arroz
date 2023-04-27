@@ -17,30 +17,13 @@
       </button>
     </div>
     <div class="pedidos">
-      <div v-for="(order, index) in porEntregar" :key="index">
-        <div
-          class="pedido_container"
-          :class="[colorClass(order), { selected: order.selected }]"
-        >
-          <label :for="'order-' + order.docId">
-            <input
-              type="checkbox"
-              :id="'order-' + order.docId"
-              :value="order"
-              v-model="selectedOrders"
-              :ref="order.docId"
-              @change="highlight(order)"
-              checked="false"
-            />
-            <div class="container">
-              <h5>{{ order.cliente.nombre }}</h5>
-              <p>{{ order.cliente.direccion }}</p>
-              <p>{{ order.horaMesa }}</p>
-              <p>Elapsed time: {{ elapsedTime(order) }}</p>
-            </div>
-          </label>
-        </div>
-      </div>
+      <individual
+        v-for="(order, index) in porEntregar"
+        :key="index"
+        :order="order"
+        @pedidoSelected="adicionarSelected"
+        @pedidoUnselected="sacarSelected"
+      />
     </div>
   </div>
 </template>
@@ -53,13 +36,14 @@ import Modal from "../utils/Modal.vue";
 import RegisterFormDomiciliarios from "./registerFormDomiciliarios.vue";
 import { useUtilsGastos } from "../../store/gastos";
 import { usePedidosStore } from "../../store/main";
+import Individual from "./individual.vue";
 export default {
   data() {
     return {
       selectedOrders: [],
     };
   },
-  components: { buttonAdd, Modal, RegisterFormDomiciliarios },
+  components: { buttonAdd, Modal, RegisterFormDomiciliarios, Individual },
   props: {
     porEntregar: {
       type: Array,
@@ -67,6 +51,18 @@ export default {
     },
   },
   methods: {
+    adicionarSelected(order) {
+      if (!this.selectedOrders.some((pedido) => pedido.docId == order.docId)) {
+        this.selectedOrders.push(order);
+        return;
+      }
+      console.log("El pedido ya esta seleccionado");
+    },
+    sacarSelected(order) {
+      this.selectedOrders = this.selectedOrders.filter(
+        (pedido) => pedido.docId !== order.docId
+      );
+    },
     async asignarPedidos(domiciliario) {
       const orderToAdicionar = [];
       this.selectedOrders = this.selectedOrders.map((order) => {
@@ -116,47 +112,6 @@ export default {
       this.modal = true;
       useDomiciliarios().toggleloginFormOpened();
     },
-    elapsedTime(order) {
-      const now = new Date();
-      const elapsedTimeInSeconds = Math.floor(
-        (now - new Date(order.horaMesa)) / 1000
-      );
-      return elapsedTimeInSeconds;
-    },
-    highlight(order) {
-      if (this.$refs[order.docId][0].checked) {
-        order.selected = true;
-      } else {
-        order.selected = false;
-      }
-    },
-    colorClass(order) {
-      const elapsedTime = this.elapsedTime(order);
-      if (elapsedTime < 10) {
-        return "yellow";
-      } else if (elapsedTime < 20) {
-        return "yellowDark";
-      } else if (elapsedTime < 30) {
-        return "orange";
-      } else if (elapsedTime < 40) {
-        return "orangeDark";
-      } else if (elapsedTime < 50) {
-        return "fucsia";
-      } else {
-        return "red";
-      }
-    },
-  },
-
-  mounted() {
-    this.timer = setInterval(() => {
-      this.porEntregar.forEach((order) => {
-        order.elapsedTime = this.elapsedTime(order);
-      });
-    }, 1000);
-  },
-  beforeUnmount() {
-    clearInterval(this.timer);
   },
   computed: {
     ...mapState(useDomiciliarios, [
@@ -207,8 +162,5 @@ export default {
 }
 .red {
   background: red;
-}
-input[type="checkbox"] {
-  display: none;
 }
 </style>
