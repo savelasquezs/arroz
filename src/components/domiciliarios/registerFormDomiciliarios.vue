@@ -121,7 +121,7 @@ export default {
             pedidosEntregados: [],
           };
           useUtilsGastos().saveElement(data, "domiciliarios");
-          cambiarModoForm();
+          this.cambiarModoForm();
           this.datosUsuario = {};
         } else {
           useUtilsStore().confirmAction(

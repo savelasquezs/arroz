@@ -16,7 +16,7 @@
         llevar
       </button>
     </div>
-    <div class="pedidos">
+    <div class="pedidos" v-if="porEntregar.length > 0">
       <individual
         v-for="(order, index) in porEntregar"
         :key="index"
@@ -25,6 +25,7 @@
         @pedidoUnselected="sacarSelected"
       />
     </div>
+    <searching-icon v-else />
   </div>
 </template>
 
@@ -37,13 +38,20 @@ import RegisterFormDomiciliarios from "./registerFormDomiciliarios.vue";
 import { useUtilsGastos } from "../../store/gastos";
 import { usePedidosStore } from "../../store/main";
 import Individual from "./individual.vue";
+import SearchingIcon from "../icons/searchingIcon.vue";
 export default {
   data() {
     return {
       selectedOrders: [],
     };
   },
-  components: { buttonAdd, Modal, RegisterFormDomiciliarios, Individual },
+  components: {
+    buttonAdd,
+    Modal,
+    RegisterFormDomiciliarios,
+    Individual,
+    SearchingIcon,
+  },
   props: {
     porEntregar: {
       type: Array,
