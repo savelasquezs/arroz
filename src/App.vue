@@ -72,6 +72,7 @@ export default {
 }
 .contenido {
   margin-left: 200px;
+  margin-right: 0;
 }
 
 * {

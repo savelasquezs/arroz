@@ -36,10 +36,12 @@
             <p>Gastos</p>
           </div>
         </router-link>
-        <div class="branding flex">
-          <domiciliario-icon />
-          <p>Domiciliarios</p>
-        </div>
+        <router-link class="nav-link flex" :to="{ name: 'Domiciliarios' }">
+          <div class="branding flex">
+            <domiciliario-icon />
+            <p>Domiciliarios</p>
+          </div>
+        </router-link>
 
         <div class="branding flex">
           <contabilidad-icon />

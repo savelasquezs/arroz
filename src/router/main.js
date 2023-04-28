@@ -52,11 +52,11 @@ const routes = [
 				name: 'Home',
 				component: () => import('../views/Home.vue'),
 			},
-			// {
-			// 	path: '/pedidos/:pedidoId',
-			// 	name: 'detallePedido',
-			// 	component: DetallePedido,
-			// },
+			{
+				path: '/domiciliarios',
+				name: 'Domiciliarios',
+				component: () => import('../views/Domiciliarios.vue'),
+			},
 		],
 	},
 ];
