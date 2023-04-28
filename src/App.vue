@@ -73,6 +73,8 @@ export default {
 .contenido {
   margin-left: 200px;
   margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 * {
