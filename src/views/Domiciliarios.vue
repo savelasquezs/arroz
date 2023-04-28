@@ -1,73 +1,171 @@
 <template>
   <Navbar class="position-fixed" />
   <div class="contenido row">
-    <div class="col-9">
-      <h3>soasd</h3>
+    <div class="col-9 mt-3">
+      <div class="estadisticas d-flex gap-3">
+        <estadistica-button :valorActual="mensajeValorHoy" titulo="Debe tener"
+          ><Icon icon="ph:money-fill" color="#198754" width="30"
+        /></estadistica-button>
+        <estadistica-button
+          :valorActual="mensajeNumeroPedidosHoy"
+          titulo="Ha llevado"
+          ><pedido-icon
+        /></estadistica-button>
+        <estadistica-button
+          titulo="Base"
+          :valorActual="Base"
+          base="true"
+          @cambioBase="cambiarBase"
+          ><Icon icon="mdi:archive-eye" color="#198754" width="30" height="30"
+        /></estadistica-button>
+        <estadistica-button titulo="Abono" :valorActual="abono" abono="true">
+          <Icon
+            icon="streamline:money-cashier-shop-shopping-pay-payment-cashier-store-cash-register-machine"
+            color="#198754"
+            width="24"
+            height="24"
+        /></estadistica-button>
+        <estadistica-button titulo="Ver" ojo="true">
+          <Icon
+            icon="mdi:eye"
+            color="#555555"
+            width="100"
+            height="100"
+            class="position-absolute top-50 start-50 translate-middle"
+          />
+        </estadistica-button>
+      </div>
+      <div class="grafica">
+        <div class="container border rounded-4 m-3 p-4 chart-container">
+          <canvas id="myChart" ref="myChart"></canvas>
+          <searching-icon class="searchicon" v-if="!domiSelected" />
+        </div>
+      </div>
     </div>
     <div class="domiciliarios col-3 mt-3">
       <div class="border rounded-4">
         <h3 class="text-center mt-2 pb-2 border-bottom">Domiciliarios</h3>
-        <div class="domis-container">
-          <div
-            :key="persona.docId"
-            v-for="persona in allDomiciliarios"
-            class="m-3 domi_container rounded-3"
-          >
-            <input
-              type="radio"
-              name="domiSelected"
-              :id="persona.docId"
-              :value="persona.nombreDomiciliario"
-              v-model="domiSelected"
-              ref="radio"
-              @change="highlight"
-            />
-            <label
-              :for="persona.docId"
-              class="d-flex justify-content-center align-items-center"
-            >
-              <domiciliario-avatar />
-              <div class="d-grid mx-3">
-                <h5 class="m-0 pt-3">
-                  {{ persona.nombreDomiciliario }}
-                </h5>
-                <p class="cuentaPedidos m-0 pb-3">
-                  {{ persona.pedidosEntregados.length }} pedidos entregados
-                </p>
-              </div>
-            </label>
-          </div>
-        </div>
+        <domiciliario-array
+          :listaDomiciliarios="allDomiciliarios"
+          @selected="setDomiSelected"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { Icon } from "@iconify/vue";
 import { mapState } from "pinia";
 import Navbar from "../components/Navbar.vue";
 import { useDomiciliarios } from "../store/domiciliario";
-import DomiciliarioAvatar from "../components/icons/domiciliarioAvatar.vue";
+import DomiciliarioArray from "../components/domiciliarios/DomiciliarioArray.vue";
+import EstadisticaButton from "../components/utils/EstadisticaButton.vue";
+import moment from "moment";
+import PedidoIcon from "../components/icons/pedidoIcon.vue";
+import { Chart } from "chart.js/auto";
+import SearchingIcon from "../components/icons/searchingIcon.vue";
 export default {
   data() {
     return {
-      domiSelected: {},
+      Base: 55000,
+      domiSelected: "",
+      mensajeValorHoy: "",
+      mensajeNumeroPedidosHoy: "",
+      valorHoy: 0,
+      abono: 0,
     };
   },
-  methods: {
-    highlight() {
-      this.$refs.radio.forEach((radio) => {
-        if (radio.checked) {
-          console.log(radio.parentNode.classList.add("selected"));
-          return;
-        }
-        radio.parentNode.classList.remove("selected");
-      });
-    },
+  components: {
+    Navbar,
+    DomiciliarioArray,
+    EstadisticaButton,
+    PedidoIcon,
+    Icon,
+    SearchingIcon,
   },
-  components: { Navbar, DomiciliarioAvatar },
   computed: {
     ...mapState(useDomiciliarios, ["allDomiciliarios"]),
+  },
+  watch: {
+    domiSelected() {
+      const domis = this.pedidosHoy();
+      this.valorHoy = domis.reduce((a, b) => a + parseInt(b.total), 0);
+      const numeroPedidosHoy = domis.length;
+      this.mensajeNumeroPedidosHoy = `${numeroPedidosHoy} Pedidos`;
+      this.mensajeValorHoy = `$${this.valorHoy + this.Base}`;
+      this.mostrarGrafica();
+    },
+    Base() {
+      this.mensajeValorHoy = `$${this.valorHoy + this.Base}`;
+    },
+  },
+  methods: {
+    mostrarGrafica() {
+      const chart = this.$refs.myChart;
+      console.log(chart.canvas);
+      new Chart(chart, {
+        type: "line",
+        data: {
+          labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+          datasets: [
+            {
+              label: "# Pedidos",
+              data: [12, 19, 3, 5, 2, 3],
+              borderWidth: 1,
+              fill: true,
+              tension: 0.1,
+              borderColor: "#198754",
+              backgroundColor: "rgba(215, 198, 249, 0.18)",
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
+    },
+    cambiarBase(valor) {
+      this.Base = valor;
+    },
+    setDomiSelected(persona) {
+      this.domiSelected = persona;
+    },
+    pedidosHoy() {
+      if (this.domiSelected) {
+        if (this.domiSelected?.pedidosEntregados.length > 0) {
+          const domis = this.domiSelected?.pedidosEntregados.filter(
+            (pedido) =>
+              moment(pedido.fecha).valueOf() >=
+                moment().startOf("day").valueOf() &&
+              moment(pedido.fecha).valueOf() <= moment().endOf("day").valueOf()
+          );
+          console.log(domis);
+          return domis;
+        }
+      }
+      return [];
+    },
+    pedidosSemanaPasada() {
+      if (this.domiSelected) {
+        if (this.domiSelected?.pedidosEntregados.length > 0) {
+          const domis = this.domiSelected?.pedidosEntregados.filter(
+            (pedido) =>
+              moment(pedido.fecha).moment().subtract(7, "days").valueOf() >=
+                moment().subtract(7, "days").startOf("day").valueOf() &&
+              moment(pedido.fecha).moment().subtract(7, "days").valueOf() <=
+                moment().subtract(7, "days").endOf("day").valueOf()
+          );
+          console.log(domis);
+          return domis;
+        }
+      }
+      return [];
+    },
   },
 };
 </script>
@@ -76,35 +174,13 @@ export default {
 .elementos {
   background: #f1f6f9;
 }
+.chart-container {
+  box-shadow: 1px 9px 16px 13px rgba(0, 0, 0, 0.1);
+  max-height: 70vh;
+}
 // .domiciliarios {
 //   height: 100vh;
 //   margin-top: 0;
 //   margin-bottom: 0;
 // }
-.cuentaPedidos {
-  opacity: 0.5;
-  color: gray;
-}
-input[type="radio"] {
-  display: none;
-}
-.selected {
-  box-shadow: 1px 9px 16px 13px #d7c6f9 !important;
-}
-.domi_container {
-  box-shadow: 0 0.125rem 0.25rem rgba(#000, 0.075);
-}
-.domi_container:hover {
-  box-shadow: 1px 9px 16px 13px rgba(0, 0, 0, 0.1);
-}
-.domi_container:focus-visible {
-  box-shadow: 1px 9px 16px 13px #d7c6f9;
-}
-h5 {
-  text-transform: capitalize;
-}
-.domis-container {
-  height: 80vh;
-  overflow-y: scroll;
-}
 </style>

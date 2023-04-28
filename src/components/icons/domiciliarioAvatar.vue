@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="border rounded-5 border-dark">
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="30"
-      height="30"
+      width="35"
+      height="35"
       viewBox="0 0 532 532"
       xmlns:xlink="http://www.w3.org/1999/xlink"
     >

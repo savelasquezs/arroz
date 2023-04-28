@@ -393,7 +393,7 @@ export default {
         enMesa: false,
         entregado: false,
         domiciliario: null,
-        fecha: new Date(),
+        fecha: new Date().getTime(),
         horaToma: new Date().getTime(),
         horaMesa: null,
         horaCamino: null,
