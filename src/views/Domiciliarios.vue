@@ -1,4 +1,7 @@
 <template>
+  <modal v-if="addingAbono">
+    <abono-form v-if="addingAbono" />
+  </modal>
   <Navbar class="position-fixed" />
   <div class="contenido row">
     <div class="col-9 mt-3">
@@ -37,8 +40,12 @@
       </div>
       <div class="grafica">
         <div class="container border rounded-4 m-3 p-4 chart-container">
-          <canvas id="myChart" ref="myChart"></canvas>
-          <searching-icon class="searchicon" v-if="!domiSelected" />
+          <searching-icon
+            class="searchicon"
+            mensaje="No hay domiciliario seleccionado"
+            v-if="!domiSelected"
+          />
+          <canvas id="myChart" ref="myChart" v-else></canvas>
         </div>
       </div>
     </div>
@@ -58,13 +65,15 @@
 import { Icon } from "@iconify/vue";
 import { mapState } from "pinia";
 import Navbar from "../components/Navbar.vue";
-import { useDomiciliarios } from "../store/domiciliario";
+import { useAbonos, useDomiciliarios } from "../store/domiciliario";
 import DomiciliarioArray from "../components/domiciliarios/DomiciliarioArray.vue";
 import EstadisticaButton from "../components/utils/EstadisticaButton.vue";
 import moment from "moment";
 import PedidoIcon from "../components/icons/pedidoIcon.vue";
 import { Chart } from "chart.js/auto";
 import SearchingIcon from "../components/icons/searchingIcon.vue";
+import Modal from "../components/utils/Modal.vue";
+import AbonoForm from "../components/abonos/AbonoForm.vue";
 export default {
   data() {
     return {
@@ -74,6 +83,8 @@ export default {
       mensajeNumeroPedidosHoy: "",
       valorHoy: 0,
       abono: 0,
+      chart: null,
+      cuentaPedidos: {},
     };
   },
   components: {
@@ -83,18 +94,32 @@ export default {
     PedidoIcon,
     Icon,
     SearchingIcon,
+    Modal,
+    AbonoForm,
   },
   computed: {
-    ...mapState(useDomiciliarios, ["allDomiciliarios"]),
+    ...mapState(useDomiciliarios, ["allDomiciliarios", "currentDomiciliario"]),
+    ...mapState(useAbonos, ["addingAbono"]),
   },
   watch: {
     domiSelected() {
+      useDomiciliarios().setCurrentDomiciliario(this.domiSelected.docId);
+      this.cuentaPedidos = {};
       const domis = this.pedidosHoy();
       this.valorHoy = domis.reduce((a, b) => a + parseInt(b.total), 0);
       const numeroPedidosHoy = domis.length;
       this.mensajeNumeroPedidosHoy = `${numeroPedidosHoy} Pedidos`;
       this.mensajeValorHoy = `$${this.valorHoy + this.Base}`;
+      this.domiSelected?.pedidosEntregados.forEach((domi) => {
+        const fechaToma = moment(domi.fecha).format("DD/MM/YYYY");
+        if (this.cuentaPedidos[fechaToma]) {
+          this.cuentaPedidos[fechaToma] += 1;
+        } else {
+          this.cuentaPedidos[fechaToma] = 1;
+        }
+      });
       this.mostrarGrafica();
+      console.log(this.cuentaPedidos);
     },
     Base() {
       this.mensajeValorHoy = `$${this.valorHoy + this.Base}`;
@@ -102,32 +127,36 @@ export default {
   },
   methods: {
     mostrarGrafica() {
-      const chart = this.$refs.myChart;
-      console.log(chart.canvas);
-      new Chart(chart, {
-        type: "line",
-        data: {
-          labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-          datasets: [
-            {
-              label: "# Pedidos",
-              data: [12, 19, 3, 5, 2, 3],
-              borderWidth: 1,
-              fill: true,
-              tension: 0.1,
-              borderColor: "#198754",
-              backgroundColor: "rgba(215, 198, 249, 0.18)",
-            },
-          ],
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
+      setTimeout(() => {
+        const canva = this.$refs.myChart;
+        if (this.chart != null) {
+          this.chart.destroy();
+        }
+        this.chart = new Chart(canva, {
+          type: "line",
+          data: {
+            labels: Object.keys(this.cuentaPedidos),
+            datasets: [
+              {
+                label: "# Pedidos",
+                data: Object.values(this.cuentaPedidos),
+                borderWidth: 1,
+                fill: true,
+                tension: 0.1,
+                borderColor: "#198754",
+                backgroundColor: "rgba(215, 198, 249, 0.18)",
+              },
+            ],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
             },
           },
-        },
-      });
+        });
+      }, 200);
     },
     cambiarBase(valor) {
       this.Base = valor;
@@ -144,7 +173,6 @@ export default {
                 moment().startOf("day").valueOf() &&
               moment(pedido.fecha).valueOf() <= moment().endOf("day").valueOf()
           );
-          console.log(domis);
           return domis;
         }
       }

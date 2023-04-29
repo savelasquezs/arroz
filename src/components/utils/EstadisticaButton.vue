@@ -22,12 +22,13 @@
       <h5 v-else>
         <strong> {{ valorActual }}</strong>
       </h5>
-      <button-add v-if="abono" class="rounded-5" />
+      <button-add v-if="abono" class="rounded-5" @click="openAbono" />
     </div>
   </div>
 </template>
 
 <script>
+import { useAbonos } from "../../store/domiciliario";
 import pedidoIcon from "../icons/pedidoIcon.vue";
 import ButtonAdd from "./buttonAdd.vue";
 export default {
@@ -37,6 +38,9 @@ export default {
     };
   },
   methods: {
+    openAbono() {
+      useAbonos().toogleAbonoForm();
+    },
     cambioBase() {
       this.$emit("cambioBase", this.baseNueva);
     },

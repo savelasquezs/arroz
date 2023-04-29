@@ -2,8 +2,8 @@
   <div class="d-grid justify-content-center align-items-center">
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="552.81023"
-      height="515.45882"
+      width="300"
+      height="300"
       viewBox="0 0 552.81023 515.45882"
       xmlns:xlink="http://www.w3.org/1999/xlink"
     >
@@ -113,12 +113,14 @@
         />
       </g>
     </svg>
-    <p class="text-center p-3 fs-3">No hay pedidos para llevar aún</p>
+    <p class="text-center p-3 fs-3">{{ mensaje }}</p>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: ["mensaje"],
+};
 </script>
 
 <style scoped>

@@ -25,7 +25,7 @@
         @pedidoUnselected="sacarSelected"
       />
     </div>
-    <searching-icon v-else />
+    <searching-icon mensaje="No hay pedidos para entregar" v-else />
   </div>
 </template>
 

@@ -61,3 +61,16 @@ export const useDomiciliarios = defineStore('domiciliarios', {
 		},
 	},
 });
+
+export const useAbonos = defineStore('Abonos', {
+	state: () => {
+		return {
+			addingAbono: null,
+		};
+	},
+	actions: {
+		toogleAbonoForm() {
+			this.addingAbono = !this.addingAbono;
+		},
+	},
+});
