@@ -1,5 +1,6 @@
 <template>
-  <modal v-if="addingAbono">
+  <modal v-if="addingAbono || detallesPedidosYAbonosOppened">
+    <detalles-pedidos-y-abonos v-if="detallesPedidosYAbonosOppened" />
     <abono-form v-if="addingAbono" />
   </modal>
   <Navbar class="position-fixed" />
@@ -33,13 +34,14 @@
             width="24"
             height="24"
         /></estadistica-button>
-        <estadistica-button titulo="Ver" ojo="true">
+        <estadistica-button titulo="Ver" ojo="true" id="verDetalles">
           <Icon
             icon="mdi:eye"
             color="#555555"
             width="100"
             height="100"
             class="position-absolute top-50 start-50 translate-middle"
+            @click="openDetalles"
           />
         </estadistica-button>
       </div>
@@ -70,7 +72,11 @@
 import { Icon } from "@iconify/vue";
 import { mapState } from "pinia";
 import Navbar from "../components/Navbar.vue";
-import { useAbonos, useDomiciliarios } from "../store/domiciliario";
+import {
+  useAbonos,
+  useDetallesPedidosYAbonos,
+  useDomiciliarios,
+} from "../store/domiciliario";
 import DomiciliarioArray from "../components/domiciliarios/DomiciliarioArray.vue";
 import EstadisticaButton from "../components/utils/EstadisticaButton.vue";
 import moment from "moment";
@@ -79,12 +85,12 @@ import { Chart } from "chart.js/auto";
 import SearchingIcon from "../components/icons/searchingIcon.vue";
 import Modal from "../components/utils/Modal.vue";
 import AbonoForm from "../components/abonos/AbonoForm.vue";
+import DetallesPedidosYAbonos from "../components/domiciliarios/DetallesPedidosYAbonos.vue";
 export default {
   data() {
     return {
       Base: 55000,
       domiSelected: "",
-      mensajeValorHoy: "",
       mensajeNumeroPedidosHoy: "",
       valorHoy: 0,
       chart: null,
@@ -100,10 +106,16 @@ export default {
     SearchingIcon,
     Modal,
     AbonoForm,
+    DetallesPedidosYAbonos,
   },
   computed: {
     ...mapState(useDomiciliarios, ["allDomiciliarios", "currentDomiciliario"]),
     ...mapState(useAbonos, ["addingAbono", "allAbonos"]),
+    ...mapState(useDetallesPedidosYAbonos, ["detallesPedidosYAbonosOppened"]),
+    mensajeValorHoy() {
+      if (!this.currentDomiciliario) return 0;
+      return `$${this.valorHoy + this.Base - this.valorAbonosHoy}`;
+    },
     valorAbonosHoy() {
       return this.abonosHoy.reduce((a, b) => a + parseInt(b.valor), 0);
     },
@@ -137,7 +149,9 @@ export default {
       );
       const numeroPedidosHoy = this.pedidosHoy().length;
       this.mensajeNumeroPedidosHoy = `${numeroPedidosHoy} Pedidos`;
-      this.mensajeValorHoy = `$${this.valorHoy + this.Base}`;
+      this.mensajeValorHoy = `$${
+        this.valorHoy + this.Base - this.valorAbonosHoy
+      }`;
       this.domiSelected?.pedidosEntregados.forEach((domi) => {
         const fechaToma = moment(domi.fecha).format("DD/MM/YYYY");
         if (this.cuentaPedidos[fechaToma]) {
@@ -154,6 +168,17 @@ export default {
     },
   },
   methods: {
+    openDetalles() {
+      if (this.currentDomiciliario) {
+        useDetallesPedidosYAbonos().toggleDetallesYPedidos();
+      }
+      return;
+    },
+    cerrarDetalles() {
+      if (this.detallesPedidosYAbonosOppened) {
+        UseDetallesPedidosYAbonos().toggleDetallesYPedidos();
+      }
+    },
     mostrarGrafica() {
       setTimeout(() => {
         const canva = this.$refs.myChart;
@@ -237,6 +262,9 @@ export default {
 .chart-container {
   box-shadow: 1px 9px 16px 13px rgba(0, 0, 0, 0.1);
   max-height: 70vh;
+}
+#verDetalles {
+  cursor: pointer;
 }
 // .domiciliarios {
 //   height: 100vh;

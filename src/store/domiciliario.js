@@ -106,3 +106,18 @@ export const useAbonos = defineStore('Abonos', {
 		},
 	},
 });
+
+export const useDetallesPedidosYAbonos = defineStore('DetallesYAnonos', {
+	state: () => {
+		return {
+			detallesPedidosYAbonosOppened: null,
+		};
+	},
+	actions: {
+		toggleDetallesYPedidos() {
+			console.log(this.detallesPedidosYAbonosOppened);
+			this.detallesPedidosYAbonosOppened = !this.detallesPedidosYAbonosOppened;
+			console.log(this.detallesPedidosYAbonosOppened);
+		},
+	},
+});

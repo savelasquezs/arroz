@@ -76,6 +76,9 @@ export default {
 input[type="radio"] {
   display: none;
 }
+label {
+  cursor: pointer;
+}
 .selected {
   box-shadow: 1px 9px 16px 13px #d7c6f9 !important;
 }

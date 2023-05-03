@@ -324,6 +324,9 @@ export const useUtilsStore = defineStore('UtilsStore', {
 		horaLocal(hora) {
 			return moment(hora).format('LT');
 		},
+		horaYFechaLocal(hora) {
+			return moment(hora).format('MMMM Do YY, h:mm a');
+		},
 		capitalize(words) {
 			const wordsArray = words.split(' ');
 			const wordsUppercase = wordsArray.map(
