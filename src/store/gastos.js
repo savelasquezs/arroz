@@ -170,6 +170,10 @@ export const useUtilsGastos = defineStore('utilsGastos', {
 					// useGastosHoy().addGasto({ ...data, docId: docRef.id });
 					mensaje = 'domiciliario guardado exitosamente';
 					break;
+				case 'abonos':
+					// useGastosHoy().addGasto({ ...data, docId: docRef.id });
+					mensaje = 'Abono agregado exitosamente';
+					break;
 				default:
 					break;
 			}
@@ -210,7 +214,7 @@ export const useUtilsGastos = defineStore('utilsGastos', {
 					break;
 				case 'domiciliarios':
 					mensaje = 'domiciliario actualizado exitosamente';
-					console.log(docRef.id	);
+					console.log(docRef.id);
 					break;
 				default:
 					break;

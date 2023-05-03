@@ -2,7 +2,7 @@
   <div class="domis-container">
     <div
       class="m-3 domi_container rounded-3"
-      v-for="(persona, index) in listaDomiciliarios"
+      v-for="(persona, index) in domiciliariosHoy"
       :key="index"
       :persona="persona"
       @selected="setDomiSelected"
@@ -25,7 +25,7 @@
             {{ persona.nombreDomiciliario }}
           </h5>
           <p class="cuentaPedidos m-0 pb-3">
-            {{ persona.pedidosEntregados?.length }} pedidos entregados
+            {{ persona.pedidosEntregados?.length }} pedidos entregados en total.
           </p>
         </div>
       </label>
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import moment from "moment";
 import DomiciliarioAvatar from "../icons/domiciliarioAvatar.vue";
 
 export default {
@@ -41,6 +42,7 @@ export default {
   components: { DomiciliarioAvatar },
   methods: {
     highlight(persona) {
+      console.log(this.domiciliariosHoy);
       this.$refs.radio.forEach((radio) => {
         if (radio.checked) {
           radio.parentNode.classList.add("selected");
@@ -49,6 +51,18 @@ export default {
         }
         radio.parentNode.classList.remove("selected");
       });
+    },
+  },
+  computed: {
+    domiciliariosHoy() {
+      return this.listaDomiciliarios.filter((domiciliario) =>
+        domiciliario.pedidosEntregados.some(
+          (pedido) =>
+            moment(pedido.fecha).valueOf() >=
+              moment().startOf("day").valueOf() &&
+            moment(pedido.fecha).valueOf() <= moment().endOf("day").valueOf()
+        )
+      );
     },
   },
 };
@@ -80,5 +94,8 @@ h5 {
 .domis-container {
   height: 80vh;
   overflow-y: scroll;
+}
+p {
+  font-size: 0.8rem;
 }
 </style>

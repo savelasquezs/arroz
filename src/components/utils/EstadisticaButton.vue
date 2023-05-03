@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mt-5 wrapper p-2 rounded-3 shadow-sm d-grid justify-content-between position-relative"
+    class="mt-3 wrapper p-2 rounded-3 shadow-sm d-grid justify-content-between position-relative"
   >
     <slot v-if="ojo" />
     <div v-else class="heading d-flex gap-2">

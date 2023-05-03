@@ -3,8 +3,9 @@
     <abono-form v-if="addingAbono" />
   </modal>
   <Navbar class="position-fixed" />
-  <div class="contenido row">
-    <div class="col-9 mt-3">
+  <div class="contenido row mt-3">
+    <div class="col-9">
+      <h3 class="text-center">Pedidos de hoy</h3>
       <div class="estadisticas d-flex gap-3">
         <estadistica-button :valorActual="mensajeValorHoy" titulo="Debe tener"
           ><Icon icon="ph:money-fill" color="#198754" width="30"
@@ -21,7 +22,11 @@
           @cambioBase="cambiarBase"
           ><Icon icon="mdi:archive-eye" color="#198754" width="30" height="30"
         /></estadistica-button>
-        <estadistica-button titulo="Abono" :valorActual="abono" abono="true">
+        <estadistica-button
+          titulo="Abono"
+          :valorActual="valorAbonosHoy"
+          abono="true"
+        >
           <Icon
             icon="streamline:money-cashier-shop-shopping-pay-payment-cashier-store-cash-register-machine"
             color="#198754"
@@ -82,7 +87,6 @@ export default {
       mensajeValorHoy: "",
       mensajeNumeroPedidosHoy: "",
       valorHoy: 0,
-      abono: 0,
       chart: null,
       cuentaPedidos: {},
     };
@@ -99,15 +103,39 @@ export default {
   },
   computed: {
     ...mapState(useDomiciliarios, ["allDomiciliarios", "currentDomiciliario"]),
-    ...mapState(useAbonos, ["addingAbono"]),
+    ...mapState(useAbonos, ["addingAbono", "allAbonos"]),
+    valorAbonosHoy() {
+      return this.abonosHoy.reduce((a, b) => a + parseInt(b.valor), 0);
+    },
+    abonosHoy() {
+      if (this.domiSelected) {
+        if (this.domiSelected?.pedidosEntregados.length > 0) {
+          console.log(this.currentDomiciliario.nombreDomiciliario);
+          console.log(this.allAbonos[0].domiciliario.nombreDomiciliario);
+          const domis = this.allAbonos.filter(
+            (abono) =>
+              moment(abono.fecha).valueOf() >=
+                moment().startOf("day").valueOf() &&
+              moment(abono.fecha).valueOf() <=
+                moment().endOf("day").valueOf() &&
+              abono.domiciliario.nombreDomiciliario ==
+                this.currentDomiciliario.nombreDomiciliario
+          );
+          return domis;
+        }
+      }
+      return [];
+    },
   },
   watch: {
     domiSelected() {
       useDomiciliarios().setCurrentDomiciliario(this.domiSelected.docId);
       this.cuentaPedidos = {};
-      const domis = this.pedidosHoy();
-      this.valorHoy = domis.reduce((a, b) => a + parseInt(b.total), 0);
-      const numeroPedidosHoy = domis.length;
+      this.valorHoy = this.pedidosHoy().reduce(
+        (a, b) => a + parseInt(b.total),
+        0
+      );
+      const numeroPedidosHoy = this.pedidosHoy().length;
       this.mensajeNumeroPedidosHoy = `${numeroPedidosHoy} Pedidos`;
       this.mensajeValorHoy = `$${this.valorHoy + this.Base}`;
       this.domiSelected?.pedidosEntregados.forEach((domi) => {
@@ -178,6 +206,7 @@ export default {
       }
       return [];
     },
+
     pedidosSemanaPasada() {
       if (this.domiSelected) {
         if (this.domiSelected?.pedidosEntregados.length > 0) {
@@ -194,6 +223,9 @@ export default {
       }
       return [];
     },
+  },
+  created() {
+    useAbonos().listenChanges();
   },
 };
 </script>
