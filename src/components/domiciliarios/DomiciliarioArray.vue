@@ -25,7 +25,8 @@
             {{ persona.nombreDomiciliario }}
           </h5>
           <p class="cuentaPedidos m-0 pb-3">
-            {{ persona.pedidosEntregados?.length }} pedidos entregados en total.
+            {{ todosPedidosDomiciliario(persona.nombreDomiciliario).length }}
+            pedidos entregados en total.
           </p>
         </div>
       </label>
@@ -36,11 +37,25 @@
 <script>
 import moment from "moment";
 import DomiciliarioAvatar from "../icons/domiciliarioAvatar.vue";
+import { mapState } from "pinia";
+import { usePedidosStore } from "../../store/main";
+import { useDomiciliarios } from "../../store/domiciliario";
 
 export default {
   props: ["listaDomiciliarios"],
   components: { DomiciliarioAvatar },
   methods: {
+    pedidosDomiciliarioHoy(nombreDomiciliario) {
+      return this.pedidosHoy.filter(
+        (pedido) => pedido.domiciliario.nombre == nombreDomiciliario
+      );
+    },
+    todosPedidosDomiciliario(nombreDomiciliario) {
+      return this.pedidosDatabase.filter(
+        (pedido) => pedido.domiciliario.nombre == nombreDomiciliario
+      );
+    },
+
     highlight(persona) {
       console.log(this.domiciliariosHoy);
       this.$refs.radio.forEach((radio) => {
@@ -54,13 +69,22 @@ export default {
     },
   },
   computed: {
+    ...mapState(usePedidosStore, ["pedidosDatabase"]),
+    ...mapState(useDomiciliarios, ["currentDomiciliario"]),
+    pedidosHoy() {
+      return this.pedidosDatabase.filter(
+        (pedido) =>
+          moment(pedido.fecha).valueOf() >= moment().startOf("day").valueOf() &&
+          moment(pedido.fecha).valueOf() <= moment().endOf("day").valueOf()
+      );
+    },
+
+    totalPedidosDomiciliario() {},
     domiciliariosHoy() {
       return this.listaDomiciliarios.filter((domiciliario) =>
-        domiciliario.pedidosEntregados.some(
+        this.pedidosHoy.some(
           (pedido) =>
-            moment(pedido.fecha).valueOf() >=
-              moment().startOf("day").valueOf() &&
-            moment(pedido.fecha).valueOf() <= moment().endOf("day").valueOf()
+            pedido.domiciliario.nombre == domiciliario.nombreDomiciliario
         )
       );
     },
