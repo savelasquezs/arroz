@@ -11,9 +11,9 @@
               v-model="pago.banco"
               @change="emitirCambios"
             >
-              <option value="Bancolombia">Bancolombia</option>
-              <option value="Nequi">Nequi</option>
-              <option value="Didi">Didi</option>
+              <option v-for="banco in listaBancos" :key="banco" :value="banco">
+                {{ banco }}
+              </option>
             </select>
             <label for="floatingSelect">Banco o App</label>
           </div>
@@ -32,9 +32,9 @@
             <label for="floatingInput">Valor</label>
           </div>
         </td>
-        <td vertical-align:middle>
+        <td class="trash pb-4">
           <img
-            @click="deleteInvoiceProducto(producto.id)"
+            @click="deleteTipoPago(pago.banco)"
             src="@/assets/icon-delete.svg"
             alt=""
           />
@@ -47,15 +47,13 @@
 <script>
 import { Icon } from "@iconify/vue";
 export default {
-  props: ["listaTipos"],
+  props: ["listaTipos", "listaBancos"],
   data() {
-    return {
-      listaBancos: ["Bancolombia", "Nequi", "Didi"],
-    };
+    return {};
   },
   methods: {
-    emitirCambios() {
-      console.log([...this.listaTipos]);
+    deleteTipoPago(banco) {
+      this.$emit("deleteTipo", banco);
     },
   },
   components: {
@@ -72,4 +70,8 @@ export default {
 </script>
 
 <style scoped>
+td.trash {
+  vertical-align: middle;
+  cursor: pointer;
+}
 </style>

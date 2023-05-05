@@ -24,15 +24,21 @@
               <th>Fecha</th>
               <th>Dirección</th>
               <th>Valor Cobrado</th>
+              <th>Valor Total</th>
               <th>Valor Domi</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="pedido in listaPedidos" :key="pedido.docId">
               <td>{{ fechaLocal(pedido.fecha) }}</td>
-              <td>{{ pedido.direccion }}</td>
-              <td>{{ pedido.total }}</td>
-              <td>{{ pedido.valorDomi }}</td>
+              <td>{{ pedido.cliente.direccion }}</td>
+              <td>
+                {{ pedido.pagoEfectivo }}
+              </td>
+              <td>
+                {{ pedido.total }}
+              </td>
+              <td>{{ pedido.cliente.valorDomi }}</td>
             </tr>
           </tbody>
         </table>
@@ -81,7 +87,7 @@ import {
   useDetallesPedidosYAbonos,
   useDomiciliarios,
 } from "../../store/domiciliario";
-import { useUtilsStore } from "../../store/main";
+import { usePedidosStore, useUtilsStore } from "../../store/main";
 import moment from "moment";
 import TabsDomiciliario from "./TabsDomiciliario.vue";
 export default {
@@ -111,13 +117,22 @@ export default {
   computed: {
     ...mapState(useDomiciliarios, ["currentDomiciliario"]),
     ...mapState(useAbonos, ["allAbonos"]),
+    ...mapState(usePedidosStore, ["pedidosDatabase"]),
+    pedidosEntregados() {
+      return this.pedidosDatabase.filter(
+        (pedido) =>
+          pedido.domiciliario.nombre ==
+          this.currentDomiciliario.nombreDomiciliario
+      );
+    },
     pedidosHoy() {
-      const pedidos = this.currentDomiciliario.pedidosEntregados.filter(
+      const pedidos = this.pedidosEntregados.filter(
         (pedido) =>
           moment(pedido.fecha).format("DD-MM-YYYY") ==
           moment().format("DD-MM-YYYY")
       );
       pedidos.forEach((pedido) => {
+        console.log(pedido);
         console.log(moment(pedido.fecha).format("DD-MM-YYYY"));
       });
 
@@ -125,7 +140,7 @@ export default {
     },
     listaPedidos() {
       if (this.mostradosTodos) {
-        return this.currentDomiciliario.pedidosEntregados;
+        return this.pedidosEntregados;
       }
       return this.pedidosHoy;
     },

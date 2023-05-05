@@ -10,7 +10,7 @@
           class="float-end close-form"
         />
         <div class="section-container d-flex gap-5 justify-content-evenly">
-          <section class="cliente border p-3 my-3 rounded-2">
+          <section class="cliente border p-3 my-3 rounded-2 w-50 shadow">
             <div class="d-flex justify-content-between">
               <h4>Cliente</h4>
               <button
@@ -120,8 +120,9 @@
               </div>
             </div>
           </section>
-          <section class="pago border p-3 my-3 rounded-2">
-            <h4 class="mb-3">Pago</h4>
+          <section class="pago border p-3 my-3 rounded-2 w-50 shadow">
+            <h4 class="">Pago</h4>
+            <hr />
             <button
               @click.prevent="addTipoPago"
               class="addInvoiceItem btn btn-outline-success btn-sm"
@@ -135,18 +136,44 @@
               Agregar Tipo Pago
             </button>
             <div class="">
-              <h6>
+              <h5>
                 Total a pagar: <strong> ${{ total }}</strong>
-              </h6>
+              </h5>
               <h6>
                 Pago efectivo: <strong>{{ totalEfectivo }}</strong>
               </h6>
             </div>
-            <tipos-pago :listaTipos="listaTipos" />
+            <tipos-pago
+              :listaTipos="listaTipos"
+              @deleteTipo="deleteTipoPago"
+              :listaBancos="listaBancos"
+            />
+            <h5>Domiciliario</h5>
+            <div class="form-floating">
+              <select
+                class="form-select"
+                id="floatingSelect"
+                aria-label="Floating label select example"
+                v-model="domiciliario"
+              >
+                <option
+                  v-for="domiciliario in allDomiciliarios"
+                  :key="domiciliario.nombreDomiciliario"
+                  :value="{
+                    nombre: domiciliario.nombreDomiciliario,
+                    docId: domiciliario.docId,
+                  }"
+                >
+                  {{ domiciliario.nombreDomiciliario }}
+                </option>
+              </select>
+              <label for="floatingSelect">Domiciliario</label>
+            </div>
           </section>
         </div>
         <hr />
-        <section class="productos">
+        <hr />
+        <section class="productos border p-3 my-3 rounded-2 shadow">
           <div class="work-items">
             <div class="d-flex justify-content-between">
               <h4>Productos</h4>
@@ -284,6 +311,7 @@ import { uid } from "uid";
 import { mapState } from "pinia";
 import ClienteForm from "../clientes/ClienteForm.vue";
 import TiposPago from "./TiposPago.vue";
+import { useDomiciliarios } from "../../store/domiciliario.js";
 
 export default {
   name: "pedidoForm",
@@ -293,13 +321,14 @@ export default {
       clienteCompleto: null,
       searchingCliente: null,
       listaTipos: [],
-
       filtroClientes: "",
       filtradosClientesArray: [],
       productosList: [],
       filtradosProductosArray: [],
       descuento: 0,
       hacerDescuento: false,
+      listaBancos: ["Bancolombia", "Nequi", "Didi"],
+      domiciliario: {},
     };
   },
   components: {
@@ -320,7 +349,18 @@ export default {
       "editingPedido",
       "currentPedido",
     ]),
+    ...mapState(useDomiciliarios, ["allDomiciliarios"]),
     ...mapState(useProductsStore, ["productDatabase"]),
+    bancosActivos() {
+      return this.listaTipos.map((registro) => registro.banco);
+    },
+    bancosSelect() {
+      const quedan = this.listaBancos.filter(
+        (banco) => !this.bancosActivos.includes(banco)
+      );
+      console.log(quedan);
+      return quedan;
+    },
     direccionCompleta() {
       if (this.direccion) {
         return `${this.direccion}, ${this.notasDir}, ${this.barrio} `;
@@ -356,15 +396,27 @@ export default {
       return recuento;
     },
     totalBancos() {
-      return this.listaTipos.reduce((a, b) => a + b.valor, 0);
+      if (this.listaTipos.length > 0) {
+        return this.listaTipos.reduce((a, b) => a + b.valor, 0);
+      }
+      return 0;
     },
     totalEfectivo() {
       return this.total - this.totalBancos;
     },
   },
   methods: {
+    deleteTipoPago(banco) {
+      console.log(banco);
+      this.listaTipos = this.listaTipos.filter(
+        (registro) => registro.banco !== banco
+      );
+    },
     addTipoPago() {
-      this.listaTipos.push({ banco: "Bancolombia", valor: this.totalEfectivo });
+      this.listaTipos.push({
+        banco: this.bancosSelect[0],
+        valor: this.totalEfectivo,
+      });
     },
     filtradosClientes() {
       console.log(this.filtradosClientesArray.length);
@@ -429,13 +481,15 @@ export default {
         enCamino: false,
         enMesa: false,
         entregado: false,
-        domiciliario: null,
+        domiciliario: this.domiciliario,
         fecha: new Date().getTime(),
         horaToma: new Date().getTime(),
         horaMesa: null,
         horaCamino: null,
         horaEntregado: null,
         descuento: this.descuento,
+        pagoOnline: this.listaTipos,
+        pagoEfectivo: this.totalEfectivo,
       };
 
       const docRef = await addDoc(collection(db, "pedidos"), data);
@@ -459,6 +513,9 @@ export default {
           productos: this.productosList,
           total: this.total,
           descuento: this.descuento,
+          pagoOnline: this.listaTipos,
+          pagoEfectivo: this.totalEfectivo,
+          domiciliario: this.domiciliario,
         };
 
         const docRef = await doc(db, "pedidos", this.currentPedido.docId);
@@ -559,6 +616,11 @@ export default {
     if (this.editingPedido) {
       console.log(this.currentPedido);
       this.productosList = this.currentPedido.productos;
+      this.domiciliario = this.currentPedido.domiciliario;
+
+      this.listaTipos = this.currentPedido.pagoOnline
+        ? this.currentPedido.pagoOnline
+        : [];
 
       const clienteId = this.clientDatabase.find(
         (cliente) => cliente.cedula == this.currentPedido.cliente.cedula

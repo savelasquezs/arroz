@@ -86,6 +86,7 @@ import SearchingIcon from "../components/icons/searchingIcon.vue";
 import Modal from "../components/utils/Modal.vue";
 import AbonoForm from "../components/abonos/AbonoForm.vue";
 import DetallesPedidosYAbonos from "../components/domiciliarios/DetallesPedidosYAbonos.vue";
+import { usePedidosStore } from "../store/main";
 export default {
   data() {
     return {
@@ -112,16 +113,23 @@ export default {
     ...mapState(useDomiciliarios, ["allDomiciliarios", "currentDomiciliario"]),
     ...mapState(useAbonos, ["addingAbono", "allAbonos"]),
     ...mapState(useDetallesPedidosYAbonos, ["detallesPedidosYAbonosOppened"]),
+    ...mapState(usePedidosStore, ["pedidosDatabase"]),
     mensajeValorHoy() {
-      if (!this.currentDomiciliario) return 0;
       return `$${this.valorHoy + this.Base - this.valorAbonosHoy}`;
     },
     valorAbonosHoy() {
       return this.abonosHoy.reduce((a, b) => a + parseInt(b.valor), 0);
     },
+    pedidosEntregados() {
+      return this.pedidosDatabase.filter(
+        (pedido) =>
+          pedido.domiciliario.nombre ==
+          this.currentDomiciliario.nombreDomiciliario
+      );
+    },
     abonosHoy() {
       if (this.domiSelected) {
-        if (this.domiSelected?.pedidosEntregados.length > 0) {
+        if (this.pedidosEntregados.length > 0) {
           console.log(this.currentDomiciliario.nombreDomiciliario);
           console.log(this.allAbonos[0].domiciliario.nombreDomiciliario);
           const domis = this.allAbonos.filter(
@@ -143,16 +151,15 @@ export default {
     domiSelected() {
       useDomiciliarios().setCurrentDomiciliario(this.domiSelected.docId);
       this.cuentaPedidos = {};
+      console.log(this.pedidosHoy());
       this.valorHoy = this.pedidosHoy().reduce(
-        (a, b) => a + parseInt(b.total),
+        (a, b) => a + parseInt(b.pagoEfectivo),
         0
       );
       const numeroPedidosHoy = this.pedidosHoy().length;
       this.mensajeNumeroPedidosHoy = `${numeroPedidosHoy} Pedidos`;
-      this.mensajeValorHoy = `$${
-        this.valorHoy + this.Base - this.valorAbonosHoy
-      }`;
-      this.domiSelected?.pedidosEntregados.forEach((domi) => {
+
+      this.pedidosEntregados.forEach((domi) => {
         const fechaToma = moment(domi.fecha).format("DD/MM/YYYY");
         if (this.cuentaPedidos[fechaToma]) {
           this.cuentaPedidos[fechaToma] += 1;
@@ -219,8 +226,8 @@ export default {
     },
     pedidosHoy() {
       if (this.domiSelected) {
-        if (this.domiSelected?.pedidosEntregados.length > 0) {
-          const domis = this.domiSelected?.pedidosEntregados.filter(
+        if (this.pedidosEntregados.length > 0) {
+          const domis = this.pedidosEntregados.filter(
             (pedido) =>
               moment(pedido.fecha).valueOf() >=
                 moment().startOf("day").valueOf() &&
@@ -234,8 +241,8 @@ export default {
 
     pedidosSemanaPasada() {
       if (this.domiSelected) {
-        if (this.domiSelected?.pedidosEntregados.length > 0) {
-          const domis = this.domiSelected?.pedidosEntregados.filter(
+        if (this.pedidosEntregados.length > 0) {
+          const domis = this.pedidosEntregados.filter(
             (pedido) =>
               moment(pedido.fecha).moment().subtract(7, "days").valueOf() >=
                 moment().subtract(7, "days").startOf("day").valueOf() &&

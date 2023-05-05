@@ -72,40 +72,42 @@ export default {
       );
     },
     async asignarPedidos(domiciliario) {
-      const orderToAdicionar = [];
-      this.selectedOrders = this.selectedOrders.map((order) => {
-        return {
-          docId: order.docId,
-          valorDomi: order.cliente.valorDomi,
-          cliente: order.cliente.nombre,
-          direccion: order.cliente.direccion,
-          fecha: order.fecha,
-          horaCamino: order.horaCamino,
-          horaMesa: order.horaMesa,
-          total: order.total,
-        };
-      });
-      this.selectedOrders.forEach((order) => {
-        if (
-          !domiciliario.pedidosEntregados.some(
-            (pedido) => pedido.docId == order.docId
-          )
-        ) {
-          orderToAdicionar.push(order);
-        }
-      });
-      const domiciliosLlevados = [
-        ...domiciliario.pedidosEntregados,
-        ...orderToAdicionar,
-      ];
-      const data = {
-        pedidosEntregados: domiciliosLlevados,
-      };
-      await useUtilsGastos().updateElement(
-        data,
-        "domiciliarios",
-        domiciliario.docId
-      );
+      // const orderToAdicionar = [];
+      // this.selectedOrders = this.selectedOrders.map((order) => {
+      //   return {
+      //     docId: order.docId,
+      //     valorDomi: order.cliente.valorDomi,
+      //     cliente: order.cliente.nombre,
+      //     direccion: order.cliente.direccion,
+      //     fecha: order.fecha,
+      //     horaCamino: order.horaCamino,
+      //     horaMesa: order.horaMesa,
+      //     total: order.total,
+      //     pagoEfectivo: order.pagoEfectivo ? order.pagoEfectivo : 0,
+      //     pagoOnline: order.pagoOnline ? order.pagoOnline : [],
+      //   };
+      // });
+      // this.selectedOrders.forEach((order) => {
+      //   if (
+      //     !domiciliario.pedidosEntregados.some(
+      //       (pedido) => pedido.docId == order.docId
+      //     )
+      //   ) {
+      //     orderToAdicionar.push(order);
+      //   }
+      // });
+      // const domiciliosLlevados = [
+      //   ...domiciliario.pedidosEntregados,
+      //   ...orderToAdicionar,
+      // ];
+      // const data = {
+      //   pedidosEntregados: domiciliosLlevados,
+      // };
+      // await useUtilsGastos().updateElement(
+      //   data,
+      //   "domiciliarios",
+      //   domiciliario.docId
+      // );
       const domiCorto = {
         nombre: domiciliario.nombreDomiciliario,
         docId: domiciliario.docId,
