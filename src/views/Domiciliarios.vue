@@ -7,7 +7,7 @@
   <div class="contenido row mt-3">
     <div class="col-9">
       <h3 class="text-center">Pedidos de hoy</h3>
-      <div class="estadisticas d-flex gap-3">
+      <div class="estadisticas d-flex gap-3" v-if="domiSelected">
         <estadistica-button :valorActual="mensajeValorHoy" titulo="Debe tener"
           ><Icon icon="ph:money-fill" color="#198754" width="30"
         /></estadistica-button>

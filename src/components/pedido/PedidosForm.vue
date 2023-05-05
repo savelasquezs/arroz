@@ -9,123 +9,147 @@
           width="30"
           class="float-end close-form"
         />
-        <section class="cliente">
-          <div class="d-flex justify-content-between">
-            <h4>Cliente</h4>
-            <button
-              class="btn btn-info"
-              v-show="clienteCompleto"
-              @click.prevent="editarCliente(currentcliente.docId)"
-            >
-              <Icon
-                icon="material-symbols:edit"
-                color="black"
-                width="24"
-                height="24"
-              />
-            </button>
-          </div>
-          <hr />
-          <div class="row">
-            <div class="mb-2 col list-container">
-              <label for="numero" class="form-label">Cedula</label>
+        <div class="section-container d-flex gap-5 justify-content-evenly">
+          <section class="cliente border p-3 my-3 rounded-2">
+            <div class="d-flex justify-content-between">
+              <h4>Cliente</h4>
               <button
-                class="btn btn-sm btn-outline-success float-end"
-                v-if="
-                  filtradosClientesArray.length == 0 && filtroClientes !== ''
-                "
-                @click.prevent="createCliente"
+                class="btn btn-info"
+                v-show="clienteCompleto"
+                @click.prevent="editarCliente(currentcliente.docId)"
               >
-                <Icon icon="mdi:create-new-folder" color="white" />
-                Crear Cliente
+                <Icon
+                  icon="material-symbols:edit"
+                  color="black"
+                  width="24"
+                  height="24"
+                />
               </button>
-
-              <input
-                required
-                type="number"
-                class="form-control"
-                id="cedula"
-                v-model="filtroClientes"
-                @keyup="filtradosClientes"
-                autocomplete="off"
-              />
-
-              <div class="list-group lista" v-if="searchingCliente">
-                <button
-                  type="button"
-                  class="list-group-item list-group-item-action"
-                  v-for="(cliente, index) in filtradosClientesArray"
-                  :key="index"
-                  @click="setcliente(cliente.docId)"
-                >
-                  {{ cliente.cedula }}
-                </button>
-              </div>
             </div>
-            <div class="mb-2 col" v-show="clienteCompleto">
-              <label for="numero" class="form-label">Telefono</label
-              ><input
-                required
-                type="text"
-                class="form-control"
-                id="numero"
-                v-model="currentcliente.numero"
-              />
-            </div>
-            <div class="mb-2 col" v-show="clienteCompleto">
-              <label for="nombre" class="form-label">Nombre</label
-              ><input
-                required
-                type="text"
-                class="form-control"
-                id="nombre"
-                v-model="currentcliente.nombre"
-              />
-            </div>
-          </div>
-          <div class="cliente-data" v-show="clienteCompleto">
+            <hr />
             <div class="row">
-              <div class="mb-2">
-                <label for="direccion" class="form-label">Dirección</label
+              <div class="mb-2 col list-container">
+                <label for="numero" class="form-label">Cedula</label>
+                <button
+                  class="btn btn-sm btn-outline-success float-end"
+                  v-if="
+                    filtradosClientesArray.length == 0 && filtroClientes !== ''
+                  "
+                  @click.prevent="createCliente"
+                >
+                  <Icon icon="mdi:create-new-folder" color="white" />
+                  Crear Cliente
+                </button>
+
+                <input
+                  required
+                  type="number"
+                  class="form-control"
+                  id="cedula"
+                  v-model="filtroClientes"
+                  @keyup="filtradosClientes"
+                  autocomplete="off"
+                />
+
+                <div class="list-group lista" v-if="searchingCliente">
+                  <button
+                    type="button"
+                    class="list-group-item list-group-item-action"
+                    v-for="(cliente, index) in filtradosClientesArray"
+                    :key="index"
+                    @click="setcliente(cliente.docId)"
+                  >
+                    {{ cliente.cedula }}
+                  </button>
+                </div>
+              </div>
+              <div class="mb-2 col" v-show="clienteCompleto">
+                <label for="numero" class="form-label">Telefono</label
                 ><input
                   required
                   type="text"
                   class="form-control"
-                  id="direccion"
-                  v-model="currentcliente.direccionCompleta"
+                  id="numero"
+                  v-model="currentcliente.numero"
+                />
+              </div>
+              <div class="mb-2 col" v-show="clienteCompleto">
+                <label for="nombre" class="form-label">Nombre</label
+                ><input
+                  required
+                  type="text"
+                  class="form-control"
+                  id="nombre"
+                  v-model="currentcliente.nombre"
                 />
               </div>
             </div>
-            <div class="mb-2">
-              <label for="notasPedidos" class="form-label">Notas Pedidos</label
-              ><input
-                type="text"
-                class="form-control"
-                id="notasPedidos"
-                placeholder="cucharas, sin pimenton...."
-                v-model="currentcliente.notasPedido"
-              />
+            <div class="cliente-data" v-show="clienteCompleto">
+              <div class="row">
+                <div class="mb-2">
+                  <label for="direccion" class="form-label">Dirección</label
+                  ><input
+                    required
+                    type="text"
+                    class="form-control"
+                    id="direccion"
+                    v-model="currentcliente.direccionCompleta"
+                  />
+                </div>
+              </div>
+              <div class="mb-2">
+                <label for="notasPedidos" class="form-label"
+                  >Notas Pedidos</label
+                ><input
+                  type="text"
+                  class="form-control"
+                  id="notasPedidos"
+                  placeholder="cucharas, sin pimenton...."
+                  v-model="currentcliente.notasPedido"
+                />
+              </div>
+              <div class="mb-2">
+                <label for="valor_domi" class="form-label">Valor del domi</label
+                ><input
+                  required
+                  type="number"
+                  class="form-control"
+                  id="valor_domi"
+                  v-model="currentcliente.valorDomi"
+                />
+              </div>
             </div>
-            <div class="mb-2">
-              <label for="valor_domi" class="form-label">Valor del domi</label
-              ><input
-                required
-                type="number"
-                class="form-control"
-                id="valor_domi"
-                v-model="currentcliente.valorDomi"
+          </section>
+          <section class="pago border p-3 my-3 rounded-2">
+            <h4 class="mb-3">Pago</h4>
+            <button
+              @click.prevent="addTipoPago"
+              class="addInvoiceItem btn btn-outline-success btn-sm"
+            >
+              <Icon
+                icon="material-symbols:add-circle-outline"
+                color="white"
+                width="30"
+                height="30"
               />
+              Agregar Tipo Pago
+            </button>
+            <div class="">
+              <h6>
+                Total a pagar: <strong> ${{ total }}</strong>
+              </h6>
+              <h6>
+                Pago efectivo: <strong>{{ totalEfectivo }}</strong>
+              </h6>
             </div>
-          </div>
-        </section>
+            <tipos-pago :listaTipos="listaTipos" />
+          </section>
+        </div>
         <hr />
         <section class="productos">
           <div class="work-items">
             <div class="d-flex justify-content-between">
               <h4>Productos</h4>
-              <h6>
-                Total a pagar: <strong> ${{ total }}</strong>
-              </h6>
               <button
                 @click.prevent="addNewInvoiceItem"
                 class="addInvoiceItem btn btn-outline-success btn-sm"
@@ -136,7 +160,7 @@
                   width="30"
                   height="30"
                 />
-                Agregar
+                Agregar Producto
               </button>
             </div>
             <p v-if="hacerDescuento" class="text-danger text-center">
@@ -223,6 +247,7 @@
             </table>
           </div>
         </section>
+
         <div class="button-container d-flex justify-content-around">
           <button
             type="button"
@@ -258,6 +283,7 @@ import { uid } from "uid";
 
 import { mapState } from "pinia";
 import ClienteForm from "../clientes/ClienteForm.vue";
+import TiposPago from "./TiposPago.vue";
 
 export default {
   name: "pedidoForm",
@@ -266,6 +292,7 @@ export default {
       clientesFiltrados: [],
       clienteCompleto: null,
       searchingCliente: null,
+      listaTipos: [],
 
       filtroClientes: "",
       filtradosClientesArray: [],
@@ -278,6 +305,7 @@ export default {
   components: {
     ClienteForm,
     Icon,
+    TiposPago,
   },
 
   computed: {
@@ -327,8 +355,17 @@ export default {
       }
       return recuento;
     },
+    totalBancos() {
+      return this.listaTipos.reduce((a, b) => a + b.valor, 0);
+    },
+    totalEfectivo() {
+      return this.total - this.totalBancos;
+    },
   },
   methods: {
+    addTipoPago() {
+      this.listaTipos.push({ banco: "Bancolombia", valor: this.totalEfectivo });
+    },
     filtradosClientes() {
       console.log(this.filtradosClientesArray.length);
       this.searchingCliente = true;
@@ -544,6 +581,8 @@ export default {
   overflow: scroll;
   max-height: 90vh;
   min-width: 800px;
+  width: 90vw;
+  max-width: 95vw;
 }
 
 .lista {
