@@ -42,11 +42,12 @@
             <p>Domiciliarios</p>
           </div>
         </router-link>
-
-        <div class="branding flex">
-          <contabilidad-icon />
-          <p>Contabilidad</p>
-        </div>
+        <router-link class="nav-link flex" :to="{ name: 'Contabilidad' }">
+          <div class="branding flex">
+            <contabilidad-icon />
+            <p>Contabilidad</p>
+          </div>
+        </router-link>
       </div>
       <div class="d-grid justify-content-center" v-if="logedUser">
         <h4 class="text-center">{{ logedUser }}</h4>

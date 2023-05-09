@@ -57,6 +57,11 @@ const routes = [
 				name: 'Domiciliarios',
 				component: () => import('../views/Domiciliarios.vue'),
 			},
+			{
+				path: '/contabilidad',
+				name: 'Contabilidad',
+				component: () => import('../views/Contabilidad.vue'),
+			},
 		],
 	},
 ];
