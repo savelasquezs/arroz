@@ -2,296 +2,43 @@
   <table class="table table-hover">
     <thead>
       <tr>
-        <th>Denominación</th>
+        <th>Moneda</th>
         <th>Cantidad</th>
         <th>Subtotal</th>
       </tr>
     </thead>
-    <tr>
-      <td align="center">$100.000</td>
+    <tr v-for="(moneda, index) in listaMonedas" :key="index">
+      <td align="center">{{ convAMoneda(moneda.valor) }}</td>
       <td>
-        <div class="input-group py-1">
+        <div class="input-group py-1 px-1">
           <input
             type="number"
             class="form-control"
-            placeholder="💸 de 100"
-            aria-label="Billetes de 100"
-            v-model="cien"
+            :placeholder="'💸 de ' + moneda.valor"
+            aria-label="Billetes de 100.000"
+            v-model="moneda.cantidad"
           />
         </div>
       </td>
       <td>
         <div class="input-group py-1">
           <input
-            type="number"
-            class="form-control"
-            placeholder=" Total 💸 de 100"
-            aria-label="Billetes de 100"
-            v-model="totalcien"
+            type="text"
+            class="form-control px-1"
+            placeholder=" Total 💸"
+            aria-label="Billetes de 100.000"
+            :value="
+              (moneda.total = moneda.cantidad
+                ? convAMoneda(moneda.cantidad * moneda.valor)
+                : null)
+            "
             disabled
           />
         </div>
       </td>
     </tr>
     <tr>
-      <td align="center">$50.000</td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder="💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="cincuenta"
-          />
-        </div>
-      </td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder=" Total 💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="totalcincuenta"
-            disabled
-          />
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td align="center">$50.000</td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder="💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="cincuenta"
-          />
-        </div>
-      </td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder=" Total 💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="totalcincuenta"
-            disabled
-          />
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td align="center">$50.000</td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder="💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="cincuenta"
-          />
-        </div>
-      </td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder=" Total 💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="totalcincuenta"
-            disabled
-          />
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td align="center">$50.000</td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder="💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="cincuenta"
-          />
-        </div>
-      </td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder=" Total 💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="totalcincuenta"
-            disabled
-          />
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td align="center">$50.000</td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder="💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="cincuenta"
-          />
-        </div>
-      </td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder=" Total 💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="totalcincuenta"
-            disabled
-          />
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td align="center">$50.000</td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder="💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="cincuenta"
-          />
-        </div>
-      </td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder=" Total 💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="totalcincuenta"
-            disabled
-          />
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td align="center">$50.000</td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder="💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="cincuenta"
-          />
-        </div>
-      </td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder=" Total 💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="totalcincuenta"
-            disabled
-          />
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td align="center">$50.000</td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder="💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="cincuenta"
-          />
-        </div>
-      </td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder=" Total 💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="totalcincuenta"
-            disabled
-          />
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td align="center">$50.000</td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder="💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="cincuenta"
-          />
-        </div>
-      </td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder=" Total 💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="totalcincuenta"
-            disabled
-          />
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td align="center">$50.000</td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder="💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="cincuenta"
-          />
-        </div>
-      </td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="number"
-            class="form-control"
-            placeholder=" Total 💸 de 50"
-            aria-label="Billetes de 50"
-            v-model="totalcincuenta"
-            disabled
-          />
-        </div>
-      </td>
+      <th>Total Caja : {{ totalCaja }}</th>
     </tr>
   </table>
 </template>
@@ -300,12 +47,38 @@
 export default {
   data() {
     return {
-      cien: 0,
+      listaMonedas: [
+        { nombre: "cienMil", valor: 100000 },
+        { nombre: "cincuentaMil", valor: 50000 },
+        { nombre: "veinte", valor: 20000 },
+        { nombre: "diez", valor: 10000 },
+        { nombre: "cinco", valor: 5000 },
+        { nombre: "dos", valor: 2000 },
+        { nombre: "mil", valor: 1000 },
+        { nombre: "quinientos", valor: 500 },
+        { nombre: "doscientos", valor: 200 },
+        { nombre: "cien", valor: 100 },
+        { nombre: "cincuenta", valor: 50 },
+      ],
     };
   },
+  methods: {
+    convAMoneda(valor) {
+      return valor.toLocaleString("es-CO", {
+        style: "currency",
+        currency: "COP",
+        maximumFractionDigits: 0,
+      });
+    },
+  },
   computed: {
-    totalcien() {
-      return this.cien * 100000;
+    totalCaja() {
+      return Number(
+        this.listaMonedas.reduce(
+          (a, b) => a + (b.total ? parseInt(b.total.replace(/\D/g, "")) : 0),
+          0
+        )
+      );
     },
   },
 };
