@@ -1,9 +1,12 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import { auth } from '../firebase/firebaseInit';
+import NotFound from '../views/NotFound.vue';
 
 const NODE_ENV = process.env.NODE_ENV;
 
 const routes = [
+	{ path: '/404', component: NotFound },
+	{ path: '/:catchAll(.*)', redirect: '/404' },
 	{
 		path: '/login',
 		component: () => import('../views/Login.vue'),
