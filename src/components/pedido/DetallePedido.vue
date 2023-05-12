@@ -96,7 +96,8 @@
 </template>
 
 <script>
-import { usePedidosStore, useUtilsStore } from "@/store/main.js";
+import { usePedidosStore } from "@/store/pedidos.js";
+import { useUtilsStore } from "@/store/utils.js";
 import { Icon } from "@iconify/vue";
 
 export default {

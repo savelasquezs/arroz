@@ -46,7 +46,7 @@
 
 <script >
 import { mapState } from "pinia";
-import { usePedidosStore } from "@/store/main";
+import { usePedidosStore } from "@/store/pedidos";
 import moment from "moment";
 import CrearAdmin from "../components/utils/CrearAdmin.vue";
 import Navbar from "../components/Navbar.vue";

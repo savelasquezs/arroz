@@ -9,11 +9,9 @@
 </template>
 <script>
 import { mapState } from "pinia";
-import {
-  useClientesStore,
-  useProductsStore,
-  usePedidosStore,
-} from "../src/store/main";
+import { useClientesStore } from "./store/clientes";
+import { useProductsStore } from "./store/productos";
+import { usePedidosStore } from "./store/pedidos";
 import { useCategorias, useGastosHoy, useTipoGastos } from "./store/gastos";
 import { useDomiciliarios } from "./store/domiciliario";
 import { useAuth } from "./store/auth";

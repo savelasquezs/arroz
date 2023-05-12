@@ -126,10 +126,11 @@
 </template>
 
 <script>
-import { useClientesStore, useUtilsStore } from "@/store/main";
 import { db } from "../../firebase/firebaseInit.js";
 import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
 import { mapState } from "pinia";
+import { useUtilsStore } from "../../store/utils.js";
+import { useClientesStore } from "../../store/clientes.js";
 export default {
   name: "clientForm",
   data() {

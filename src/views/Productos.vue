@@ -67,7 +67,7 @@
 import Modal from "@/components/utils/Modal.vue";
 import ProductForm from "@/components/productos/Productform.vue";
 import Borrar from "@/components/utils/Borrar.vue";
-import { useProductsStore } from "../store/main";
+import { useProductsStore } from "../store/productos";
 import { mapState } from "pinia";
 import buttonAdd from "../components/utils/buttonAdd.vue";
 import Navbar from "../components/Navbar.vue";

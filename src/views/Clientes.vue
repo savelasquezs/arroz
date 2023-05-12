@@ -93,7 +93,7 @@ import Modal from "@/components/utils/Modal.vue";
 import DetalleCliente from "@/components/clientes/DetalleCliente.vue";
 import { Icon } from "@iconify/vue";
 
-import { useClientesStore } from "../store/main";
+import { useClientesStore } from "../store/clientes";
 import Navbar from "@/components/Navbar.vue";
 import { mapState } from "pinia";
 import buttonAdd from "../components/utils/buttonAdd.vue";

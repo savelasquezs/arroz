@@ -38,7 +38,7 @@
 import moment from "moment";
 import DomiciliarioAvatar from "../icons/domiciliarioAvatar.vue";
 import { mapState } from "pinia";
-import { usePedidosStore } from "../../store/main";
+import { usePedidosStore } from "../../store/pedidos";
 import { useDomiciliarios } from "../../store/domiciliario";
 
 export default {

@@ -51,7 +51,7 @@
 import { mapState } from "pinia";
 import { useDomiciliarios } from "../../store/domiciliario";
 import { useUtilsGastos } from "../../store/gastos";
-import { useUtilsStore } from "../../store/main";
+import { useUtilsStore } from "../../store/utils";
 export default {
   props: ["registro"],
   data() {

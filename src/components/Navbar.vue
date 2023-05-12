@@ -69,7 +69,7 @@ import gastosIcon from "./icons/gastosIcon.vue";
 import domiciliarioIcon from "./icons/domiciliarioIcon.vue";
 import ContabilidadIcon from "./icons/contabilidadIcon.vue";
 import { auth } from "../firebase/firebaseInit";
-import { useUtilsStore } from "../store/main";
+import { useUtilsStore } from "../store/utils";
 
 export default {
   data() {

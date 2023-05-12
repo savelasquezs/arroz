@@ -98,9 +98,13 @@
 
 <script>
 import { mapState } from "pinia";
-import { useGastosHoy, useTipoGastos, useUtilsGastos } from "../../store/gastos";
+import {
+  useGastosHoy,
+  useTipoGastos,
+  useUtilsGastos,
+} from "../../store/gastos";
 import AutocompleteDropDown from "../utils/AutocompleteDropDown.vue";
-import { useUtilsStore } from "../../store/main";
+import { useUtilsStore } from "../../store/utils";
 export default {
   data() {
     return {

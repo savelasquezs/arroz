@@ -30,7 +30,8 @@
 </template>
 
 <script>
-import { useClientesStore, useUtilsStore } from "@/store/main";
+import { useClientesStore } from "@/store/clientes";
+import { useUtilsStore } from "@/store/utils";
 import { mapState } from "pinia";
 export default {
   name: "detalleCliente",

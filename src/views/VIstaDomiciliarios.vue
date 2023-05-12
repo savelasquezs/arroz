@@ -17,7 +17,7 @@
 <script>
 import { mapState } from "pinia";
 import { useAuth } from "../store/auth";
-import { usePedidosStore } from "../store/main";
+import { usePedidosStore } from "../store/pedidos";
 import SquareColored from "../components/domiciliarios/SquareColored.vue";
 import Modal from "../components/utils/Modal.vue";
 import RegisterFormDomiciliarios from "../components/domiciliarios/registerFormDomiciliarios.vue";
@@ -27,7 +27,6 @@ export default {
     return {
       selectedOrders: [],
       modal: null,
- 
     };
   },
   methods: {

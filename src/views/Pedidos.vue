@@ -150,12 +150,12 @@
 import ButtonAdd from "../components/utils/buttonAdd.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { useClientesStore } from "../store/main";
 import DetallePedido from "@/components/pedido/DetallePedido.vue";
 import Modal from "@/components/utils/Modal.vue";
 import PedidosForm from "@/components/pedido/PedidosForm.vue";
 import { mapState } from "pinia";
-import { usePedidosStore, useUtilsStore } from "@/store/main";
+import { usePedidosStore } from "@/store/pedidos";
+import { useUtilsStore } from "@/store/utils";
 import { Icon } from "@iconify/vue";
 import moment from "moment";
 import Borrar from "@/components/utils/Borrar.vue";

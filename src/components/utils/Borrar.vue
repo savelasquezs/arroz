@@ -23,12 +23,10 @@
 </template>
 
 <script>
-import {
-  useClientesStore,
-  useProductsStore,
-  usePedidosStore,
-  useUtilsStore,
-} from "@/store/main";
+import { useClientesStore } from "@/store/clientes";
+import { useProductsStore } from "@/store/productos";
+import { usePedidosStore } from "@/store/pedidos";
+import { useUtilsStore } from "@/store/utils";
 import { useCategorias, useGastosHoy, useTipoGastos } from "../../store/gastos";
 import Swal from "sweetalert2";
 

@@ -87,7 +87,8 @@ import {
   useDetallesPedidosYAbonos,
   useDomiciliarios,
 } from "../../store/domiciliario";
-import { usePedidosStore, useUtilsStore } from "../../store/main";
+import { useUtilsStore } from "../../store/utils";
+import { usePedidosStore } from "../../store/pedidos";
 import moment from "moment";
 import TabsDomiciliario from "./TabsDomiciliario.vue";
 export default {

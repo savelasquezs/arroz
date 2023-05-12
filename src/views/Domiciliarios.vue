@@ -86,7 +86,7 @@ import SearchingIcon from "../components/icons/searchingIcon.vue";
 import Modal from "../components/utils/Modal.vue";
 import AbonoForm from "../components/abonos/AbonoForm.vue";
 import DetallesPedidosYAbonos from "../components/domiciliarios/DetallesPedidosYAbonos.vue";
-import { usePedidosStore } from "../store/main";
+import { usePedidosStore } from "../store/pedidos";
 export default {
   data() {
     return {

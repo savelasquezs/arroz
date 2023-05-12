@@ -35,8 +35,7 @@ import { useDomiciliarios } from "../../store/domiciliario";
 import buttonAdd from "../utils/buttonAdd.vue";
 import Modal from "../utils/Modal.vue";
 import RegisterFormDomiciliarios from "./registerFormDomiciliarios.vue";
-import { useUtilsGastos } from "../../store/gastos";
-import { usePedidosStore } from "../../store/main";
+import { usePedidosStore } from "../../store/pedidos";
 import Individual from "./individual.vue";
 import SearchingIcon from "../icons/searchingIcon.vue";
 export default {

@@ -38,7 +38,7 @@
 <script>
 import { mapState } from "pinia";
 import { useAbonos, useDomiciliarios } from "../../store/domiciliario";
-import { useUtilsStore } from "../../store/main";
+import { useUtilsStore } from "../../store/utils";
 import { useUtilsGastos } from "../../store/gastos";
 export default {
   props: ["user"],

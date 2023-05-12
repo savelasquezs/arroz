@@ -1,4 +1,4 @@
-import { db, auth } from '../firebase/firebaseInit';
+import { auth } from '../firebase/firebaseInit';
 
 import {
 	createUserWithEmailAndPassword,
@@ -6,14 +6,8 @@ import {
 	updateProfile,
 } from 'firebase/auth';
 import { defineStore } from 'pinia';
-import { useUtilsStore } from './main';
-import {
-	getDocs,
-	collection,
-	addDoc,
-	updateDoc,
-	doc,
-} from 'firebase/firestore';
+import { useUtilsStore } from './utils';
+
 import router from '../router/main';
 
 export const useAuth = defineStore('authArroz', {

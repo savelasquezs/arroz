@@ -120,54 +120,60 @@
               </div>
             </div>
           </section>
-          <section class="pago border p-3 my-3 rounded-2 w-50 shadow">
-            <h4 class="">Pago</h4>
-            <hr />
-            <button
-              @click.prevent="addTipoPago"
-              class="addInvoiceItem btn btn-outline-success btn-sm"
-            >
-              <Icon
-                icon="material-symbols:add-circle-outline"
-                color="white"
-                width="30"
-                height="30"
-              />
-              Agregar Tipo Pago
-            </button>
-            <div class="">
-              <h5>
-                Total a pagar: <strong> ${{ total }}</strong>
-              </h5>
-              <h6>
-                Pago efectivo: <strong>{{ totalEfectivo }}</strong>
-              </h6>
-            </div>
-            <tipos-pago
-              :listaTipos="listaTipos"
-              @deleteTipo="deleteTipoPago"
-              :listaBancos="listaBancos"
-            />
-            <h5>Domiciliario</h5>
-            <div class="form-floating">
-              <select
-                class="form-select"
-                id="floatingSelect"
-                aria-label="Floating label select example"
-                v-model="domiciliario"
+          <section
+            class="pago border p-3 my-3 rounded-2 w-50 shadow d-grid align-content-around"
+          >
+            <div class="rounded border p-3">
+              <h4 class="">Pago</h4>
+              <hr />
+              <button
+                @click.prevent="addTipoPago"
+                class="addInvoiceItem btn btn-outline-success btn-sm"
               >
-                <option
-                  v-for="domiciliario in allDomiciliarios"
-                  :key="domiciliario.nombreDomiciliario"
-                  :value="{
-                    nombre: domiciliario.nombreDomiciliario,
-                    docId: domiciliario.docId,
-                  }"
+                <Icon
+                  icon="material-symbols:add-circle-outline"
+                  color="white"
+                  width="30"
+                  height="30"
+                />
+                Agregar Tipo Pago
+              </button>
+              <div class="">
+                <h5>
+                  Total a pagar: <strong> ${{ total }}</strong>
+                </h5>
+                <h6>
+                  Pago efectivo: <strong>{{ totalEfectivo }}</strong>
+                </h6>
+              </div>
+              <tipos-pago
+                :listaTipos="listaTipos"
+                @deleteTipo="deleteTipoPago"
+                :listaBancos="listaBancos"
+              />
+            </div>
+            <div class="border p-3 rounded mt-3" v-if="editingPedido">
+              <h5>Domiciliario</h5>
+              <div class="form-floating">
+                <select
+                  class="form-select"
+                  id="floatingSelect"
+                  aria-label="Floating label select example"
+                  v-model="domiciliario"
                 >
-                  {{ domiciliario.nombreDomiciliario }}
-                </option>
-              </select>
-              <label for="floatingSelect">Domiciliario</label>
+                  <option
+                    v-for="domiciliario in allDomiciliarios"
+                    :key="domiciliario.nombreDomiciliario"
+                    :value="{
+                      nombre: domiciliario.nombreDomiciliario,
+                      docId: domiciliario.docId,
+                    }"
+                  >
+                    {{ domiciliario.nombreDomiciliario }}
+                  </option>
+                </select>
+                <label for="floatingSelect">Domiciliario</label>
+              </div>
             </div>
           </section>
         </div>
@@ -293,12 +299,10 @@
   </div>
 </template>
 <script>
-import {
-  useClientesStore,
-  usePedidosStore,
-  useProductsStore,
-  useUtilsStore,
-} from "@/store/main";
+import { useUtilsStore } from "@/store/utils";
+import { useClientesStore } from "@/store/clientes";
+import { usePedidosStore } from "@/store/pedidos";
+import { useProductsStore } from "@/store/productos";
 import Swal from "sweetalert2";
 import { db } from "../../firebase/firebaseInit.js";
 

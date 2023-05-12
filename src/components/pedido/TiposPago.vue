@@ -3,7 +3,7 @@
     <tbody>
       <tr v-for="(pago, index) in listaTipos" :key="index">
         <td>
-          <div class="form-floating">
+          <div class="form-floating bancoNombre">
             <select
               class="form-select"
               id="floatingSelect"
@@ -15,11 +15,11 @@
                 {{ banco }}
               </option>
             </select>
-            <label for="floatingSelect">Banco o App</label>
+            <label for="floatingSelect">Banco o Applicacion</label>
           </div>
         </td>
-        <td>
-          <div class="form-floating mb-3">
+        <td class="">
+          <div class="form-floating mb-3 bancoValor">
             <input
               type="number"
               class="form-control"
@@ -73,5 +73,13 @@ export default {
 td.trash {
   vertical-align: middle;
   cursor: pointer;
+}
+.bancoNombre {
+  width: 125%;
+  margin-right: 10px;
+}
+.bancoValor {
+  width: 75%;
+  float: right;
 }
 </style>

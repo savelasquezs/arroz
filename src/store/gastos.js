@@ -1,6 +1,6 @@
 import { db } from '../firebase/firebaseInit';
 import { defineStore } from 'pinia';
-import { useUtilsStore } from './main';
+import { useUtilsStore } from './utils';
 import {
 	getDocs,
 	collection,
@@ -38,6 +38,7 @@ export const useCategorias = defineStore('categorias', {
 				}
 			});
 		},
+
 		toogleDelete() {
 			this.deletingCat = !this.deletingCat;
 		},

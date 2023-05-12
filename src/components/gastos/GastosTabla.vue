@@ -74,7 +74,7 @@ import { mapState } from "pinia";
 import { useGastosHoy } from "../../store/gastos";
 import Modal from "../utils/Modal.vue";
 import GastoHoyForm from "./GastoHoyForm.vue";
-import { useUtilsStore } from "../../store/main";
+import { useUtilsStore } from "../../store/utils";
 import { Icon } from "@iconify/vue";
 import Borrar from "../utils/Borrar.vue";
 export default {
