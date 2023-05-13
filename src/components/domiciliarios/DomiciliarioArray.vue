@@ -1,8 +1,28 @@
 <template>
+  <h3 class="text-center mt-2 pb-2 border-bottom" v-if="!todosMostrados">
+    Domiciliarios de hoy
+  </h3>
+  <h3 class="text-center mt-2 pb-2 border-bottom" v-else>
+    Todos los domiciliarios
+  </h3>
   <div class="domis-container">
+    <button
+      class="btn btn-outline-dark w-100"
+      @click="todosMostrados = !todosMostrados"
+      v-if="!todosMostrados"
+    >
+      Ver Todos los domiciliarios
+    </button>
+    <button
+      class="btn btn-outline-dark w-100"
+      @click="todosMostrados = !todosMostrados"
+      v-else
+    >
+      Ver domiciliarios Hoy
+    </button>
     <div
       class="m-3 domi_container rounded-3"
-      v-for="(persona, index) in domiciliariosHoy"
+      v-for="(persona, index) in domiciliariosArray"
       :key="index"
       :persona="persona"
       @selected="setDomiSelected"
@@ -42,6 +62,11 @@ import { usePedidosStore } from "../../store/pedidos";
 import { useDomiciliarios } from "../../store/domiciliario";
 
 export default {
+  data() {
+    return {
+      todosMostrados: null,
+    };
+  },
   props: ["listaDomiciliarios"],
   components: { DomiciliarioAvatar },
   methods: {
@@ -87,6 +112,12 @@ export default {
             pedido.domiciliario.nombre == domiciliario.nombreDomiciliario
         )
       );
+    },
+    domiciliariosArray() {
+      if (this.todosMostrados) {
+        return this.listaDomiciliarios;
+      }
+      return this.domiciliariosHoy;
     },
   },
 };

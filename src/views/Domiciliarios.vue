@@ -58,7 +58,6 @@
     </div>
     <div class="domiciliarios col-3 mt-3">
       <div class="border rounded-4">
-        <h3 class="text-center mt-2 pb-2 border-bottom">Domiciliarios</h3>
         <domiciliario-array
           :listaDomiciliarios="allDomiciliarios"
           @selected="setDomiSelected"
@@ -151,7 +150,6 @@ export default {
     domiSelected() {
       useDomiciliarios().setCurrentDomiciliario(this.domiSelected.docId);
       this.cuentaPedidos = {};
-      console.log(this.pedidosHoy());
       this.valorHoy = this.pedidosHoy().reduce(
         (a, b) => a + parseInt(b.pagoEfectivo),
         0
