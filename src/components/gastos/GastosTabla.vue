@@ -34,8 +34,8 @@
       <tbody>
         <tr v-for="(gasto, index) in listaGastos" :key="index">
           <td>{{ fechaLocal(gasto.fecha) }}</td>
-          <td>{{ gasto.gasto.categoria }}</td>
-          <td>{{ gasto.gasto.nombre }}</td>
+          <td class="text-capitalize">{{ gasto.gasto.categoria }}</td>
+          <td class="text-capitalize">{{ gasto.gasto.nombre }}</td>
           <td>{{ gasto.cantidad }}</td>
           <td>{{ gasto.valorTotal }}</td>
           <td>{{ gasto.valorUnitario }}</td>

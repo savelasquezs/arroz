@@ -10,7 +10,7 @@
     <div class="accordion-item" v-for="(item, index) in list" :key="index">
       <h2 class="accordion-header">
         <button
-          class="accordion-button collapsed"
+          class="accordion-button collapsed text-capitalize"
           type="button"
           data-bs-toggle="collapse"
           :data-bs-target="'#' + item.categorie + index"

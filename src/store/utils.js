@@ -54,7 +54,6 @@ export const useUtilsStore = defineStore('UtilsStore', {
 	actions: {
 		confirmAction(Mensaje, timer = 2000, icon = 'success') {
 			Swal.fire({
-				position: 'top-end',
 				icon,
 				title: Mensaje,
 				showConfirmButton: false,
@@ -79,7 +78,7 @@ export const useUtilsStore = defineStore('UtilsStore', {
 			return result;
 		},
 		listenChanges({ store, tabla, ordenarPor, arrayName }) {
-			console.log(store.clientDatabase);
+			console.log(store);
 			const q = ordenarPor
 				? query(collection(db, tabla), orderBy(ordenarPor))
 				: collection(db, tabla);
@@ -91,7 +90,7 @@ export const useUtilsStore = defineStore('UtilsStore', {
 								docId: change.doc.id,
 								...change.doc.data(),
 							};
-							store[arrayName].push(data);
+							store[arrayName].unshift(data);
 						}
 					} else if (change.type == 'modified') {
 						let cambio = store[arrayName].find(
@@ -108,6 +107,17 @@ export const useUtilsStore = defineStore('UtilsStore', {
 					}
 				});
 			});
+		},
+		async saveElement(data, tabla) {
+			const docRef = await addDoc(collection(db, tabla), data);
+
+			useUtilsStore().confirmAction(`Registro guardado exitosamente`);
+		},
+		async updateElement(data, tabla, id) {
+			const docRef = doc(db, tabla, id);
+			await updateDoc(docRef, data);
+
+			useUtilsStore().confirmAction('Actualización completada');
 		},
 	},
 });

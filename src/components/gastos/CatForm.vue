@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { useCategorias, useUtilsGastos } from "../../store/gastos";
+import { useCategorias } from "../../store/gastos";
 import Acordion from "../utils/Acordion.vue";
 import { mapState } from "pinia";
 import { useUtilsStore } from "../../store/utils";
@@ -70,7 +70,8 @@ export default {
         categorie: this.categorieToCreate,
         description: this.descriptionCategorie,
       };
-      useUtilsGastos().updateElement(data, "categories", id);
+      useUtilsStore().updateElement(data, "categories", id);
+      useUtilsStore().updateElement(data, "categories", id);
       this.cerrarModal();
     },
     cerrarModal() {
@@ -93,7 +94,8 @@ export default {
         categorie: this.categorieToCreate,
         description: this.descriptionCategorie,
       };
-      useUtilsGastos().saveElement(data, "categories");
+      useUtilsStore().saveElement(data, "categories");
+      useUtilsStore().saveElement(data, "categories");
       this.cerrarModal();
     },
   },

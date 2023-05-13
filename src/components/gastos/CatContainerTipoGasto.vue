@@ -12,11 +12,11 @@
             :color="icono.color"
           />
 
-          <p class="mb-0">{{ gasto.categoria }}</p>
+          <p class="mb-0 text-capitalize">{{ gasto.categoria }}</p>
         </div>
         <div>
-          <h6>{{ gasto.nombre }}</h6>
-          <p>{{ gasto.anotaciones }}</p>
+          <h6 class="text-capitalize">{{ gasto.nombre }}</h6>
+          <p class="">{{ gasto.anotaciones }}</p>
         </div>
       </div>
       <div class="d-flex justify-content-between w-25">

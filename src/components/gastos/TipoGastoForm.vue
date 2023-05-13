@@ -104,11 +104,7 @@ import Swal from "sweetalert2";
 import Acordion from "../utils/Acordion.vue";
 import AutocompleteDropDown from "../utils/AutocompleteDropDown.vue";
 import { mapState } from "pinia";
-import {
-  useCategorias,
-  useTipoGastos,
-  useUtilsGastos,
-} from "../../store/gastos";
+import { useCategorias, useTipoGastos } from "../../store/gastos";
 import { useUtilsStore } from "../../store/utils";
 import Modal from "../utils/Modal.vue";
 import Borrar from "../utils/Borrar.vue";
@@ -147,7 +143,7 @@ export default {
         medida: this.medida,
         anotaciones: this.anotaciones,
       };
-      useUtilsGastos().updateElement(data, "tipoGastos", id);
+      useUtilsStore().updateElement(data, "tipoGastos", id);
       this.$refs.botonCerrar.click();
     },
     setCategoria(nombre, elementoInLista) {
@@ -201,7 +197,7 @@ export default {
         anotaciones: this.anotaciones,
       };
 
-      useUtilsGastos().saveElement(data, "tipoGastos");
+      useUtilsStore().saveElement(data, "tipoGastos");
       this.$refs.botonCerrar.click();
     },
   },

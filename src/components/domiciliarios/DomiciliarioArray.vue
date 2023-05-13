@@ -25,7 +25,6 @@
       v-for="(persona, index) in domiciliariosArray"
       :key="index"
       :persona="persona"
-      @selected="setDomiSelected"
     >
       <input
         type="radio"

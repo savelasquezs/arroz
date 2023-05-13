@@ -48,9 +48,9 @@ export default {
   created() {
     useProductsStore().listenChanges();
     usePedidosStore().listenChanges();
-    useCategorias().getCategories();
-    useTipoGastos().getTipoGastos();
-    useGastosHoy().getGastos();
+    useCategorias().listenChanges();
+    useTipoGastos().listenChanges();
+    useGastosHoy().listenChanges();
     useClientesStore().listenChanges();
     useDomiciliarios().listenChanges();
   },

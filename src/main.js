@@ -3,6 +3,7 @@ import App from './App.vue';
 import { createPinia } from 'pinia';
 const pinia = createPinia();
 import router from './router/main';
+import VueSweetalert2 from 'vue-sweetalert2';
 import { auth } from './firebase/firebaseInit';
 import { useAuth } from './store/auth';
 
@@ -27,4 +28,4 @@ auth.onAuthStateChanged(async (user) => {
 	}
 });
 
-createApp(App).use(router).use(pinia).mount('#app');
+createApp(App).use(router).use(pinia).use(VueSweetalert2).mount('#app');
