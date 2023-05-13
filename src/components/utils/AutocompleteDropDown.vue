@@ -61,7 +61,7 @@ export default {
       setTimeout(() => {
         this.typing = false;
         const elementoInLista = this.lista.some((item) => item == this.filtro);
-        this.$emit("catSeleccionada", this.filtro, elementoInLista);
+        this.$emit("elSeleccionado", this.filtro, elementoInLista);
       }, 200);
     },
   },

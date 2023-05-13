@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia';
+import { useUtilsStore } from './utils';
+
 import {
 	collection,
 	onSnapshot,
@@ -38,35 +40,11 @@ export const useProductsStore = defineStore('ProductosStore', {
 		},
 
 		listenChanges() {
-			const q = query(collection(db, 'productos'), orderBy('nombre'));
-			onSnapshot(q, (snapshot) => {
-				snapshot.docChanges().forEach((change) => {
-					if (change.type == 'added') {
-						if (
-							!this.productDatabase.some(
-								(product) => product.docId == change.doc.id
-							)
-						) {
-							const data = {
-								docId: change.doc.id,
-								...change.doc.data(),
-							};
-							this.productDatabase.push(data);
-						}
-					} else if (change.type == 'modified') {
-						let cambio = this.productDatabase.find(
-							(product) => product.docId == change.doc.id
-						);
-						let index = this.productDatabase.findIndex(
-							(product) => product.docId == change.doc.id
-						);
-						this.productDatabase[index] = { ...cambio, ...change.doc.data() };
-					} else if (change.type == 'removed') {
-						this.productDatabase = this.productDatabase.filter(
-							(product) => product.docId != change.doc.id
-						);
-					}
-				});
+			useUtilsStore().listenChanges({
+				store: this,
+				tabla: 'productos',
+				ordenarPor: 'nombre',
+				arrayName: 'productDatabase',
 			});
 		},
 
@@ -76,5 +54,11 @@ export const useProductsStore = defineStore('ProductosStore', {
 			);
 			console.log(this.currentProduct);
 		},
+	},
+	getters: {
+		getProducts: (state) => (search) =>
+			state.productDatabase.filter((product) =>
+				product.nombre.toLowerCase().includes(search.toLowerCase())
+			),
 	},
 });

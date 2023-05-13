@@ -20,7 +20,6 @@
         type="text"
         class="form-control"
         v-model="filtro"
-        @keyup="filtradosProductos"
         placeholder="  ...Buscar"
       />
     </div>
@@ -36,7 +35,7 @@
       </thead>
 
       <tbody>
-        <tr v-for="(product, index) in filtrados" :key="index">
+        <tr v-for="(product, index) in getProducts(filtro)" :key="index">
           <td>{{ product.nombre }}</td>
           <td>$ {{ product.valor }}</td>
           <td>{{ product.categoria }}</td>
@@ -81,19 +80,6 @@ export default {
     };
   },
   methods: {
-    filtradosProductos() {
-      if (this.filtro == "") {
-        this.filtrados = this.productDatabase;
-        return;
-      } else {
-        this.filtrados = this.productDatabase.filter((product) =>
-          product.nombre.toLowerCase().includes(this.filtro.toLocaleLowerCase())
-        );
-        return;
-      }
-
-      console.log(this.filtrados);
-    },
     abrirModal() {
       useProductsStore().toggleModalProducto();
       if (this.editProduct) {
@@ -125,16 +111,8 @@ export default {
       "borrarProducto",
       "currentProduct",
       "editProduct",
+      "getProducts",
     ]),
-  },
-
-  watch: {
-    productDatabase() {
-      this.filtradosProductos();
-    },
-  },
-  created() {
-    this.filtradosProductos();
   },
 };
 </script>

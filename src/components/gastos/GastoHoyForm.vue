@@ -6,7 +6,7 @@ fecha<template>
         ref="autocompletar"
         :lista="allTipoGastos.map((gasto) => gasto.nombre)"
         titulo="Gasto"
-        @catSeleccionada="setGasto"
+        @elSeleccionado="setGasto"
       />
       <p v-if="gastoNoValido" class="text-danger">Gasto no encontrado</p>
       <button
@@ -28,6 +28,7 @@ fecha<template>
             :placeholder="gasto.medida"
             v-model="cantidad"
             required
+            autocomplete="off"
           />
           <label for="medida">{{ gasto.medida }}s</label>
         </div>

@@ -31,7 +31,6 @@
         <input
           type="text"
           v-model="filtroPorNombre"
-          @keyup="filtrar"
           class="form-control"
           placeholder="  ...Filtra por Nombre"
         />
@@ -70,7 +69,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(pedido, index) in filtrados" :key="index">
+        <tr
+          v-for="(pedido, index) in getPedidos(
+            filtroPorNombre,
+            date[0],
+            date[1]
+          )"
+          :key="index"
+        >
           <td>{{ pedido.cliente.nombre }}</td>
           <td>{{ pedido.cliente.direccion.split(",")[0] }}</td>
           <td>{{ pedido.total }}</td>
@@ -159,8 +165,7 @@ import { useUtilsStore } from "@/store/utils";
 import { Icon } from "@iconify/vue";
 import moment from "moment";
 import Borrar from "@/components/utils/Borrar.vue";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "@/firebase/firebaseInit.js";
+
 import Navbar from "../components/Navbar.vue";
 import ClienteForm from "../components/clientes/ClienteForm.vue";
 
@@ -176,7 +181,7 @@ export default {
   data() {
     return {
       filtroPorNombre: "",
-      filtrados: [],
+
       date: "",
       presetDateRanges: [
         { label: "Hoy", range: [new Date(), new Date()] },
@@ -221,6 +226,7 @@ export default {
       "deletingPedido",
       "currentPedido",
       "detallePedidoAbierto",
+      "getPedidos",
     ]),
   },
   methods: {
@@ -232,30 +238,6 @@ export default {
       usePedidosStore().tooglePedidoFormOpen();
     },
 
-    filtrar() {
-      if (!this.date && this.filtroPorNombre == "") {
-        this.filtrados = this.pedidosDatabase;
-        return;
-      }
-      if (!this.date && this.filtroPorNombre !== "") {
-        this.filtrados = this.pedidosDatabase.filter((pedido) =>
-          pedido.cliente.nombre
-            .toLowerCase()
-            .includes(this.filtroPorNombre.toLocaleLowerCase())
-        );
-        return;
-      }
-
-      this.filtrados = this.pedidosDatabase.filter(
-        (pedido) =>
-          moment(pedido.horaToma).valueOf() >=
-            moment(this.date[0]).subtract(1, "days").valueOf() &&
-          moment(pedido.horaToma).valueOf() <= moment(this.date[1]).valueOf() &&
-          pedido.cliente.nombre
-            .toLowerCase()
-            .includes(this.filtroPorNombre.toLocaleLowerCase())
-      );
-    },
     borrarPedido(id) {
       usePedidosStore().setCurrentPedido(id);
       usePedidosStore().toggleDelete();
@@ -281,17 +263,6 @@ export default {
     horaLocal(hora) {
       return useUtilsStore().horaLocal(hora);
     },
-  },
-  watch: {
-    pedidosDatabase() {
-      this.filtrar();
-    },
-    date() {
-      this.filtrar();
-    },
-  },
-  created() {
-    this.filtrar();
   },
 };
 </script>

@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 import moment from 'moment';
 
 import { db } from '../firebase/firebaseInit';
+import { useUtilsStore } from './utils';
 
 export const usePedidosStore = defineStore('PedidosStore', {
 	state: () => {
@@ -94,39 +95,26 @@ export const usePedidosStore = defineStore('PedidosStore', {
 		},
 
 		listenChanges() {
-			const q = query(collection(db, 'pedidos'), orderBy('horaToma', 'desc'));
-			onSnapshot(q, (snapshot) => {
-				snapshot.docChanges().forEach((change) => {
-					if (change.type == 'added') {
-						if (
-							!this.pedidosDatabase.some(
-								(pedido) => pedido.docId == change.doc.id
-							)
-						) {
-							const data = {
-								docId: change.doc.id,
-								...change.doc.data(),
-							};
-							this.pedidosDatabase.unshift(data);
-						}
-					} else if (change.type == 'modified') {
-						let cambio = this.pedidosDatabase.find(
-							(pedido) => pedido.docId == change.doc.id
-						);
-						let index = this.pedidosDatabase.findIndex(
-							(pedido) => pedido.docId == change.doc.id
-						);
-						this.pedidosDatabase[index] = { ...cambio, ...change.doc.data() };
-					} else if (change.type == 'removed') {
-						this.pedidosDatabase = this.pedidosDatabase.filter(
-							(pedido) => pedido.docId != change.doc.id
-						);
-					}
-				});
+			useUtilsStore().listenChanges({
+				store: this,
+				tabla: 'pedidos',
+				ordenarPor: 'horaToma',
+				arrayName: 'pedidosDatabase',
 			});
 		},
 	},
 	getters: {
+		getPedidos: (state) => (nombre, diaInicio, diaFinal) =>
+			state.pedidosDatabase.filter((pedido) =>
+				diaInicio
+					? moment(pedido.horaToma).valueOf() >=
+							moment(diaInicio).subtract(1, 'days').valueOf() &&
+					  moment(pedido.horaToma).valueOf() <= moment(diaFinal).valueOf() &&
+					  pedido.cliente.nombre
+							.toLowerCase()
+							.includes(nombre.toLocaleLowerCase())
+					: pedido
+			),
 		pedidosHoy: (state) =>
 			state.pedidosDatabase.filter(
 				(pedido) =>

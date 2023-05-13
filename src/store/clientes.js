@@ -38,6 +38,10 @@ export const useClientesStore = defineStore('ClientesStore', {
 	},
 	getters: {
 		doubleCount: (state) => state.count * 2,
+		getCustomers: (state) => (search) =>
+			state.clientDatabase.filter((cliente) =>
+				cliente.cedula.toString().includes(search)
+			),
 	},
 	actions: {
 		toggleDelete() {

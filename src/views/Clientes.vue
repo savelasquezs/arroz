@@ -24,14 +24,12 @@
         class="form-control"
         placeholder="  ...Buscar por Cedula"
         v-model="filtro"
-        @keyup="filtradosClientes"
       />
     </div>
     <table class="table table-hover">
       <thead>
         <tr>
           <th>Cedula</th>
-
           <th>Nombre</th>
           <th>Telefono</th>
           <th>Dirección</th>
@@ -41,7 +39,7 @@
       </thead>
       <tbody v-if="filtrados">
         <tr
-          v-for="(cliente, index) in filtrados"
+          v-for="(cliente, index) in getCustomers(filtro)"
           :key="index"
           @click.self="verDetalles(cliente.docId)"
         >
@@ -115,19 +113,6 @@ export default {
     buttonAdd,
   },
   methods: {
-    filtradosClientes() {
-      if (this.filtro == "") {
-        this.filtrados = this.clientDatabase;
-        return;
-      } else {
-        this.filtrados = this.clientDatabase.filter((cliente) =>
-          cliente.cedula.toString().includes(this.filtro)
-        );
-        return;
-      }
-
-      console.log(this.filtrados);
-    },
     toogleClienteForm() {
       useClientesStore().toggleClientForm();
     },
@@ -159,16 +144,8 @@ export default {
       "currentcliente",
       "deletingCliente",
       "detalleCliente",
+      "getCustomers",
     ]),
-  },
-  watch: {
-    clientDatabase() {
-      this.filtradosClientes();
-    },
-  },
-
-  created() {
-    this.filtradosClientes();
   },
 };
 </script>
