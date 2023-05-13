@@ -1,4 +1,4 @@
-<template>
+fecha<template>
   <div class="card">
     <form>
       <h3 class="text-center mb-3">Agregar Gasto</h3>
@@ -98,11 +98,7 @@
 
 <script>
 import { mapState } from "pinia";
-import {
-  useGastosHoy,
-  useTipoGastos,
-  useUtilsGastos,
-} from "../../store/gastos";
+import { useGastosHoy, useTipoGastos } from "../../store/gastos";
 import AutocompleteDropDown from "../utils/AutocompleteDropDown.vue";
 import { useUtilsStore } from "../../store/utils";
 export default {
@@ -132,11 +128,6 @@ export default {
     async agregarGastoYSalir() {
       if (this.gastoNoValido) return;
       if (this.gasto == "" || this.cantidad == "" || this.valorTotal == "") {
-        useUtilsStore().confirmAction(
-          "Los campos no pueden ir vacios",
-          2000,
-          "error"
-        );
         return;
       }
       const data = {
@@ -148,7 +139,7 @@ export default {
         comentario: this.comentario,
         fecha: new Date().getTime(),
       };
-      useUtilsGastos().saveElement(data, "Gastos");
+      useUtilsStore().saveElement(data, "Gastos");
       this.cerrarModal();
     },
     async guardarYContinuar() {
@@ -176,7 +167,7 @@ export default {
         origen: this.origen,
         comentario: this.comentario,
       };
-      useUtilsGastos().updateElement(data, "Gastos", this.currentGasto.docId);
+      useUtilsStore().updateElement(data, "Gastos", this.currentGasto.docId);
       this.cerrarModal();
     },
   },
