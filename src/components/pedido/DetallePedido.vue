@@ -14,6 +14,25 @@
             Valor Domi: $ {{ pedido.cliente.valorDomi }}
           </p>
           <p class="text-center">Notas: {{ pedido.cliente.notasPedido }}</p>
+          <section class="Pago">
+            <h2 class="text-center">Pago</h2>
+            <p><strong>Efectivo: </strong> ${{ pedido.pagoEfectivo }}</p>
+            <p>
+              <strong>Bancolombia: </strong> ${{
+                valorBancoXpedido("Bancolombia", pedido.docId)
+              }}
+            </p>
+            <p>
+              <strong>Nequi: </strong> ${{
+                valorBancoXpedido("Nequi", pedido.docId)
+              }}
+            </p>
+            <p>
+              <strong>Didi: </strong> ${{
+                valorBancoXpedido("Didi", pedido.docId)
+              }}
+            </p>
+          </section>
         </div>
 
         <div class="right w-50">
@@ -99,6 +118,7 @@
 import { usePedidosStore } from "@/store/pedidos.js";
 import { useUtilsStore } from "@/store/utils.js";
 import { Icon } from "@iconify/vue";
+import { mapState } from "pinia";
 
 export default {
   name: "detallePedido",
@@ -113,6 +133,9 @@ export default {
     horaLocal(hora) {
       return useUtilsStore().horaLocal(hora);
     },
+  },
+  computed: {
+    ...mapState(usePedidosStore, ["valorBancoXpedido"]),
   },
   components: {
     Icon,

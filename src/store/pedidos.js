@@ -104,6 +104,7 @@ export const usePedidosStore = defineStore('PedidosStore', {
 		},
 	},
 	getters: {
+<<<<<<< Updated upstream
 		getPedidos: (state) => (nombre, diaInicio, diaFinal) =>
 			state.pedidosDatabase.filter((pedido) =>
 				diaInicio
@@ -117,9 +118,84 @@ export const usePedidosStore = defineStore('PedidosStore', {
 			),
 		pedidosHoy: (state) =>
 			state.pedidosDatabase.filter(
+=======
+		pedidosHoy: (state) => {
+			return state.pedidosDatabase.filter(
+>>>>>>> Stashed changes
 				(pedido) =>
 					moment(pedido.fecha).format('DD-MM-YYYY') ==
 					moment().format('DD-MM-YYYY')
-			),
+			);
+		},
+		totalPedidosHoy() {
+			return this.pedidosHoy.reduce((a, b) => a + b.total, 0);
+		},
+		pedidosBancoHoy() {
+			const pedidos = this.pedidosHoy;
+			return (banco) =>
+				pedidos.filter((pedido) =>
+					pedido.pagoOnline.some((pago) => pago.banco == banco)
+				);
+		},
+		valorPedidosBancoHoy() {
+			const pedidos = this.pedidosHoy;
+			return (banco) =>
+				pedidos
+					.map((pedido) => {
+						const valores = pedido.pagoOnline?.map((pago) => {
+							if (pago.banco == banco) return pago.valor;
+							return 0;
+						});
+						return valores.reduce((a, b) => a + b, 0);
+					})
+					.reduce((a, b) => a + b, 0);
+		},
+		valorBancoXpedido(state) {
+			const pedidos = state.pedidosDatabase;
+			return (banco, pedidoId) =>
+				pedidos
+					.find((pedido) => pedido.docId == pedidoId)
+					.pagoOnline?.map((pago) => {
+						if (pago.banco == banco) return pago.valor;
+						return 0;
+					})
+					.reduce((a, b) => a + b, 0);
+		},
+			);
+		},
+		totalPedidosHoy() {
+			return this.pedidosHoy.reduce((a, b) => a + b.total, 0);
+		},
+		pedidosBancoHoy() {
+			const pedidos = this.pedidosHoy;
+			return (banco) =>
+				pedidos.filter((pedido) =>
+					pedido.pagoOnline.some((pago) => pago.banco == banco)
+				);
+		},
+		valorPedidosBancoHoy() {
+			const pedidos = this.pedidosHoy;
+			return (banco) =>
+				pedidos
+					.map((pedido) => {
+						const valores = pedido.pagoOnline?.map((pago) => {
+							if (pago.banco == banco) return pago.valor;
+							return 0;
+						});
+						return valores.reduce((a, b) => a + b, 0);
+					})
+					.reduce((a, b) => a + b, 0);
+		},
+		valorBancoXpedido(state) {
+			const pedidos = state.pedidosDatabase;
+			return (banco, pedidoId) =>
+				pedidos
+					.find((pedido) => pedido.docId == pedidoId)
+					.pagoOnline?.map((pago) => {
+						if (pago.banco == banco) return pago.valor;
+						return 0;
+					})
+					.reduce((a, b) => a + b, 0);
+		},
 	},
 });

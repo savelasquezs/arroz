@@ -1,7 +1,14 @@
 import { db } from '../firebase/firebaseInit';
 import { defineStore } from 'pinia';
 import { useUtilsStore } from './utils';
-import { collection, addDoc, updateDoc, doc } from 'firebase/firestore';
+import {
+	getDocs,
+	collection,
+	addDoc,
+	updateDoc,
+	doc,
+} from 'firebase/firestore';
+import moment from 'moment';
 
 export const useCategorias = defineStore('categorias', {
 	state: () => {
@@ -83,6 +90,28 @@ export const useGastosHoy = defineStore('gastosHoy', {
 			editingGasto: null,
 			formOpenned: null,
 		};
+	},
+	getters: {
+		valorGastosHoy: (state) => {
+			return state.allGastos
+				.filter(
+					(gasto) =>
+						moment(gasto.fecha).format('DD/MM/YYYY') ==
+						moment().format('DD/MM/YYYY')
+				)
+				.reduce((a, b) => a + b.valorTotal, 0);
+		},
+	},
+	getters: {
+		valorGastosHoy: (state) => {
+			return state.allGastos
+				.filter(
+					(gasto) =>
+						moment(gasto.fecha).format('DD/MM/YYYY') ==
+						moment().format('DD/MM/YYYY')
+				)
+				.reduce((a, b) => a + b.valorTotal, 0);
+		},
 	},
 	actions: {
 		toggleEditing() {
