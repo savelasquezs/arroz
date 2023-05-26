@@ -104,7 +104,6 @@ export const usePedidosStore = defineStore('PedidosStore', {
 		},
 	},
 	getters: {
-<<<<<<< Updated upstream
 		getPedidos: (state) => (nombre, diaInicio, diaFinal) =>
 			state.pedidosDatabase.filter((pedido) =>
 				diaInicio
@@ -116,12 +115,8 @@ export const usePedidosStore = defineStore('PedidosStore', {
 							.includes(nombre.toLocaleLowerCase())
 					: pedido
 			),
-		pedidosHoy: (state) =>
-			state.pedidosDatabase.filter(
-=======
 		pedidosHoy: (state) => {
 			return state.pedidosDatabase.filter(
->>>>>>> Stashed changes
 				(pedido) =>
 					moment(pedido.fecha).format('DD-MM-YYYY') ==
 					moment().format('DD-MM-YYYY')
@@ -161,8 +156,7 @@ export const usePedidosStore = defineStore('PedidosStore', {
 					})
 					.reduce((a, b) => a + b, 0);
 		},
-			);
-		},
+
 		totalPedidosHoy() {
 			return this.pedidosHoy.reduce((a, b) => a + b.total, 0);
 		},
