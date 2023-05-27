@@ -39,7 +39,6 @@
 import { mapState } from "pinia";
 import { useAbonos, useDomiciliarios } from "../../store/domiciliario";
 import { useUtilsStore } from "../../store/utils";
-import { useUtilsGastos } from "../../store/gastos";
 export default {
   props: ["user"],
   data() {
@@ -68,7 +67,7 @@ export default {
         );
         return;
       }
-      await useUtilsGastos().saveElement(data, "abonos");
+      await useUtilsStore().saveElement(data, "abonos");
       console.log(this.allAbonos);
       this.cerrarModal();
     },

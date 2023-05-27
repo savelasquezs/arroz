@@ -1,7 +1,5 @@
 <template>
   <div class="container d-flex">
-    <h1>{{ gastosBancoHoy("Bancolombia") }}</h1>
-    <h1>{{ gastosBancoHoy("Nequi") }}</h1>
     <table class="table table-hover">
       <thead>
         <tr>
@@ -85,10 +83,13 @@ export default {
       const data = {
         totalVentas: this.ventasHoy,
         totalGastos: this.gastosHoy,
-        totalVentasBancolombiaHoy: this.bancolombia,
-        totalVentasNequi: this.nequi,
-        totalVentasDidi: this.didi,
+        totalVentasBancolombiaHoy: this.ventasBancolombia,
+        totalVentasNequi: this.ventasNequi,
+        totalVentasDidi: this.ventasDidi,
         baseAnterior: this.valorUltimoCuadre,
+        debeHaber: this.debeHaber,
+        hay: this.hay,
+        cuadre: this.cuadre,
       };
       console.log(data);
     },
@@ -115,23 +116,51 @@ export default {
     gastosHoy() {
       return this.valorGastosHoy;
     },
-    bancolombia() {
+    ventasBancolombia() {
       return this.valorPedidosBancoHoy("Bancolombia");
     },
-    nequi() {
+    ventasNequi() {
       return this.valorPedidosBancoHoy("Nequi");
     },
-    didi() {
+    ventasDidi() {
       return this.valorPedidosBancoHoy("Didi");
+    },
+    gastosBancolombia() {
+      return this.gastosBancoHoy("Bancolombia");
+    },
+    gastosNequi() {
+      return this.gastosBancoHoy("Nequi");
     },
     ultimoCuadre() {
       if (this.allCuadres.length > 0) return this.allCuadres[0];
       return;
     },
+    debeHaber() {
+      return this.valorUltimoCuadre + this.ventasHoy - this.gastosHoy;
+    },
+    hay() {
+      return (
+        this.totalCaja +
+        this.ventasBancolombia +
+        this.ventasNequi +
+        this.ventasDidi
+      );
+    },
+    cuadre() {
+      return this.hay - this.debeHaber;
+    },
     valorUltimoCuadre() {
       if (this.ultimoCuadre) return this.ultimoCuadre.debeHaber;
       return 0;
     },
+  },
+  watch: {
+    cuadre() {
+      this.$emit("cambioCuadre", this.cuadre);
+    },
+  },
+  mounted() {
+    this.$emit("cambioCuadre", this.cuadre);
   },
 };
 </script>

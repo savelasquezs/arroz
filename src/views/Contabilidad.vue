@@ -30,12 +30,13 @@
       <detalle-contabilidad
         titulo="Cuadre"
         icon="healthicons:bills-negative"
-        :valor="valorPedidosBancoHoy('Didi')"
+        :valor="cuadre"
+        :class="cuadre < 0 ? 'text-danger' : cuadre == 0 ? 'text-success' : ''"
       />
     </div>
     <tabs-contabilidad>
       <template #cuadreDiario>
-        <tabla-denominacion />
+        <tabla-denominacion @cambioCuadre="cambiarValorCuadre" />
       </template>
     </tabs-contabilidad>
   </div>
@@ -50,11 +51,21 @@ import { usePedidosStore } from "../store/pedidos";
 import DetalleContabilidad from "../components/utils/DetalleContabilidad.vue";
 import { useGastosHoy } from "../store/gastos";
 export default {
+  data() {
+    return {
+      cuadre: 0,
+    };
+  },
   components: {
     TabsContabilidad,
     Navbar,
     TablaDenominacion,
     DetalleContabilidad,
+  },
+  methods: {
+    cambiarValorCuadre(cuadre) {
+      this.cuadre = cuadre;
+    },
   },
   computed: {
     ...mapState(usePedidosStore, [

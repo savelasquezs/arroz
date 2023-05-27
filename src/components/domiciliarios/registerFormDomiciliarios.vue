@@ -50,7 +50,6 @@
 <script>
 import { mapState } from "pinia";
 import { useDomiciliarios } from "../../store/domiciliario";
-import { useUtilsGastos } from "../../store/gastos";
 import { useUtilsStore } from "../../store/utils";
 export default {
   props: ["registro"],
@@ -120,7 +119,7 @@ export default {
             contrasena: this.datosUsuario.password1,
             pedidosEntregados: [],
           };
-          useUtilsGastos().saveElement(data, "domiciliarios");
+          useUtilsStore().saveElement(data, "domiciliarios");
           this.cambiarModoForm();
           this.datosUsuario = {};
         } else {
