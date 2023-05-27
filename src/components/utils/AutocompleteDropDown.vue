@@ -55,6 +55,7 @@ export default {
     },
     seleccionar(elemento) {
       this.filtro = elemento;
+      console.log(this.filtro);
       this.typing = false;
     },
     validate() {
@@ -62,7 +63,7 @@ export default {
         this.typing = false;
         const elementoInLista = this.lista.some((item) => item == this.filtro);
         this.$emit("elSeleccionado", this.filtro, elementoInLista);
-      }, 200);
+      }, 500);
     },
   },
   watch: {

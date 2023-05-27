@@ -21,9 +21,7 @@ export const useAuth = defineStore('authArroz', {
 			localStorage.setItem('user', JSON.stringify({ ...this.user, ...datos }));
 			this.user = JSON.parse(localStorage.getItem('user'));
 		},
-		showUser() {
-			console.log(this.user);
-		},
+		showUser() {},
 		setAdmin(value) {
 			this.user.isAdmin = value;
 		},
@@ -40,7 +38,6 @@ export const useAuth = defineStore('authArroz', {
 							displayName: fullName,
 						});
 						this.setUser(cred.user);
-						console.log(this.user);
 					});
 					return;
 				} else {
@@ -82,7 +79,6 @@ export const useAuth = defineStore('authArroz', {
 					router.push('/pedidos/todos');
 				})
 				.catch((error) => {
-					console.log(error.code);
 					let mensaje = '';
 					switch (error.code) {
 						case 'auth/user-not-found':

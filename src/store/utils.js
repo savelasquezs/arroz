@@ -44,7 +44,6 @@ export const useUtilsStore = defineStore('UtilsStore', {
 			return result;
 		},
 		listenChanges({ store, tabla, ordenarPor, arrayName }) {
-			console.log(store);
 			const q = ordenarPor
 				? query(collection(db, tabla), orderBy(ordenarPor))
 				: collection(db, tabla);

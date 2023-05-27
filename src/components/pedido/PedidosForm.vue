@@ -93,7 +93,7 @@
                     type="text"
                     class="form-control"
                     id="direccion"
-                    v-model="currentcliente.direccionCompleta"
+                    v-model="direccionCompleta"
                   />
                 </div>
               </div>
@@ -362,12 +362,11 @@ export default {
       const quedan = this.listaBancos.filter(
         (banco) => !this.bancosActivos.includes(banco)
       );
-      console.log(quedan);
       return quedan;
     },
     direccionCompleta() {
-      if (this.direccion) {
-        return `${this.direccion}, ${this.notasDir}, ${this.barrio} `;
+      if (this.currentcliente.direccion) {
+        return `${this.currentcliente.direccion}, ${this.currentcliente.notasDir}, ${this.currentcliente.barrio} `;
       }
       return "";
     },
@@ -411,7 +410,6 @@ export default {
   },
   methods: {
     deleteTipoPago(banco) {
-      console.log(banco);
       this.listaTipos = this.listaTipos.filter(
         (registro) => registro.banco !== banco
       );
@@ -423,7 +421,6 @@ export default {
       });
     },
     filtradosClientes() {
-      console.log(this.filtradosClientesArray.length);
       this.searchingCliente = true;
       if (this.filtroClientes == "") {
         this.filtradosClientesArray = this.clientDatabase;
@@ -475,7 +472,7 @@ export default {
           cedula: this.currentcliente.cedula,
           valorDomi: this.currentcliente.valorDomi,
           notasPedido: this.currentcliente.notasPedido,
-          direccion: this.currentcliente.direccionCompleta,
+          direccion: this.direccionCompleta,
           nombre: this.currentcliente.nombre,
           numero: this.currentcliente.numero,
         },
@@ -497,7 +494,6 @@ export default {
       };
 
       const docRef = await addDoc(collection(db, "pedidos"), data);
-      console.log(docRef.id);
       // usePedidosStore().addPedido({ ...data, docId: docRef.id });
       this.cerrarPedido();
       useUtilsStore().confirmAction("Pedido Guardado Exitosamente");
@@ -510,7 +506,7 @@ export default {
             cedula: this.currentcliente.cedula,
             valorDomi: this.currentcliente.valorDomi,
             notasPedido: this.currentcliente.notasPedido,
-            direccion: this.currentcliente.direccionCompleta,
+            direccion: this.direccionCompleta,
             nombre: this.currentcliente.nombre,
             numero: this.currentcliente.numero,
           },
@@ -529,9 +525,7 @@ export default {
         this.cerrarPedido();
 
         useUtilsStore().confirmAction("Pedido Actualizado exitosamente");
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     },
 
     submitEnviar() {
@@ -569,9 +563,7 @@ export default {
       );
       this.productosList[indexProduct].nombre = nombre;
       this.productosList[indexProduct].precio = precio;
-      console.log(
-        this.$refs.listaDesplegable[indexList].classList.add("d-none")
-      );
+      this.$refs.listaDesplegable[indexList].classList.add("d-none");
     },
     deleteInvoiceProducto(id) {
       this.productosList = this.productosList.filter(
@@ -612,13 +604,10 @@ export default {
   },
   watch: {
     clientDatabase() {},
-    currentcliente() {
-      console.log(this.valorDomi);
-    },
+    currentcliente() {},
   },
   created() {
     if (this.editingPedido) {
-      console.log(this.currentPedido);
       this.productosList = this.currentPedido.productos;
       this.domiciliario = this.currentPedido.domiciliario;
 

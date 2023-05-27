@@ -11,7 +11,6 @@ auth.onAuthStateChanged(async (user) => {
 		useAuth().clearUser();
 	} else {
 		await user.getIdTokenResult().then((idTokenResult) => {
-			console.log(idTokenResult.claims.admin);
 			useAuth().user.isAdmin = idTokenResult.claims.admin;
 			useAuth().setUser(user);
 			useAuth().setAdmin(idTokenResult.claims.admin);

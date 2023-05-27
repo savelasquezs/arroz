@@ -92,7 +92,6 @@ export default {
   methods: {
     toggleModal() {
       useGastosHoy().toggleForm();
-      console.log(this.allGastos);
     },
     fechaLocal(fecha) {
       return useUtilsStore().fechaLocal(fecha);
