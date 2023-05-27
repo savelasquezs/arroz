@@ -1,49 +1,60 @@
 <template>
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>Moneda</th>
-        <th>Cantidad</th>
-        <th>Subtotal</th>
+  <div class="container d-flex">
+    <h1>{{ gastosBancoHoy("Bancolombia") }}</h1>
+    <h1>{{ gastosBancoHoy("Nequi") }}</h1>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Moneda</th>
+          <th>Cantidad</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tr v-for="(moneda, index) in listaMonedas" :key="index">
+        <td align="center">{{ convAMoneda(moneda.valor) }}</td>
+        <td>
+          <div class="input-group py-1 px-1">
+            <input
+              type="number"
+              class="form-control"
+              :placeholder="'💸 de ' + moneda.valor"
+              aria-label="Billetes de 100.000"
+              v-model="moneda.cantidad"
+            />
+          </div>
+        </td>
+        <td>
+          <div class="input-group py-1">
+            <input
+              type="text"
+              class="form-control px-1"
+              placeholder=" Total 💸"
+              aria-label="Billetes de 100.000"
+              :value="
+                (moneda.total = moneda.cantidad
+                  ? convAMoneda(moneda.cantidad * moneda.valor)
+                  : null)
+              "
+              disabled
+            />
+          </div>
+        </td>
       </tr>
-    </thead>
-    <tr v-for="(moneda, index) in listaMonedas" :key="index">
-      <td align="center">{{ convAMoneda(moneda.valor) }}</td>
-      <td>
-        <div class="input-group py-1 px-1">
-          <input
-            type="number"
-            class="form-control"
-            :placeholder="'💸 de ' + moneda.valor"
-            aria-label="Billetes de 100.000"
-            v-model="moneda.cantidad"
-          />
-        </div>
-      </td>
-      <td>
-        <div class="input-group py-1">
-          <input
-            type="text"
-            class="form-control px-1"
-            placeholder=" Total 💸"
-            aria-label="Billetes de 100.000"
-            :value="
-              (moneda.total = moneda.cantidad
-                ? convAMoneda(moneda.cantidad * moneda.valor)
-                : null)
-            "
-            disabled
-          />
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <th>Total Caja : {{ totalCaja }}</th>
-    </tr>
-  </table>
+    </table>
+    <div class="m-5">
+      <h5><strong>Total caja: </strong>{{ totalCaja }}</h5>
+      <button class="btn btn-outline-success h-25 fs-3" @click="guardarCuadre">
+        Guardar Cuadre
+      </button>
+    </div>
+  </div>
 </template>
 
 <script>
+import { mapState } from "pinia";
+import { usePedidosStore } from "../../store/pedidos";
+import { useGastosHoy } from "../../store/gastos";
+import { useCuadres } from "../../store/cuadres";
 export default {
   data() {
     return {
@@ -70,6 +81,17 @@ export default {
         maximumFractionDigits: 0,
       });
     },
+    guardarCuadre() {
+      const data = {
+        totalVentas: this.ventasHoy,
+        totalGastos: this.gastosHoy,
+        totalVentasBancolombiaHoy: this.bancolombia,
+        totalVentasNequi: this.nequi,
+        totalVentasDidi: this.didi,
+        baseAnterior: this.valorUltimoCuadre,
+      };
+      console.log(data);
+    },
   },
   computed: {
     totalCaja() {
@@ -79,6 +101,36 @@ export default {
           0
         )
       );
+    },
+    ...mapState(usePedidosStore, [
+      "totalPedidosHoy",
+      "pedidosBancoHoy",
+      "valorPedidosBancoHoy",
+    ]),
+    ...mapState(useCuadres, ["allCuadres"]),
+    ...mapState(useGastosHoy, ["valorGastosHoy", "gastosBancoHoy"]),
+    ventasHoy() {
+      return this.totalPedidosHoy;
+    },
+    gastosHoy() {
+      return this.valorGastosHoy;
+    },
+    bancolombia() {
+      return this.valorPedidosBancoHoy("Bancolombia");
+    },
+    nequi() {
+      return this.valorPedidosBancoHoy("Nequi");
+    },
+    didi() {
+      return this.valorPedidosBancoHoy("Didi");
+    },
+    ultimoCuadre() {
+      if (this.allCuadres.length > 0) return this.allCuadres[0];
+      return;
+    },
+    valorUltimoCuadre() {
+      if (this.ultimoCuadre) return this.ultimoCuadre.debeHaber;
+      return 0;
     },
   },
 };

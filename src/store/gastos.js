@@ -1,13 +1,6 @@
-import { db } from '../firebase/firebaseInit';
 import { defineStore } from 'pinia';
 import { useUtilsStore } from './utils';
-import {
-	getDocs,
-	collection,
-	addDoc,
-	updateDoc,
-	doc,
-} from 'firebase/firestore';
+
 import moment from 'moment';
 
 export const useCategorias = defineStore('categorias', {
@@ -91,26 +84,24 @@ export const useGastosHoy = defineStore('gastosHoy', {
 			formOpenned: null,
 		};
 	},
+
 	getters: {
-		valorGastosHoy: (state) => {
-			return state.allGastos
-				.filter(
-					(gasto) =>
-						moment(gasto.fecha).format('DD/MM/YYYY') ==
-						moment().format('DD/MM/YYYY')
-				)
-				.reduce((a, b) => a + b.valorTotal, 0);
+		gastosHoy: (state) => {
+			return state.allGastos.filter(
+				(gasto) =>
+					moment(gasto.fecha).format('DD/MM/YYYY') ==
+					moment().format('DD/MM/YYYY')
+			);
 		},
-	},
-	getters: {
-		valorGastosHoy: (state) => {
-			return state.allGastos
-				.filter(
-					(gasto) =>
-						moment(gasto.fecha).format('DD/MM/YYYY') ==
-						moment().format('DD/MM/YYYY')
-				)
-				.reduce((a, b) => a + b.valorTotal, 0);
+		valorGastosHoy() {
+			return this.gastosHoy.reduce((a, b) => a + b.valorTotal, 0);
+		},
+		gastosBancoHoy() {
+			const gastos = this.gastosHoy;
+			return (banco) =>
+				gastos
+					.filter((gasto) => gasto.origen == banco)
+					.reduce((a, b) => a + b.valorTotal, 0);
 		},
 	},
 	actions: {

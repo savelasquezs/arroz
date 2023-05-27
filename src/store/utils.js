@@ -6,46 +6,12 @@ import {
 	orderBy,
 	doc,
 	updateDoc,
+	addDoc,
 } from 'firebase/firestore';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 
 import { db } from '../firebase/firebaseInit';
-import { array } from 'i/lib/util';
-
-export const useProductsStore = defineStore('ProductosStore', {
-	state: () => {
-		return {
-			editProduct: null,
-			productDatabase: [],
-			modalProducto: null,
-			productLoaded: false,
-			currentProduct: null,
-			borrarProducto: null,
-		};
-	},
-	actions: {
-		addProduct(product) {
-			this.productDatabase.push(product);
-		},
-		toggleModalProducto() {
-			this.modalProducto = !this.modalProducto;
-		},
-		toggleEditProduct() {
-			this.editProduct = !this.editProduct;
-		},
-		toggleDeleteProduct() {
-			this.borrarProducto = !this.borrarProducto;
-		},
-
-		setCurrentProduct(id) {
-			this.currentProduct = this.productDatabase.find(
-				(product) => product.docId == id
-			);
-			console.log(this.currentProduct);
-		},
-	},
-});
 
 export const useUtilsStore = defineStore('UtilsStore', {
 	state: () => {

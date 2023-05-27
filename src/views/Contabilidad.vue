@@ -1,7 +1,7 @@
 <template>
   <navbar class="position-fixed" />
   <div class="contenido">
-    <div class="detalle d-flex gap-2 justify-content-center mt-3">
+    <div class="detalle d-flex gap-2 justify-content-evenly my-3">
       <detalle-contabilidad
         titulo="Ventas Hoy"
         icon="healthicons:bills-negative"
@@ -17,9 +17,22 @@
         icon="healthicons:bills-negative"
         :valor="valorPedidosBancoHoy('Bancolombia')"
       />
+      <detalle-contabilidad
+        titulo="Nequi "
+        icon="healthicons:bills-negative"
+        :valor="valorPedidosBancoHoy('Nequi')"
+      />
+      <detalle-contabilidad
+        titulo="Didi "
+        icon="healthicons:bills-negative"
+        :valor="valorPedidosBancoHoy('Didi')"
+      />
+      <detalle-contabilidad
+        titulo="Cuadre"
+        icon="healthicons:bills-negative"
+        :valor="valorPedidosBancoHoy('Didi')"
+      />
     </div>
-
-    <h1>{{}}</h1>
     <tabs-contabilidad>
       <template #cuadreDiario>
         <tabla-denominacion />

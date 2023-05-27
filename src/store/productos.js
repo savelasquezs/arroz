@@ -1,19 +1,6 @@
 import { defineStore } from 'pinia';
 import { useUtilsStore } from './utils';
 
-import {
-	collection,
-	onSnapshot,
-	query,
-	orderBy,
-	doc,
-	updateDoc,
-} from 'firebase/firestore';
-import Swal from 'sweetalert2';
-import moment from 'moment';
-
-import { db } from '../firebase/firebaseInit';
-
 export const useProductsStore = defineStore('ProductosStore', {
 	state: () => {
 		return {

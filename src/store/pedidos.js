@@ -156,7 +156,6 @@ export const usePedidosStore = defineStore('PedidosStore', {
 					})
 					.reduce((a, b) => a + b, 0);
 		},
-
 		totalPedidosHoy() {
 			return this.pedidosHoy.reduce((a, b) => a + b.total, 0);
 		},
