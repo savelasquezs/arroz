@@ -58,7 +58,7 @@
         ref="autocomplete"
         :lista="allCategories.map((cat) => cat.categorie)"
         titulo="Categoria"
-        @catSeleccionada="setCategoria"
+        @elSeleccionado="setCategoria"
       />
       <p class="text-danger">{{ error }}</p>
 
@@ -93,7 +93,7 @@
         class="btn btn-success position-absolute bottom-0 mb-5 end-0 mx-3"
         @click="guardarTipoGasto"
       >
-        Guardar Gasto
+        Guardar Tipo Gasto
       </button>
     </div>
   </div>
@@ -129,6 +129,10 @@ export default {
     actualizarRegistro() {
       if (this.categoriaNoValida) return;
       if (this.nombreGasto == "" || this.categoria == "" || this.medida == "") {
+        console.log("Algo falta");
+        console.log(this.categoria);
+        console.log(this.nombreGasto);
+        console.log(this.medida);
         useUtilsStore().confirmAction(
           "Los campos no pueden ir vacios",
           2000,
@@ -181,22 +185,25 @@ export default {
       this.anotaciones = this.currentTipoGasto.anotaciones;
     },
     guardarTipoGasto() {
-      if (this.categoriaNoValida) return;
-      if (this.nombreGasto == "" || this.categoria == "" || this.medida == "") {
-        useUtilsStore().confirmAction(
-          "Los campos no pueden ir vacios",
-          2000,
-          "error"
-        );
-        return;
-      }
+      // if (this.categoriaNoValida) {
+      //   alert("Categoria no valida");
+      //   return;
+      // }
+      // if (this.nombreGasto == "" || this.categoria == "" || this.medida == "") {
+      //   useUtilsStore().confirmAction(
+      //     "Los campos no pueden ir vacios",
+      //     2000,
+      //     "error"
+      //   );
+      //   return;
+      // }
       const data = {
         categoria: this.categoria,
         nombre: this.nombreGasto,
         medida: this.medida,
         anotaciones: this.anotaciones,
       };
-
+      console.log(data);
       useUtilsStore().saveElement(data, "tipoGastos");
       this.$refs.botonCerrar.click();
     },

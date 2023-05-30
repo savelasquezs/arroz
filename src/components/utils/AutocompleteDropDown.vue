@@ -57,6 +57,8 @@ export default {
       this.filtro = elemento;
       console.log(this.filtro);
       this.typing = false;
+      const elementoInLista = this.lista.some((item) => item == this.filtro);
+      this.$emit("elSeleccionado", this.filtro, elementoInLista);
     },
     validate() {
       setTimeout(() => {

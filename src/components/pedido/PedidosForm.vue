@@ -333,6 +333,7 @@ export default {
       hacerDescuento: false,
       listaBancos: ["Bancolombia", "Nequi", "Didi"],
       domiciliario: {},
+      direccion: "",
     };
   },
   components: {
@@ -362,10 +363,11 @@ export default {
       const quedan = this.listaBancos.filter(
         (banco) => !this.bancosActivos.includes(banco)
       );
+      console.log(quedan);
       return quedan;
     },
     direccionCompleta() {
-      if (this.currentcliente.direccion) {
+      if (this.currentcliente) {
         return `${this.currentcliente.direccion}, ${this.currentcliente.notasDir}, ${this.currentcliente.barrio} `;
       }
       return "";
@@ -410,6 +412,7 @@ export default {
   },
   methods: {
     deleteTipoPago(banco) {
+      console.log(banco);
       this.listaTipos = this.listaTipos.filter(
         (registro) => registro.banco !== banco
       );
@@ -421,6 +424,7 @@ export default {
       });
     },
     filtradosClientes() {
+      console.log(this.filtradosClientesArray.length);
       this.searchingCliente = true;
       if (this.filtroClientes == "") {
         this.filtradosClientesArray = this.clientDatabase;
@@ -492,8 +496,12 @@ export default {
         pagoOnline: this.listaTipos,
         pagoEfectivo: this.totalEfectivo,
       };
-
+      if (this.listaTipos.some((tipo) => tipo.banco == "Didi")) {
+        data["liquidado"] = false;
+      }
+      console.log(data);
       const docRef = await addDoc(collection(db, "pedidos"), data);
+      console.log(docRef.id);
       // usePedidosStore().addPedido({ ...data, docId: docRef.id });
       this.cerrarPedido();
       useUtilsStore().confirmAction("Pedido Guardado Exitosamente");
@@ -525,7 +533,9 @@ export default {
         this.cerrarPedido();
 
         useUtilsStore().confirmAction("Pedido Actualizado exitosamente");
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     submitEnviar() {
@@ -563,7 +573,9 @@ export default {
       );
       this.productosList[indexProduct].nombre = nombre;
       this.productosList[indexProduct].precio = precio;
-      this.$refs.listaDesplegable[indexList].classList.add("d-none");
+      console.log(
+        this.$refs.listaDesplegable[indexList].classList.add("d-none")
+      );
     },
     deleteInvoiceProducto(id) {
       this.productosList = this.productosList.filter(
@@ -604,10 +616,13 @@ export default {
   },
   watch: {
     clientDatabase() {},
-    currentcliente() {},
+    currentcliente() {
+      console.log(this.valorDomi);
+    },
   },
   created() {
     if (this.editingPedido) {
+      console.log(this.currentPedido);
       this.productosList = this.currentPedido.productos;
       this.domiciliario = this.currentPedido.domiciliario;
 

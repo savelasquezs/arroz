@@ -66,7 +66,7 @@ export const useUtilsStore = defineStore('UtilsStore', {
 						);
 						store[arrayName][index] = { ...cambio, ...change.doc.data() };
 					} else if (change.type == 'removed') {
-						store[arrayName] = store.productDatabase.filter(
+						store[arrayName] = store[arrayName].filter(
 							(item) => item.docId != change.doc.id
 						);
 					}

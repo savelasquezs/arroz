@@ -122,7 +122,7 @@ export default {
     pedidosEntregados() {
       return this.pedidosDatabase.filter(
         (pedido) =>
-          pedido.domiciliario.nombre ==
+          pedido.domiciliario?.nombre ==
           this.currentDomiciliario.nombreDomiciliario
       );
     },
@@ -181,7 +181,7 @@ export default {
     },
     cerrarDetalles() {
       if (this.detallesPedidosYAbonosOppened) {
-        UseDetallesPedidosYAbonos().toggleDetallesYPedidos();
+        useDetallesPedidosYAbonos().toggleDetallesYPedidos();
       }
     },
     mostrarGrafica() {

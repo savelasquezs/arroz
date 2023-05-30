@@ -26,6 +26,12 @@ export const usePedidosStore = defineStore('PedidosStore', {
 		};
 	},
 	actions: {
+		async actualizarLiquidado(id) {
+			const pedido = this.pedidosDatabase.find((pedido) => pedido.docId == id);
+			const docRef = doc(db, 'pedidos', id);
+			const liquidado = !pedido.liquidado;
+			await updateDoc(docRef, { liquidado: liquidado });
+		},
 		toggleDetallePedidoAbierto() {
 			this.detallePedidoAbierto = !this.detallePedidoAbierto;
 		},

@@ -65,6 +65,7 @@
           <th>Domiciliario</th>
           <th>Fecha</th>
           <th>Hora</th>
+          <th>Liquidado</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -116,6 +117,21 @@
           <td>{{ pedido.domiciliario?.nombre }}</td>
           <td>{{ fechaLocal(pedido.horaToma) }}</td>
           <td>{{ horaLocal(pedido.horaToma) }}</td>
+          <td>
+            <input
+              v-if="pedido['liquidado'] != null"
+              type="checkbox"
+              name="App"
+              id=""
+              @change="ActualizarLiquidado(pedido.docId)"
+              :checked="pedido.liquidado"
+            />
+            <span
+              v-if="pedido['liquidado'] != null"
+              :class="pedido.liquidado ? 'text-success' : 'text-danger'"
+              >{{ pedido.liquidado ? "Liquidado" : "sinLiquidar" }}</span
+            >
+          </td>
           <td>
             <button
               class="btn btn-sm btn-info"
@@ -230,6 +246,9 @@ export default {
     ]),
   },
   methods: {
+    ActualizarLiquidado(id) {
+      usePedidosStore().actualizarLiquidado(id);
+    },
     borrarfiltros() {
       this.date = "";
       this.filtroPorNombre = "";

@@ -47,6 +47,7 @@ export default {
         case "productos":
           useProductsStore().toggleDeleteProduct();
           break;
+          useTipoGastos;
         case "pedidos":
           usePedidosStore().toggleDelete();
           break;
@@ -91,7 +92,6 @@ export default {
           break;
         case "tipoGastos":
           console.log(this.collection);
-          useTipoGastos().deleteTipoGasto(this.itemId);
           break;
         case "Gastos":
           console.log(this.collection);

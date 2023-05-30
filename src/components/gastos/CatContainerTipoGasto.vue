@@ -8,8 +8,8 @@
           <Icon
             width="14"
             class="mx-4"
-            :icon="icono.icono"
-            :color="icono.color"
+            :icon="icono?.icono"
+            :color="icono?.color"
           />
 
           <p class="mb-0 text-capitalize">{{ gasto.categoria }}</p>
@@ -32,8 +32,8 @@
           <Icon
             icon="material-symbols:edit"
             color="black"
-            width="20"
-            height="20"
+            width="25"
+            height="25"
           />
         </button>
         <button
@@ -77,7 +77,7 @@ export default {
           };
 
           break;
-        case "apps":
+        case "app ":
           return {
             icono: "ic:baseline-app-shortcut",
             color: "#a84448",
@@ -108,6 +108,11 @@ export default {
         case "aseo":
           return {
             icono: "ic:baseline-clean-hands",
+            color: "#262a56",
+          };
+        case "apps":
+          return {
+            icono: "material-symbols:touch-app",
             color: "#262a56",
           };
 

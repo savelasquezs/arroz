@@ -76,7 +76,7 @@ export default {
     },
     todosPedidosDomiciliario(nombreDomiciliario) {
       return this.pedidosDatabase.filter(
-        (pedido) => pedido.domiciliario.nombre == nombreDomiciliario
+        (pedido) => pedido.domiciliario?.nombre == nombreDomiciliario
       );
     },
 
