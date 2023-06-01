@@ -38,6 +38,9 @@
       <template #cuadreDiario>
         <tabla-denominacion @cambioCuadre="cambiarValorCuadre" />
       </template>
+      <template #totalesBancos>
+        <totales-bancos />
+      </template>
     </tabs-contabilidad>
   </div>
 </template>
@@ -50,6 +53,7 @@ import Navbar from "../components/Navbar.vue";
 import { usePedidosStore } from "../store/pedidos";
 import DetalleContabilidad from "../components/utils/DetalleContabilidad.vue";
 import { useGastosHoy } from "../store/gastos";
+import TotalesBancos from "../components/contabilidad/TotalesBancos.vue";
 export default {
   data() {
     return {
@@ -61,6 +65,7 @@ export default {
     Navbar,
     TablaDenominacion,
     DetalleContabilidad,
+    TotalesBancos,
   },
   methods: {
     cambiarValorCuadre(cuadre) {

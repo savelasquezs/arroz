@@ -122,8 +122,8 @@ export default {
     pedidosEntregados() {
       return this.pedidosDatabase.filter(
         (pedido) =>
-          pedido.domiciliario.nombre ==
-          this.currentDomiciliario.nombreDomiciliario
+          pedido.domiciliario?.nombre ==
+          this.currentDomiciliario?.nombreDomiciliario
       );
     },
     pedidosHoy() {
@@ -158,8 +158,8 @@ export default {
     abonosDomiciliario() {
       return this.allAbonos.filter(
         (abono) =>
-          abono.domiciliario.nombreDomiciliario ==
-          this.currentDomiciliario.nombreDomiciliario
+          abono.domiciliario?.nombreDomiciliario ==
+          this.currentDomiciliario?.nombreDomiciliario
       );
     },
   },

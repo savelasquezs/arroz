@@ -27,6 +27,20 @@
         Historico de Cuadres
       </button>
     </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="valoresBancos"
+        data-bs-toggle="tab"
+        data-bs-target="#valoresBancosTab"
+        type="button"
+        role="tab"
+        aria-controls="valoresBancosTab"
+        aria-selected="false"
+      >
+        Totales
+      </button>
+    </li>
   </ul>
   <div class="tab-content" id="myTabContent">
     <div
@@ -46,6 +60,15 @@
       tabindex="0"
     >
       <slot name="historico" />
+    </div>
+    <div
+      class="tab-pane fade"
+      id="valoresBancosTab"
+      role="tabpanel"
+      aria-labelledby="valoresBancos"
+      tabindex="0"
+    >
+      <slot name="totalesBancos" />
     </div>
   </div>
 </template>

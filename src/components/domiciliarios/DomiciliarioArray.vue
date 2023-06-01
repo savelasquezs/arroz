@@ -66,6 +66,7 @@ export default {
       todosMostrados: null,
     };
   },
+  emits: ["selected"],
   props: ["listaDomiciliarios"],
   components: { DomiciliarioAvatar },
   methods: {
@@ -84,8 +85,8 @@ export default {
       console.log(this.domiciliariosHoy);
       this.$refs.radio.forEach((radio) => {
         if (radio.checked) {
-          radio.parentNode.classList.add("selected");
           this.$emit("selected", persona);
+          radio.parentNode.classList.add("selected");
           return;
         }
         radio.parentNode.classList.remove("selected");

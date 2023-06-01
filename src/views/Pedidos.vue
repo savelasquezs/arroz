@@ -123,6 +123,7 @@
               type="checkbox"
               name="App"
               id=""
+              class="form-check-input"
               @change="ActualizarLiquidado(pedido.docId)"
               :checked="pedido.liquidado"
             />
