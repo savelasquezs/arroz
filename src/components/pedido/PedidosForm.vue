@@ -498,6 +498,12 @@ export default {
       };
       if (this.listaTipos.some((tipo) => tipo.banco == "Didi")) {
         data["liquidado"] = false;
+      } else if (
+        this.listaTipos.some(
+          (tipo) => tipo.banco == "Bancolombia" || tipo.banco == "Nequi"
+        )
+      ) {
+        data["pagoConfirmado"] = false;
       }
       console.log(data);
       const docRef = await addDoc(collection(db, "pedidos"), data);

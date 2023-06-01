@@ -32,6 +32,12 @@ export const usePedidosStore = defineStore('PedidosStore', {
 			const liquidado = !pedido.liquidado;
 			await updateDoc(docRef, { liquidado: liquidado });
 		},
+		async actualizarPagoConfimado(id) {
+			const pedido = this.pedidosDatabase.find((pedido) => pedido.docId == id);
+			const docRef = doc(db, 'pedidos', id);
+			const pagoConfirmado = !pedido.pagoConfirmado;
+			await updateDoc(docRef, { pagoConfirmado });
+		},
 		toggleDetallePedidoAbierto() {
 			this.detallePedidoAbierto = !this.detallePedidoAbierto;
 		},
@@ -190,11 +196,65 @@ export const usePedidosStore = defineStore('PedidosStore', {
 			return (banco, pedidoId) =>
 				pedidos
 					.find((pedido) => pedido.docId == pedidoId)
-					.pagoOnline?.map((pago) => {
+					?.pagoOnline?.map((pago) => {
 						if (pago.banco == banco) return pago.valor;
 						return 0;
 					})
 					.reduce((a, b) => a + b, 0);
+		},
+		valorPedidosBanco(state) {
+			const pedidos = state.pedidosDatabase;
+			return (banco) =>
+				pedidos
+					.map((pedido) => {
+						const valores = pedido.pagoOnline?.map((pago) => {
+							if (pago.banco == banco) return pago.valor;
+							return 0;
+						});
+						return valores ? valores.reduce((a, b) => a + b, 0) : 0;
+					})
+					.reduce((a, b) => a + b, 0);
+		},
+		valorPedidosBancolombia(state) {
+			const pedidos = state.pedidosDatabase;
+			const Bancolombia = pedidos
+				.map((pedido) => {
+					const valores = pedido.pagoOnline?.map((pago) => {
+						if (pago.banco == 'Bancolombia') return pago.valor;
+						return 0;
+					});
+					return valores ? valores.reduce((a, b) => a + b, 0) : 0;
+				})
+				.reduce((a, b) => a + b, 0);
+			const didi = pedidos
+				.map((pedido) => {
+					if (pedido.liquidado) {
+						const valores = pedido.pagoOnline?.map((pago) => {
+							if (pago.banco == 'Didi') return pago.valor;
+							return 0;
+						});
+						return valores ? valores.reduce((a, b) => a + b, 0) : 0;
+					}
+					return 0;
+				})
+				.reduce((a, b) => a + b, 0);
+			return didi + Bancolombia;
+		},
+
+		valorPedidosDidi(state) {
+			const pedidos = state.pedidosDatabase;
+			return pedidos
+				.map((pedido) => {
+					if (!pedido.liquidado) {
+						const valores = pedido.pagoOnline?.map((pago) => {
+							if (pago.banco == 'Didi') return pago.valor;
+							return 0;
+						});
+						return valores ? valores.reduce((a, b) => a + b, 0) : 0;
+					}
+					return 0;
+				})
+				.reduce((a, b) => a + b, 0);
 		},
 	},
 });

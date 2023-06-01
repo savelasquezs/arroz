@@ -65,6 +65,7 @@
           <th>Domiciliario</th>
           <th>Fecha</th>
           <th>Hora</th>
+          <th>Pago</th>
           <th>Liquidado</th>
           <th>Acciones</th>
         </tr>
@@ -77,6 +78,7 @@
             date[1]
           )"
           :key="index"
+          :class="pedido.pagoConfirmado ? 'bg-success-subtle' : ''"
         >
           <td>{{ pedido.cliente.nombre }}</td>
           <td>{{ pedido.cliente.direccion.split(",")[0] }}</td>
@@ -117,20 +119,67 @@
           <td>{{ pedido.domiciliario?.nombre }}</td>
           <td>{{ fechaLocal(pedido.horaToma) }}</td>
           <td>{{ horaLocal(pedido.horaToma) }}</td>
+          <td class="">
+            <Icon
+              icon="bi:cash-coin"
+              color="#198754"
+              width="20"
+              v-if="pedido.pagoEfectivo > 0"
+            />
+            <img
+              v-for="(pago, index) in pedido?.pagoOnline"
+              :key="index"
+              width="20"
+              :src="
+                pago.banco == 'Bancolombia'
+                  ? '/src/assets/bancolombia_tiny.png'
+                  : pago.banco == 'Nequi'
+                  ? '/src/assets/nequi_tiny.png'
+                  : pago.banco == 'Didi'
+                  ? '/src/assets/didi_tiny.png'
+                  : ''
+              "
+              alt=""
+            />
+          </td>
           <td>
             <input
-              v-if="pedido['liquidado'] != null"
+              v-if="
+                pedido['liquidado'] != null || pedido['pagoConfirmado'] != null
+              "
               type="checkbox"
               name="App"
               id=""
-              class="form-check-input"
-              @change="ActualizarLiquidado(pedido.docId)"
-              :checked="pedido.liquidado"
+              class="border m-2"
+              @change="
+                pedido['liquidado'] != null
+                  ? ActualizarLiquidado(pedido.docId)
+                  : actualizarPagoConfimado(pedido.docId)
+              "
+              :checked="
+                pedido['liquidado'] != null
+                  ? pedido.liquidado
+                  : pedido.pagoConfirmado
+              "
             />
             <span
-              v-if="pedido['liquidado'] != null"
-              :class="pedido.liquidado ? 'text-success' : 'text-danger'"
-              >{{ pedido.liquidado ? "Liquidado" : "sinLiquidar" }}</span
+              v-if="
+                pedido['liquidado'] != null || pedido['pagoConfirmado'] != null
+              "
+              :class="
+                pedido.liquidado || pedido.pagoConfirmado
+                  ? 'text-success'
+                  : 'text-danger'
+              "
+              >{{
+                pedido.liquidado
+                  ? "Liquidado"
+                  : pedido.liquidado == false
+                  ? "Sin Liquidar"
+                  : pedido.pagoConfirmado
+                  ? "PagoConfirmado"
+                  : "Sin Confirmar"
+              }}</span
             >
           </td>
           <td>
@@ -249,6 +298,9 @@ export default {
   methods: {
     ActualizarLiquidado(id) {
       usePedidosStore().actualizarLiquidado(id);
+    },
+    actualizarPagoConfimado(id) {
+      usePedidosStore().actualizarPagoConfimado(id);
     },
     borrarfiltros() {
       this.date = "";

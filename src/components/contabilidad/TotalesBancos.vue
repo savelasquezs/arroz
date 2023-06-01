@@ -5,6 +5,16 @@
       imagenBanco="/src/assets/bancolombia.png"
       :valor="valorPedidosBancolombia"
     />
+    <card-banco
+      banco="Nequi"
+      imagenBanco="/src/assets/nequi.png"
+      :valor="valorPedidosBanco('Nequi')"
+    />
+    <card-banco
+      banco="Didi"
+      imagenBanco="/src/assets/didi.png"
+      :valor="valorPedidosDidi"
+    />
   </div>
 </template>
 
@@ -20,7 +30,11 @@ export default {
     };
   },
   computed: {
-    ...mapState(usePedidosStore, ["valorPedidosBancolombia"]),
+    ...mapState(usePedidosStore, [
+      "valorPedidosBancolombia",
+      "valorPedidosDidi",
+      "valorPedidosBanco",
+    ]),
   },
 };
 </script>
