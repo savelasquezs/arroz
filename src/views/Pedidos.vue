@@ -138,7 +138,7 @@
                   ? '/src/assets/nequi_tiny.png'
                   : pago.banco == 'Didi'
                   ? '/src/assets/didi_tiny.png'
-                  : ''
+                  : '/src/assets/didi_tiny.png'
               "
               alt=""
             />
