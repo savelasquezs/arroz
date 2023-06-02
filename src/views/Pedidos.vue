@@ -126,6 +126,7 @@
               width="20"
               v-if="pedido.pagoEfectivo > 0"
             />
+            <h3>santy</h3>
             <img
               v-for="(pago, index) in pedido?.pagoOnline"
               :key="index"
