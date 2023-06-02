@@ -134,13 +134,13 @@
                 width="20"
               />
               <img
-                v-if="pago.banco == 'Nequi'"
+                v-else-if="pago.banco == 'Nequi'"
                 src="/src/assets/img/nequi_tiny.png"
                 alt=""
                 width="20"
               />
               <img
-                v-if="pago.banco == 'Didi'"
+                v-else-if="pago.banco == 'Didi'"
                 src="/src/assets/img/didi_tiny.png"
                 alt=""
                 width="20"

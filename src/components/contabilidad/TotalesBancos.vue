@@ -1,20 +1,8 @@
 <template>
   <div class="d-flex gap-3 m-3 mt-5 justify-content-center">
-    <card-banco
-      banco="Bancolombia"
-      imagenBanco="/src/assets/img/bancolombia.png"
-      :valor="valorPedidosBancolombia"
-    />
-    <card-banco
-      banco="Nequi"
-      imagenBanco="/src/assets/img/nequi.png"
-      :valor="valorPedidosBanco('Nequi')"
-    />
-    <card-banco
-      banco="Didi"
-      imagenBanco="/src/assets/img/didi.png"
-      :valor="valorPedidosDidi"
-    />
+    <card-banco banco="Bancolombia" :valor="valorPedidosBancolombia" />
+    <card-banco banco="Nequi" :valor="valorPedidosBanco('Nequi')" />
+    <card-banco banco="Didi" :valor="valorPedidosDidi" />
   </div>
 </template>
 
