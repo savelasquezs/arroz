@@ -3,7 +3,7 @@
     <div class="main">
       <div class="brand">
         <router-link class="nav-link flex" :to="{ name: 'Home' }">
-          <img src="../assets/arrocito.png" alt="" />
+          <img src="../assets/img/arrocito.png" alt="" />
         </router-link>
         <h3>El señor arroz</h3>
       </div>

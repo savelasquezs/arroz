@@ -126,22 +126,26 @@
               width="20"
               v-if="pedido.pagoEfectivo > 0"
             />
-            <h3>santy</h3>
-            <img
-              v-for="(pago, index) in pedido?.pagoOnline"
-              :key="index"
-              width="20"
-              :src="
-                pago.banco == 'Bancolombia'
-                  ? './src/assets/bancolombia_tiny.png'
-                  : pago.banco == 'Nequi'
-                  ? './src/assets/nequi_tiny.png'
-                  : pago.banco == 'Didi'
-                  ? './src/assets/didi_tiny.png'
-                  : './src/assets/didi_tiny.png'
-              "
-              alt=""
-            />
+            <span v-for="(pago, index) in pedido?.pagoOnline" :key="index">
+              <img
+                v-if="pago.banco == 'Bancolombia'"
+                src="/src/assets/img/bancolombia_tiny.png"
+                alt=""
+                width="20"
+              />
+              <img
+                v-if="pago.banco == 'Nequi'"
+                src="/src/assets/img/nequi_tiny.png"
+                alt=""
+                width="20"
+              />
+              <img
+                v-if="pago.banco == 'Didi'"
+                src="/src/assets/img/didi_tiny.png"
+                alt=""
+                width="20"
+              />
+            </span>
           </td>
           <td>
             <input
