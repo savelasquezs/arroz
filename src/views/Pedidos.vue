@@ -133,12 +133,12 @@
               width="20"
               :src="
                 pago.banco == 'Bancolombia'
-                  ? '/src/assets/bancolombia_tiny.png'
+                  ? './src/assets/bancolombia_tiny.png'
                   : pago.banco == 'Nequi'
-                  ? '/src/assets/nequi_tiny.png'
+                  ? './src/assets/nequi_tiny.png'
                   : pago.banco == 'Didi'
-                  ? '/src/assets/didi_tiny.png'
-                  : '/src/assets/didi_tiny.png'
+                  ? './src/assets/didi_tiny.png'
+                  : './src/assets/didi_tiny.png'
               "
               alt=""
             />
