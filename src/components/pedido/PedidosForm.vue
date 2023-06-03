@@ -10,116 +10,10 @@
           class="float-end close-form"
         />
         <div class="section-container d-flex gap-5 justify-content-evenly">
-          <section class="cliente border p-3 my-3 rounded-2 w-50 shadow">
-            <div class="d-flex justify-content-between">
-              <h4>Cliente</h4>
-              <button
-                class="btn btn-info"
-                v-show="clienteCompleto"
-                @click.prevent="editarCliente(currentcliente.docId)"
-              >
-                <Icon
-                  icon="material-symbols:edit"
-                  color="black"
-                  width="24"
-                  height="24"
-                />
-              </button>
-            </div>
-            <hr />
-            <div class="row">
-              <div class="mb-2 col list-container">
-                <label for="numero" class="form-label">Cedula</label>
-                <button
-                  class="btn btn-sm btn-outline-success float-end"
-                  v-if="
-                    filtradosClientesArray.length == 0 && filtroClientes !== ''
-                  "
-                  @click.prevent="createCliente"
-                >
-                  <Icon icon="mdi:create-new-folder" color="white" />
-                  Crear Cliente
-                </button>
-
-                <input
-                  required
-                  type="number"
-                  class="form-control"
-                  id="cedula"
-                  v-model="filtroClientes"
-                  @keyup="filtradosClientes"
-                  autocomplete="off"
-                />
-
-                <div class="list-group lista" v-if="searchingCliente">
-                  <button
-                    type="button"
-                    class="list-group-item list-group-item-action"
-                    v-for="(cliente, index) in filtradosClientesArray"
-                    :key="index"
-                    @click="setcliente(cliente.docId)"
-                  >
-                    {{ cliente.cedula }}
-                  </button>
-                </div>
-              </div>
-              <div class="mb-2 col" v-show="clienteCompleto">
-                <label for="numero" class="form-label">Telefono</label
-                ><input
-                  required
-                  type="text"
-                  class="form-control"
-                  id="numero"
-                  v-model="currentcliente.numero"
-                />
-              </div>
-              <div class="mb-2 col" v-show="clienteCompleto">
-                <label for="nombre" class="form-label">Nombre</label
-                ><input
-                  required
-                  type="text"
-                  class="form-control"
-                  id="nombre"
-                  v-model="currentcliente.nombre"
-                />
-              </div>
-            </div>
-            <div class="cliente-data" v-show="clienteCompleto">
-              <div class="row">
-                <div class="mb-2">
-                  <label for="direccion" class="form-label">Dirección</label
-                  ><input
-                    required
-                    type="text"
-                    class="form-control"
-                    id="direccion"
-                    v-model="direccionCompleta"
-                  />
-                </div>
-              </div>
-              <div class="mb-2">
-                <label for="notasPedidos" class="form-label"
-                  >Notas Pedidos</label
-                ><input
-                  type="text"
-                  class="form-control"
-                  id="notasPedidos"
-                  placeholder="cucharas, sin pimenton...."
-                  v-model="currentcliente.notasPedido"
-                />
-              </div>
-              <div class="mb-2">
-                <label for="valor_domi" class="form-label">Valor del domi</label
-                ><input
-                  required
-                  type="number"
-                  class="form-control"
-                  id="valor_domi"
-                  v-model="currentcliente.valorDomi"
-                />
-              </div>
-            </div>
-          </section>
+          <cliente-pedido-form
+            @cambio="setCliente"
+            :editingPedido="editingPedido"
+          />
           <section
             class="pago border p-3 my-3 rounded-2 w-50 shadow d-grid align-content-around"
           >
@@ -293,6 +187,7 @@
           ><button v-else type="submit" class="btn btn-success">
             Actualizar
           </button>
+          <impresora />
         </div>
       </form>
     </div>
@@ -316,17 +211,15 @@ import { mapState } from "pinia";
 import ClienteForm from "../clientes/ClienteForm.vue";
 import TiposPago from "./TiposPago.vue";
 import { useDomiciliarios } from "../../store/domiciliario.js";
+import Impresora from "../utils/Impresora.vue";
+import ClientePedidoForm from "./ClientePedidoForm.vue";
 
 export default {
   name: "pedidoForm",
   data() {
     return {
-      clientesFiltrados: [],
-      clienteCompleto: null,
-      searchingCliente: null,
+      cliente: {},
       listaTipos: [],
-      filtroClientes: "",
-      filtradosClientesArray: [],
       productosList: [],
       filtradosProductosArray: [],
       descuento: 0,
@@ -340,6 +233,8 @@ export default {
     ClienteForm,
     Icon,
     TiposPago,
+    Impresora,
+    ClientePedidoForm,
   },
 
   computed: {
@@ -366,12 +261,7 @@ export default {
       console.log(quedan);
       return quedan;
     },
-    direccionCompleta() {
-      if (this.currentcliente) {
-        return `${this.currentcliente.direccion}, ${this.currentcliente.notasDir}, ${this.currentcliente.barrio} `;
-      }
-      return "";
-    },
+
     total() {
       let recuento = 0;
       this.productosList.forEach((product) => {
@@ -411,6 +301,10 @@ export default {
     },
   },
   methods: {
+    setCliente(clienteEnviado) {
+      this.cliente = clienteEnviado;
+      console.log(clienteEnviado);
+    },
     deleteTipoPago(banco) {
       console.log(banco);
       this.listaTipos = this.listaTipos.filter(
@@ -422,20 +316,6 @@ export default {
         banco: this.bancosSelect[0],
         valor: this.totalEfectivo,
       });
-    },
-    filtradosClientes() {
-      console.log(this.filtradosClientesArray.length);
-      this.searchingCliente = true;
-      if (this.filtroClientes == "") {
-        this.filtradosClientesArray = this.clientDatabase;
-        this.searchingCliente = false;
-        return;
-      } else {
-        this.filtradosClientesArray = this.clientDatabase.filter((cliente) =>
-          cliente.cedula.toString().includes(this.filtroClientes)
-        );
-        return;
-      }
     },
 
     verificarPedido() {
@@ -472,14 +352,7 @@ export default {
         return;
       }
       const data = {
-        cliente: {
-          cedula: this.currentcliente.cedula,
-          valorDomi: this.currentcliente.valorDomi,
-          notasPedido: this.currentcliente.notasPedido,
-          direccion: this.direccionCompleta,
-          nombre: this.currentcliente.nombre,
-          numero: this.currentcliente.numero,
-        },
+        cliente: { ...this.cliente, direccion: this.cliente.direccionCompleta },
         productos: this.productosList,
         total: this.total,
         enPreparacion: true,
@@ -517,12 +390,8 @@ export default {
       try {
         const data = {
           cliente: {
-            cedula: this.currentcliente.cedula,
-            valorDomi: this.currentcliente.valorDomi,
-            notasPedido: this.currentcliente.notasPedido,
-            direccion: this.direccionCompleta,
-            nombre: this.currentcliente.nombre,
-            numero: this.currentcliente.numero,
+            ...this.cliente,
+            direccion: this.cliente.direccionCompleta,
           },
           productos: this.productosList,
           total: this.total,
@@ -593,31 +462,13 @@ export default {
       this.hacerDescuento = false;
       useClientesStore().resetCurrentClient();
     },
-    toggleClienteCompleto() {
-      this.clienteCompleto = !this.clienteCompleto;
-    },
-    setcliente(id) {
-      this.clienteCompleto = true;
-      this.searchingCliente = false;
-      useClientesStore().setCurrentCliente(id);
-      this.filtroClientes = this.currentcliente.cedula;
-    },
+
     cerrarPedido() {
       usePedidosStore().tooglePedidoFormOpen();
       this.resetcliente();
       if (this.editingPedido) {
         usePedidosStore().toggleEditPedido();
       }
-    },
-
-    editarCliente(id) {
-      useClientesStore().toggleEditCliente();
-      useClientesStore().toggleClientForm();
-      useClientesStore().setCurrentCliente(id);
-    },
-    createCliente() {
-      this.clienteCompleto = true;
-      useClientesStore().toggleClientForm();
     },
   },
   watch: {
@@ -639,8 +490,9 @@ export default {
       const clienteId = this.clientDatabase.find(
         (cliente) => cliente.cedula == this.currentPedido.cliente.cedula
       );
+      console.log(this.currentPedido);
       if (clienteId) {
-        this.setcliente(clienteId.docId);
+        useClientesStore().setCurrentCliente(clienteId.docId);
       } else {
         useUtilsStore().confirmAction(
           "El cliente ha sido borrado, creelo nuevamente",
@@ -661,22 +513,6 @@ export default {
   max-width: 95vw;
 }
 
-.lista {
-  z-index: 102;
-  position: absolute;
-}
-
-.lista button {
-  border-radius: 5px;
-}
-
-.lista button:hover {
-  background: rgb(215, 212, 212);
-}
-
-.list-container {
-  position: relative;
-}
 h4 {
   margin: 0;
 }

@@ -20,10 +20,12 @@
             <p>Clientes</p>
           </div>
         </router-link>
-        <div class="branding flex">
-          <caja-icon />
-          <p>Cuadre de caja</p>
-        </div>
+        <router-link class="nav-link flex" :to="{ name: 'Gastos' }">
+          <div class="branding flex">
+            <Icon icon="raphael:future" color="#198754" width="20" />
+            <p>Reservas</p>
+          </div>
+        </router-link>
         <router-link class="nav-link flex" :to="{ name: 'Productos' }">
           <div class="branding flex">
             <productos-icon />
@@ -60,10 +62,10 @@
 </template>
 
 <script>
+import { Icon } from "@iconify/vue";
 import { useAuth } from "../store/auth";
 import PedidoIcon from "./icons/pedidoIcon.vue";
 import clientesIcon from "./icons/clientesIcon.vue";
-import cajaIcon from "./icons/cajaIcon.vue";
 import productosIcon from "./icons/productosIcon.vue";
 import gastosIcon from "./icons/gastosIcon.vue";
 import domiciliarioIcon from "./icons/domiciliarioIcon.vue";
@@ -77,9 +79,9 @@ export default {
   },
   name: "navbar",
   components: {
+    Icon,
     PedidoIcon,
     clientesIcon,
-    cajaIcon,
     productosIcon,
     gastosIcon,
     domiciliarioIcon,

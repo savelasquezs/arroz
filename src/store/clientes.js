@@ -26,6 +26,13 @@ export const useClientesStore = defineStore('ClientesStore', {
 	},
 	getters: {
 		doubleCount: (state) => state.count * 2,
+		filtradosClientesArray(state) {
+			return (filtro) => {
+				return state.clientDatabase.filter((cliente) =>
+					cliente.cedula.toString().includes(filtro)
+				);
+			};
+		},
 		getCustomers: (state) => (search) =>
 			state.clientDatabase.filter((cliente) =>
 				cliente.cedula.toString().includes(search)
