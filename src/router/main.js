@@ -65,6 +65,11 @@ const routes = [
 				name: 'Contabilidad',
 				component: () => import('../views/Contabilidad.vue'),
 			},
+			{
+				path: '/config',
+				name: 'Config',
+				component: () => import('../views/Config.vue'),
+			},
 		],
 	},
 ];

@@ -39,6 +39,7 @@
           v-model="filtroClientes"
           autocomplete="off"
           @keydown="searchingCliente = true"
+          @blur="hideButtons"
         />
 
         <div class="list-group lista" v-if="searchingCliente">
@@ -144,6 +145,11 @@ export default {
     },
   },
   methods: {
+    hideButtons() {
+      setTimeout(() => {
+        this.searchingCliente = false;
+      }, 500);
+    },
     changedDefaultInputs(e) {
       const valor = e.target.value;
       const campo = e.target.id;

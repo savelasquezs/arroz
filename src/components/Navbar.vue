@@ -50,6 +50,12 @@
             <p>Contabilidad</p>
           </div>
         </router-link>
+        <router-link class="nav-link flex" :to="{ name: 'Config' }">
+          <div class="branding flex">
+            <Icon icon="icon-park-solid:config" color="#198754" />
+            <p>Configuración</p>
+          </div>
+        </router-link>
       </div>
       <div class="d-grid justify-content-center" v-if="logedUser">
         <h4 class="text-center">{{ logedUser }}</h4>

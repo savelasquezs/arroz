@@ -73,107 +73,10 @@
         </div>
         <hr />
         <hr />
-        <section class="productos border p-3 my-3 rounded-2 shadow">
-          <div class="work-items">
-            <div class="d-flex justify-content-between">
-              <h4>Productos</h4>
-              <button
-                @click.prevent="addNewInvoiceItem"
-                class="addInvoiceItem btn btn-outline-success btn-sm"
-              >
-                <Icon
-                  icon="material-symbols:add-circle-outline"
-                  color="white"
-                  width="30"
-                  height="30"
-                />
-                Agregar Producto
-              </button>
-            </div>
-            <p v-if="hacerDescuento" class="text-danger text-center">
-              Se está haciendo un descuento de {{ descuento }} %
-            </p>
-            <hr />
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th class="col-sm-6">Producto</th>
-                  <th class="col-sm-1">Cantidad</th>
-                  <th class="col-sm-2">Precio</th>
-                  <th>Subtotal</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(producto, indexProducto) in productosList"
-                  :key="indexProducto"
-                >
-                  <td>
-                    <input
-                      required
-                      type="text"
-                      class="form-control"
-                      id="producto"
-                      autocomplete="off"
-                      v-model="producto.nombre"
-                      @keyup="
-                        filtradosProductos(producto.nombre, indexProducto)
-                      "
-                    />
-                    <div ref="listaDesplegable" class="list-group lista">
-                      <button
-                        type="button"
-                        class="list-group-item list-group-item-action"
-                        v-for="(item, index) in filtradosProductosArray"
-                        :key="index"
-                        @click="
-                          setProducto(
-                            item.nombre,
-                            item.valor,
-                            producto.id,
-                            indexProducto
-                          )
-                        "
-                      >
-                        {{ item.nombre }}
-                      </button>
-                    </div>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      v-model="producto.cantidad"
-                      class="form-control"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      v-model="producto.precio"
-                      class="form-control"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      readonly
-                      :value="
-                        (producto.subtotal =
-                          producto.cantidad * producto.precio)
-                      "
-                      class="form-control"
-                    />
-                  </td>
-                  <img
-                    @click="deleteInvoiceProducto(producto.id)"
-                    src="@/assets/icon-delete.svg"
-                    alt=""
-                  />
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+        <produto-pedido-form
+          @listChanged="changeList"
+          :editingPedido="editingPedido"
+        />
 
         <div class="button-container d-flex justify-content-around">
           <button
@@ -200,19 +103,15 @@ import { usePedidosStore } from "@/store/pedidos";
 import { useProductsStore } from "@/store/productos";
 import Swal from "sweetalert2";
 import { db } from "../../firebase/firebaseInit.js";
-
 import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
-
 import { Icon } from "@iconify/vue";
-
-import { uid } from "uid";
-
 import { mapState } from "pinia";
 import ClienteForm from "../clientes/ClienteForm.vue";
 import TiposPago from "./TiposPago.vue";
 import { useDomiciliarios } from "../../store/domiciliario.js";
 import Impresora from "../utils/Impresora.vue";
 import ClientePedidoForm from "./ClientePedidoForm.vue";
+import ProdutoPedidoForm from "./ProdutoPedidoForm.vue";
 
 export default {
   name: "pedidoForm",
@@ -221,12 +120,10 @@ export default {
       cliente: {},
       listaTipos: [],
       productosList: [],
-      filtradosProductosArray: [],
       descuento: 0,
       hacerDescuento: false,
       listaBancos: ["Bancolombia", "Nequi", "Didi"],
       domiciliario: {},
-      direccion: "",
     };
   },
   components: {
@@ -235,6 +132,7 @@ export default {
     TiposPago,
     Impresora,
     ClientePedidoForm,
+    ProdutoPedidoForm,
   },
 
   computed: {
@@ -267,27 +165,8 @@ export default {
       this.productosList.forEach((product) => {
         recuento += product.subtotal;
       });
-      if (
-        this.productosList.some(
-          (product) =>
-            product.cantidad >= 3 &&
-            product.nombre.toLowerCase().includes("super")
-        )
-      ) {
-        this.hacerDescuento = true;
-      } else {
-        this.hacerDescuento = false;
-      }
+      recuento = recuento + this.currentcliente.valorDomi;
 
-      if (this.hacerDescuento) {
-        this.descuento = 10;
-        recuento =
-          recuento * (1 - this.descuento * 0.01) +
-          this.currentcliente.valorDomi;
-      } else {
-        recuento = recuento + this.currentcliente.valorDomi;
-        this.descuento = 0;
-      }
       return recuento;
     },
     totalBancos() {
@@ -301,6 +180,9 @@ export default {
     },
   },
   methods: {
+    changeList(list) {
+      this.productosList = list;
+    },
     setCliente(clienteEnviado) {
       this.cliente = clienteEnviado;
       console.log(clienteEnviado);
@@ -421,37 +303,6 @@ export default {
       this.guardarPedido();
     },
 
-    filtradosProductos(filtro, indexList) {
-      this.searchingProduct = true;
-      this.$refs.listaDesplegable[indexList].classList.remove("d-none");
-      if (filtro == "") {
-        this.filtradosProductosArray = this.productDatabase;
-        return;
-      } else {
-        this.filtradosProductosArray = this.productDatabase.filter((producto) =>
-          producto.nombre.toLowerCase().includes(filtro.toLowerCase())
-        );
-        return;
-      }
-    },
-    addNewInvoiceItem() {
-      this.productosList.push({
-        nombre: "",
-        precio: 0,
-        cantidad: 1,
-        id: uid(),
-      });
-    },
-    setProducto(nombre, precio, idListItem, indexList) {
-      const indexProduct = this.productosList.findIndex(
-        (product) => product.id == idListItem
-      );
-      this.productosList[indexProduct].nombre = nombre;
-      this.productosList[indexProduct].precio = precio;
-      console.log(
-        this.$refs.listaDesplegable[indexList].classList.add("d-none")
-      );
-    },
     deleteInvoiceProducto(id) {
       this.productosList = this.productosList.filter(
         (product) => product.id != id

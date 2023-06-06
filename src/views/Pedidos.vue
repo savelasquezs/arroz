@@ -55,171 +55,180 @@
         >
       </div>
     </div>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Cliente</th>
-          <th>Direccion</th>
-          <th>Valor</th>
-          <th>Estado</th>
-          <th>Domiciliario</th>
-          <th>Fecha</th>
-          <th>Hora</th>
-          <th>Pago</th>
-          <th>Liquidado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="(pedido, index) in getPedidos(
-            filtroPorNombre,
-            date[0],
-            date[1]
-          )"
-          :key="index"
-          :class="pedido.pagoConfirmado ? 'bg-success-subtle' : ''"
-        >
-          <td>{{ pedido.cliente.nombre }}</td>
-          <td>{{ pedido.cliente.direccion.split(",")[0] }}</td>
-          <td>{{ pedido.total }}</td>
-          <td align="center" @click="actualizarEstado(pedido.docId)">
-            <span v-if="pedido.enPreparacion"
-              ><Icon
-                icon="mdi:pot-steam"
-                color="#7e0000"
-                width="20"
-                height="20"
-            /></span>
-            <span v-if="pedido.enCamino"
-              ><Icon
-                icon="mdi:delivery-dining-electric"
-                color="green"
-                width="20"
-                height="20"
-            /></span>
-            <span v-if="pedido.enMesa"
-              ><Icon
-                icon="material-symbols:table-restaurant"
-                color="orange"
-                width="20"
-                height="20"
-            /></span>
+    <div class="tabla">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Direccion</th>
+            <th>Valor</th>
+            <th>Estado</th>
+            <th>Domiciliario</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Pago</th>
+            <th>Liquidado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(pedido, index) in getPedidos(
+              filtroPorNombre,
+              date[0],
+              date[1]
+            )"
+            :key="index"
+            :class="pedido.pagoConfirmado ? 'bg-success-subtle' : ''"
+          >
+            <td>{{ pedido.cliente.nombre }}</td>
+            <td>{{ pedido.cliente.direccion.split(",")[0] }}</td>
+            <td>{{ pedido.total }}</td>
+            <td align="center" @click="actualizarEstado(pedido.docId)">
+              <span v-if="pedido.enPreparacion"
+                ><Icon
+                  icon="mdi:pot-steam"
+                  color="#7e0000"
+                  width="20"
+                  height="20"
+              /></span>
+              <span v-if="pedido.enCamino"
+                ><Icon
+                  icon="mdi:delivery-dining-electric"
+                  color="green"
+                  width="20"
+                  height="20"
+              /></span>
+              <span v-if="pedido.enMesa"
+                ><Icon
+                  icon="material-symbols:table-restaurant"
+                  color="orange"
+                  width="20"
+                  height="20"
+              /></span>
 
-            <span v-if="pedido.entregado">
-              <Icon icon="healthicons:happy" width="20" height="20" />
+              <span v-if="pedido.entregado">
+                <Icon icon="healthicons:happy" width="20" height="20" />
+                <Icon
+                  icon="material-symbols:check"
+                  color="green"
+                  width="20"
+                  height="20"
+                />c
+              </span>
+            </td>
+            <td>{{ pedido.domiciliario?.nombre }}</td>
+            <td>{{ fechaLocal(pedido.horaToma) }}</td>
+            <td>{{ horaLocal(pedido.horaToma) }}</td>
+            <td class="">
               <Icon
-                icon="material-symbols:check"
-                color="green"
+                icon="bi:cash-coin"
+                color="#198754"
                 width="20"
-                height="20"
-              />c
-            </span>
-          </td>
-          <td>{{ pedido.domiciliario?.nombre }}</td>
-          <td>{{ fechaLocal(pedido.horaToma) }}</td>
-          <td>{{ horaLocal(pedido.horaToma) }}</td>
-          <td class="">
-            <Icon
-              icon="bi:cash-coin"
-              color="#198754"
-              width="20"
-              v-if="pedido.pagoEfectivo > 0"
-            />
-            <span v-for="(pago, index) in pedido?.pagoOnline" :key="index">
-              <img
-                v-if="pago.banco == 'Bancolombia'"
-                src="/src/assets/img/bancolombia_tiny.png"
-                alt=""
-                width="20"
+                v-if="pedido.pagoEfectivo > 0"
               />
-              <img
-                v-else-if="pago.banco == 'Nequi'"
-                src="/src/assets/img/nequi_tiny.png"
-                alt=""
-                width="20"
+              <span v-for="(pago, index) in pedido?.pagoOnline" :key="index">
+                <img
+                  v-if="pago.banco == 'Bancolombia'"
+                  src="/src/assets/img/bancolombia_tiny.png"
+                  alt=""
+                  width="20"
+                />
+                <img
+                  v-else-if="pago.banco == 'Nequi'"
+                  src="/src/assets/img/nequi_tiny.png"
+                  alt=""
+                  width="20"
+                />
+                <img
+                  v-else-if="pago.banco == 'Didi'"
+                  src="/src/assets/img/didi_tiny.png"
+                  alt=""
+                  width="20"
+                />
+              </span>
+            </td>
+            <td>
+              <input
+                v-if="
+                  pedido['liquidado'] != null ||
+                  pedido['pagoConfirmado'] != null
+                "
+                type="checkbox"
+                name="App"
+                id=""
+                class="border m-2"
+                @change="
+                  pedido['liquidado'] != null
+                    ? ActualizarLiquidado(pedido.docId)
+                    : actualizarPagoConfimado(pedido.docId)
+                "
+                :checked="
+                  pedido['liquidado'] != null
+                    ? pedido.liquidado
+                    : pedido.pagoConfirmado
+                "
               />
-              <img
-                v-else-if="pago.banco == 'Didi'"
-                src="/src/assets/img/didi_tiny.png"
-                alt=""
-                width="20"
-              />
-            </span>
-          </td>
-          <td>
-            <input
-              v-if="
-                pedido['liquidado'] != null || pedido['pagoConfirmado'] != null
-              "
-              type="checkbox"
-              name="App"
-              id=""
-              class="border m-2"
-              @change="
-                pedido['liquidado'] != null
-                  ? ActualizarLiquidado(pedido.docId)
-                  : actualizarPagoConfimado(pedido.docId)
-              "
-              :checked="
-                pedido['liquidado'] != null
-                  ? pedido.liquidado
-                  : pedido.pagoConfirmado
-              "
-            />
-            <span
-              v-if="
-                pedido['liquidado'] != null || pedido['pagoConfirmado'] != null
-              "
-              :class="
-                pedido.liquidado || pedido.pagoConfirmado
-                  ? 'text-success'
-                  : 'text-danger'
-              "
-              >{{
-                pedido.liquidado
-                  ? "Liquidado"
-                  : pedido.liquidado == false
-                  ? "Sin Liquidar"
-                  : pedido.pagoConfirmado
-                  ? "PagoConfirmado"
-                  : "Sin Confirmar"
-              }}</span
-            >
-          </td>
-          <td>
-            <button
-              class="btn btn-sm btn-info"
-              @click="verDetalles(pedido.docId)"
-            >
-              <Icon
-                icon="mdi:eye-outline"
-                color="black"
-                width="20"
-                height="20"
-              />
-            </button>
-            <button
-              class="btn btn-sm btn-warning"
-              @click="editarPedido(pedido.docId)"
-            >
-              <Icon
-                icon="material-symbols:edit"
-                color="black"
-                width="20"
-                height="20"
-              />
-            </button>
-            <button
-              class="btn btn-sm btn-danger"
-              @click="borrarPedido(pedido.docId)"
-            >
-              <Icon icon="bi:trash-fill" color="black" width="20" height="20" />
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+              <span
+                v-if="
+                  pedido['liquidado'] != null ||
+                  pedido['pagoConfirmado'] != null
+                "
+                :class="
+                  pedido.liquidado || pedido.pagoConfirmado
+                    ? 'text-success'
+                    : 'text-danger'
+                "
+                >{{
+                  pedido.liquidado
+                    ? "Liquidado"
+                    : pedido.liquidado == false
+                    ? "Sin Liquidar"
+                    : pedido.pagoConfirmado
+                    ? "PagoConfirmado"
+                    : "Sin Confirmar"
+                }}</span
+              >
+            </td>
+            <td>
+              <button
+                class="btn btn-sm btn-info"
+                @click="verDetalles(pedido.docId)"
+              >
+                <Icon
+                  icon="mdi:eye-outline"
+                  color="black"
+                  width="20"
+                  height="20"
+                />
+              </button>
+              <button
+                class="btn btn-sm btn-warning"
+                @click="editarPedido(pedido.docId)"
+              >
+                <Icon
+                  icon="material-symbols:edit"
+                  color="black"
+                  width="20"
+                  height="20"
+                />
+              </button>
+              <button
+                class="btn btn-sm btn-danger"
+                @click="borrarPedido(pedido.docId)"
+              >
+                <Icon
+                  icon="bi:trash-fill"
+                  color="black"
+                  width="20"
+                  height="20"
+                />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -350,5 +359,8 @@ hr {
 }
 .clientesCont {
   padding-top: 100px;
+}
+.tabla {
+  height: 50px !important;
 }
 </style>
