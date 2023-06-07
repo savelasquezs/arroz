@@ -1,8 +1,12 @@
 <template>
   <div class="d-flex gap-3 m-3 mt-5 justify-content-center">
-    <card-banco banco="Bancolombia" :valor="valorPedidosBancolombia" />
-    <card-banco banco="Nequi" :valor="valorPedidosBanco('Nequi')" />
-    <card-banco banco="Didi" :valor="valorPedidosDidi" />
+    <card-banco
+      v-for="entidad in bancoDatabase"
+      :key="entidad.docId"
+      :banco="entidad.nombre"
+      :imagen="entidad.imageUrl"
+      :valor="valorPedidosBanco(entidad.nombre)"
+    />
   </div>
 </template>
 
@@ -10,6 +14,7 @@
 import { mapState } from "pinia";
 import CardBanco from "./CardBanco.vue";
 import { usePedidosStore } from "../../store/pedidos";
+import { useBancos } from "../../store/bancos";
 export default {
   components: { CardBanco },
   data() {
@@ -18,11 +23,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(usePedidosStore, [
-      "valorPedidosBancolombia",
-      "valorPedidosDidi",
-      "valorPedidosBanco",
-    ]),
+    ...mapState(usePedidosStore, ["valorPedidosBanco"]),
+    ...mapState(useBancos, ["bancoDatabase"]),
   },
 };
 </script>

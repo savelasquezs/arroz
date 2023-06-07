@@ -53,6 +53,7 @@ import { mapState } from "pinia";
 import { usePedidosStore } from "../../store/pedidos";
 import { useGastosHoy } from "../../store/gastos";
 import { useCuadres } from "../../store/cuadres";
+import { useBancos } from "../../store/bancos";
 export default {
   data() {
     return {
@@ -83,9 +84,7 @@ export default {
       const data = {
         totalVentas: this.ventasHoy,
         totalGastos: this.gastosHoy,
-        totalVentasBancolombiaHoy: this.ventasBancolombia,
-        totalVentasNequi: this.ventasNequi,
-        totalVentasDidi: this.ventasDidi,
+        ventasBancos: this.ventasBancos,
         baseAnterior: this.valorUltimoCuadre,
         debeHaber: this.debeHaber,
         hay: this.hay,
@@ -110,27 +109,25 @@ export default {
     ]),
     ...mapState(useCuadres, ["allCuadres"]),
     ...mapState(useGastosHoy, ["valorGastosHoy", "gastosBancoHoy"]),
+    ...mapState(useBancos, ["bancoDatabase"]),
     ventasHoy() {
       return this.totalPedidosHoy;
     },
     gastosHoy() {
       return this.valorGastosHoy;
     },
-    ventasBancolombia() {
-      return this.valorPedidosBancoHoy("Bancolombia");
+    ventasBancos() {
+      const ventas = {};
+      for (const banco of this.bancoDatabase) {
+        ventas[banco.nombre] = this.valorPedidosBancoHoy(banco.nombre);
+      }
+      return ventas;
     },
-    ventasNequi() {
-      return this.valorPedidosBancoHoy("Nequi");
+
+    valorVentasBancos() {
+      return Object.values(this.ventasBancos).reduce((a, b) => a + b, 0);
     },
-    ventasDidi() {
-      return this.valorPedidosBancoHoy("Didi");
-    },
-    gastosBancolombia() {
-      return this.gastosBancoHoy("Bancolombia");
-    },
-    gastosNequi() {
-      return this.gastosBancoHoy("Nequi");
-    },
+
     ultimoCuadre() {
       if (this.allCuadres.length > 0) return this.allCuadres[0];
       return;
@@ -139,12 +136,7 @@ export default {
       return this.valorUltimoCuadre + this.ventasHoy - this.gastosHoy;
     },
     hay() {
-      return (
-        this.totalCaja +
-        this.ventasBancolombia +
-        this.ventasNequi +
-        this.ventasDidi
-      );
+      return this.totalCaja + this.valorVentasBancos;
     },
     cuadre() {
       return this.hay - this.debeHaber;

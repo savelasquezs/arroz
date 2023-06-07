@@ -2,9 +2,10 @@
   <div class="contenedor">
     <router-view />
   </div>
-  <Modal v-if="clienteFormShowed || formOpenned">
+  <Modal v-if="clienteFormShowed || formOpenned || bancoFormShowed">
     <ClienteForm v-if="clienteFormShowed" />
     <CatForm v-if="formOpenned" />
+    <add-banco-form v-if="bancoFormShowed" />
   </Modal>
 </template>
 <script>
@@ -21,6 +22,8 @@ import Modal from "./components/utils/Modal.vue";
 import Pedidos from "./views/Pedidos.vue";
 import CatForm from "./components/gastos/CatForm.vue";
 import ClienteForm from "./components/clientes/ClienteForm.vue";
+import AddBancoForm from "./components/bancos/addBancoForm.vue";
+import { useBancos } from "./store/bancos";
 
 export default {
   components: {
@@ -29,11 +32,13 @@ export default {
     ClienteForm,
     Modal,
     CatForm,
+    AddBancoForm,
   },
 
   computed: {
     ...mapState(useClientesStore, ["clienteFormShowed"]),
     ...mapState(useCategorias, ["formOpenned"]),
+    ...mapState(useBancos, ["bancoFormShowed"]),
     usuario() {
       useAuth().fetchUser();
       return auth.currentUser;
@@ -53,6 +58,7 @@ export default {
     useGastosHoy().listenChanges();
     useClientesStore().listenChanges();
     useDomiciliarios().listenChanges();
+    useBancos().listenChanges();
   },
 };
 </script>

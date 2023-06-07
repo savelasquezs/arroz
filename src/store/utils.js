@@ -10,8 +10,9 @@ import {
 } from 'firebase/firestore';
 import Swal from 'sweetalert2';
 import moment from 'moment';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-import { db } from '../firebase/firebaseInit';
+import { db, storage } from '../firebase/firebaseInit';
 
 export const useUtilsStore = defineStore('UtilsStore', {
 	state: () => {
@@ -75,14 +76,31 @@ export const useUtilsStore = defineStore('UtilsStore', {
 		},
 		async saveElement(data, tabla) {
 			const docRef = await addDoc(collection(db, tabla), data);
-
 			useUtilsStore().confirmAction(`Registro guardado exitosamente`);
+			return docRef;
 		},
 		async updateElement(data, tabla, id) {
 			const docRef = doc(db, tabla, id);
 			await updateDoc(docRef, data);
 
 			useUtilsStore().confirmAction('Actualización completada');
+		},
+		async saveElementWithImage(data, tabla, imageNombre, imageFile) {
+			try {
+				const articulo = await this.saveElement(data, tabla);
+				const articuloId = articulo.id;
+				console.log(articuloId);
+				const storageRef = ref(
+					storage,
+					`${tabla}/${articuloId}/${imageNombre}`
+				);
+				await uploadBytes(storageRef, imageFile);
+				const imageUrl = await getDownloadURL(storageRef);
+				console.log(imageUrl);
+				await this.updateElement({ imageUrl: imageUrl }, tabla, articuloId);
+			} catch (err) {
+				alert('Error al guardar articulo', err);
+			}
 		},
 	},
 });

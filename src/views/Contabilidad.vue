@@ -13,20 +13,13 @@
         :valor="valorGastosHoy"
       />
       <detalle-contabilidad
-        titulo="Bancolombia "
+        v-for="entidad in bancoDatabase"
+        :key="entidad.docId"
+        :titulo="entidad.nombre"
         icon="healthicons:bills-negative"
-        :valor="valorPedidosBancoHoy('Bancolombia')"
+        :valor="valorPedidosBancoHoy(entidad.nombre)"
       />
-      <detalle-contabilidad
-        titulo="Nequi "
-        icon="healthicons:bills-negative"
-        :valor="valorPedidosBancoHoy('Nequi')"
-      />
-      <detalle-contabilidad
-        titulo="Didi "
-        icon="healthicons:bills-negative"
-        :valor="valorPedidosBancoHoy('Didi')"
-      />
+
       <detalle-contabilidad
         titulo="Cuadre"
         icon="healthicons:bills-negative"
@@ -54,6 +47,7 @@ import { usePedidosStore } from "../store/pedidos";
 import DetalleContabilidad from "../components/utils/DetalleContabilidad.vue";
 import { useGastosHoy } from "../store/gastos";
 import TotalesBancos from "../components/contabilidad/TotalesBancos.vue";
+import { useBancos } from "../store/bancos";
 export default {
   data() {
     return {
@@ -79,6 +73,7 @@ export default {
       "valorPedidosBancoHoy",
     ]),
     ...mapState(useGastosHoy, ["valorGastosHoy"]),
+    ...mapState(useBancos, ["bancoDatabase"]),
   },
 };
 </script>

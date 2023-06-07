@@ -128,24 +128,7 @@
                 v-if="pedido.pagoEfectivo > 0"
               />
               <span v-for="(pago, index) in pedido?.pagoOnline" :key="index">
-                <img
-                  v-if="pago.banco == 'Bancolombia'"
-                  src="/src/assets/img/bancolombia_tiny.png"
-                  alt=""
-                  width="20"
-                />
-                <img
-                  v-else-if="pago.banco == 'Nequi'"
-                  src="/src/assets/img/nequi_tiny.png"
-                  alt=""
-                  width="20"
-                />
-                <img
-                  v-else-if="pago.banco == 'Didi'"
-                  src="/src/assets/img/didi_tiny.png"
-                  alt=""
-                  width="20"
-                />
+                <img :src="imagenBanco(pago.banco)" alt="" width="20" />
               </span>
             </td>
             <td>
@@ -256,6 +239,7 @@ import {
   startOfYear,
   subMonths,
 } from "date-fns";
+import { useBancos } from "../store/bancos";
 export default {
   name: "home",
   data() {
@@ -308,8 +292,13 @@ export default {
       "detallePedidoAbierto",
       "getPedidos",
     ]),
+    ...mapState(useBancos, ["bancoDatabase"]),
   },
   methods: {
+    imagenBanco(nombreBanco) {
+      return this.bancoDatabase.find((entidad) => entidad.nombre == nombreBanco)
+        ?.imageUrl;
+    },
     ActualizarLiquidado(id) {
       usePedidosStore().actualizarLiquidado(id);
     },

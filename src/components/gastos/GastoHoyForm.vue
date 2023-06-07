@@ -51,9 +51,9 @@ fecha<template>
             v-model="origen"
           >
             <option selected value="Caja">Caja</option>
-            <option value="Bancolombia">Bancolombia</option>
-            <option value="Nequi">Nequi</option>
-            <option value="otro">otro</option>
+            <option v-for="banco in listaBancos" :key="banco" :value="banco">
+              {{ banco }}
+            </option>
           </select>
           <label for="metodosGasto">Origen</label>
         </div>
@@ -102,6 +102,7 @@ import { mapState } from "pinia";
 import { useGastosHoy, useTipoGastos } from "../../store/gastos";
 import AutocompleteDropDown from "../utils/AutocompleteDropDown.vue";
 import { useUtilsStore } from "../../store/utils";
+import { useBancos } from "../../store/bancos";
 export default {
   data() {
     return {
@@ -175,8 +176,14 @@ export default {
   computed: {
     ...mapState(useGastosHoy, ["editingGasto", "currentGasto"]),
     ...mapState(useTipoGastos, ["allTipoGastos"]),
+    ...mapState(useBancos, ["bancoDatabase"]),
     valorUnitario() {
       return this.valorTotal / this.cantidad;
+    },
+    listaBancos() {
+      return this.bancoDatabase
+        .filter((banco) => banco.tipo == "Banco")
+        .map((banco) => banco.nombre);
     },
   },
 

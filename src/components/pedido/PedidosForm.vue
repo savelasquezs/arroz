@@ -112,6 +112,7 @@ import { useDomiciliarios } from "../../store/domiciliario.js";
 import Impresora from "../utils/Impresora.vue";
 import ClientePedidoForm from "./ClientePedidoForm.vue";
 import ProdutoPedidoForm from "./ProdutoPedidoForm.vue";
+import { useBancos } from "../../store/bancos.js";
 
 export default {
   name: "pedidoForm",
@@ -122,7 +123,6 @@ export default {
       productosList: [],
       descuento: 0,
       hacerDescuento: false,
-      listaBancos: ["Bancolombia", "Nequi", "Didi"],
       domiciliario: {},
     };
   },
@@ -147,17 +147,22 @@ export default {
       "editingPedido",
       "currentPedido",
     ]),
+    ...mapState(useBancos, ["bancoDatabase"]),
     ...mapState(useDomiciliarios, ["allDomiciliarios"]),
     ...mapState(useProductsStore, ["productDatabase"]),
     bancosActivos() {
       return this.listaTipos.map((registro) => registro.banco);
     },
+
     bancosSelect() {
       const quedan = this.listaBancos.filter(
         (banco) => !this.bancosActivos.includes(banco)
       );
       console.log(quedan);
       return quedan;
+    },
+    listaBancos() {
+      return this.bancoDatabase.map((entidad) => entidad.nombre);
     },
 
     total() {

@@ -98,10 +98,12 @@ export const useGastosHoy = defineStore('gastosHoy', {
 		},
 		gastosBancoHoy() {
 			const gastos = this.gastosHoy;
-			return (banco) =>
-				gastos
+			return (banco) => {
+				console.log(banco);
+				return gastos
 					.filter((gasto) => gasto.origen == banco)
 					.reduce((a, b) => a + b.valorTotal, 0);
+			};
 		},
 	},
 	actions: {
