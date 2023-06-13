@@ -28,6 +28,7 @@
           <th>Cantidad</th>
           <th>Valor total</th>
           <th>Valor unitario</th>
+          <th>Pago</th>
           <th>Comentarios</th>
         </tr>
       </thead>
@@ -39,6 +40,15 @@
           <td>{{ gasto.cantidad }}</td>
           <td>{{ gasto.valorTotal }}</td>
           <td>{{ gasto.valorUnitario }}</td>
+          <td>
+            <Icon
+              icon="bi:cash-coin"
+              color="#198754"
+              width="20"
+              v-if="gasto.origen == 'Caja'"
+            />
+            <img v-else :src="imagenBanco(gasto.origen)" alt="" width="20" />
+          </td>
           <td>{{ gasto.comentario }}</td>
 
           <td>
@@ -77,6 +87,8 @@ import GastoHoyForm from "./GastoHoyForm.vue";
 import { useUtilsStore } from "../../store/utils";
 import { Icon } from "@iconify/vue";
 import Borrar from "../utils/Borrar.vue";
+import { useBancos } from "../../store/bancos";
+
 export default {
   data() {
     return {};
@@ -90,6 +102,10 @@ export default {
     Borrar,
   },
   methods: {
+    imagenBanco(banco) {
+      return this.bancoDatabase.find((entidad) => entidad.nombre == banco)
+        ?.imageUrl;
+    },
     toggleModal() {
       useGastosHoy().toggleForm();
     },
@@ -113,6 +129,7 @@ export default {
       "formOpenned",
       "currentGasto",
     ]),
+    ...mapState(useBancos, ["bancoDatabase"]),
   },
 };
 </script>

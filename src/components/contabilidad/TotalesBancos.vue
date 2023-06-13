@@ -5,7 +5,7 @@
       :key="entidad.docId"
       :banco="entidad.nombre"
       :imagen="entidad.imageUrl"
-      :valor="valorPedidosBanco(entidad.nombre)"
+      :valor="valorBancos(entidad)"
     />
   </div>
 </template>
@@ -23,7 +23,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(usePedidosStore, ["valorPedidosBanco"]),
+    ...mapState(usePedidosStore, ["valorPedidosBanco", "valorBancos"]),
     ...mapState(useBancos, ["bancoDatabase"]),
   },
 };

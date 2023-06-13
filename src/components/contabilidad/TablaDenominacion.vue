@@ -90,7 +90,6 @@ export default {
         hay: this.hay,
         cuadre: this.cuadre,
       };
-      console.log(data);
     },
   },
   computed: {

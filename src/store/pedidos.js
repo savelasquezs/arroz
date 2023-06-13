@@ -12,6 +12,8 @@ import moment from 'moment';
 
 import { db } from '../firebase/firebaseInit';
 import { useUtilsStore } from './utils';
+import { useBancos } from './bancos';
+import { useGastosHoy } from './gastos';
 
 export const usePedidosStore = defineStore('PedidosStore', {
 	state: () => {
@@ -215,46 +217,46 @@ export const usePedidosStore = defineStore('PedidosStore', {
 					})
 					.reduce((a, b) => a + b, 0);
 		},
-		valorPedidosBancolombia(state) {
-			const pedidos = state.pedidosDatabase;
-			const Bancolombia = pedidos
-				.map((pedido) => {
-					const valores = pedido.pagoOnline?.map((pago) => {
-						if (pago.banco == 'Bancolombia') return pago.valor;
-						return 0;
-					});
-					return valores ? valores.reduce((a, b) => a + b, 0) : 0;
-				})
-				.reduce((a, b) => a + b, 0);
-			const didi = pedidos
-				.map((pedido) => {
-					if (pedido.liquidado) {
-						const valores = pedido.pagoOnline?.map((pago) => {
-							if (pago.banco == 'Didi') return pago.valor;
-							return 0;
-						});
-						return valores ? valores.reduce((a, b) => a + b, 0) : 0;
-					}
-					return 0;
-				})
-				.reduce((a, b) => a + b, 0);
-			return didi + Bancolombia;
-		},
 
-		valorPedidosDidi(state) {
+		valorBancos(state) {
+			const allBancos = useBancos().bancoDatabase;
+			const gastos = useGastosHoy();
 			const pedidos = state.pedidosDatabase;
-			return pedidos
-				.map((pedido) => {
-					if (!pedido.liquidado) {
-						const valores = pedido.pagoOnline?.map((pago) => {
-							if (pago.banco == 'Didi') return pago.valor;
+			return (entidad) => {
+				if (entidad?.tipo == 'App') {
+					return pedidos
+						.map((pedido) => {
+							if (!pedido.liquidado) {
+								const valores = pedido.pagoOnline?.map((pago) => {
+									if (pago.banco == entidad?.nombre) return pago.valor;
+									return 0;
+								});
+								return valores ? valores.reduce((a, b) => a + b, 0) : 0;
+							}
 							return 0;
-						});
-						return valores ? valores.reduce((a, b) => a + b, 0) : 0;
-					}
-					return 0;
-				})
-				.reduce((a, b) => a + b, 0);
+						})
+						.reduce((a, b) => a + b, 0);
+				}
+				return (
+					pedidos
+						.map((pedido) => {
+							const valores = pedido.pagoOnline?.map((pago) => {
+								const entidadPago = allBancos.find(
+									(entidad) => entidad?.nombre == pago.banco
+								);
+								if (
+									pago.banco == entidad?.nombre ||
+									(entidadPago?.liquidarEn == entidad?.nombre &&
+										pedido?.liquidado)
+								)
+									return pago.valor;
+								return 0;
+							});
+							return valores ? valores.reduce((a, b) => a + b, 0) : 0;
+						})
+						.reduce((a, b) => a + b, 0) - gastos.gastosBanco(entidad?.nombre)
+				);
+			};
 		},
 	},
 });

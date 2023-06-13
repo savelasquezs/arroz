@@ -99,7 +99,14 @@ export const useGastosHoy = defineStore('gastosHoy', {
 		gastosBancoHoy() {
 			const gastos = this.gastosHoy;
 			return (banco) => {
-				console.log(banco);
+				return gastos
+					.filter((gasto) => gasto.origen == banco)
+					.reduce((a, b) => a + b.valorTotal, 0);
+			};
+		},
+		gastosBanco(state) {
+			const gastos = state.allGastos;
+			return (banco) => {
 				return gastos
 					.filter((gasto) => gasto.origen == banco)
 					.reduce((a, b) => a + b.valorTotal, 0);

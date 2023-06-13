@@ -17,16 +17,6 @@
           <label for="nombreFloating"> Nombre</label>
         </div>
 
-        <div class="form-floating mb-3">
-          <input
-            type="text"
-            v-model="valor"
-            id="valorFloating"
-            class="form-control"
-            placeholder="Valor"
-          />
-          <label for="valorFloating">Valor Inicial</label>
-        </div>
         <div class="form-floating">
           <select
             class="form-select mb-3"
@@ -39,6 +29,27 @@
             <option value="App">App</option>
           </select>
           <label for="floatingSelect">Tipo de entidad : Banco o App</label>
+        </div>
+        <div class="form-floating">
+          <select
+            class="form-select mb-3"
+            id="asignarA"
+            aria-label="Floating label select example"
+            v-model="liquidarEn"
+            v-if="tipo == 'App'"
+          >
+            <option selected>...Selecciona uno...</option>
+            <option
+              v-for="banco in listaBancos"
+              :key="banco.docId"
+              :value="banco.nombre"
+            >
+              {{ banco.nombre }}
+            </option>
+
+            <option value="App">App</option>
+          </select>
+          <label v-if="tipo == 'App'" for="asignarA">Donde nos consignan</label>
         </div>
         <input
           type="file"
@@ -66,6 +77,7 @@ import Modal from "../utils/Modal.vue";
 import { Icon } from "@iconify/vue";
 import { useBancos } from "../../store/bancos";
 import { useUtilsStore } from "../../store/utils";
+import { mapState } from "pinia";
 export default {
   components: { Modal, Icon },
   data() {
@@ -75,6 +87,7 @@ export default {
       file: "",
       preview: null,
       tipo: "Banco",
+      liquidarEn: "",
     };
   },
   methods: {
@@ -89,7 +102,10 @@ export default {
       useBancos().togglebancoForm();
     },
     GuardarBanco() {
-      const data = { nombre: this.nombre, valor: this.valor, tipo: this.tipo };
+      const data = { nombre: this.nombre, tipo: this.tipo };
+      if (this.liquidarEn != "") {
+        data["liquidarEn"] = this.liquidarEn;
+      }
       useUtilsStore().saveElementWithImage(
         data,
         "bancos",
@@ -97,6 +113,12 @@ export default {
         this.file
       );
       this.close();
+    },
+  },
+  computed: {
+    ...mapState(useBancos, ["bancoDatabase"]),
+    listaBancos() {
+      return this.bancoDatabase.filter((banco) => banco.tipo == "Banco");
     },
   },
 };

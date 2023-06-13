@@ -71,6 +71,7 @@ export default {
       "totalPedidosHoy",
       "pedidosBancoHoy",
       "valorPedidosBancoHoy",
+      "valorBancos",
     ]),
     ...mapState(useGastosHoy, ["valorGastosHoy"]),
     ...mapState(useBancos, ["bancoDatabase"]),
